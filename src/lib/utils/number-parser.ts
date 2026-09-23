@@ -1,4 +1,4 @@
-import type { ParseResult } from "@/types/game";
+import type { ParseResult } from "@/lib/types/game";
 
 // ============================================================
 // NUMBER PARSING
@@ -34,42 +34,82 @@ const WORD_MULTIPLIERS: Record<string, number> = {
  *   "0"           → error (zero not allowed)
  *   "abc"         → error
  */
+function evaluateMath(expression: string): number {
+  const tokens = expression.match(/(?:\d+\.?\d*(?:[eE][+-]?\d+)?)|[+*/()-]|\*\*/g);
+  if (!tokens) throw new Error("Invalid expression");
+
+  const precedence: Record<string, number> = { '+': 1, '-': 1, '*': 2, '/': 2, '**': 3 };
+  const output: string[] = [];
+  const operators: string[] = [];
+
+  for (const token of tokens) {
+    if (!isNaN(Number(token))) {
+      output.push(token);
+    } else if (token in precedence) {
+      while (
+        operators.length > 0 &&
+        operators[operators.length - 1] !== '(' &&
+        precedence[operators[operators.length - 1]] >= precedence[token]
+      ) {
+        output.push(operators.pop()!);
+      }
+      operators.push(token);
+    } else if (token === '(') {
+      operators.push(token);
+    } else if (token === ')') {
+      while (operators.length > 0 && operators[operators.length - 1] !== '(') {
+        output.push(operators.pop()!);
+      }
+      operators.pop();
+    }
+  }
+  while (operators.length > 0) output.push(operators.pop()!);
+
+  const stack: number[] = [];
+  for (const token of output) {
+    if (!isNaN(Number(token))) {
+      stack.push(Number(token));
+    } else {
+      const b = stack.pop()!;
+      const a = stack.pop();
+      if (a === undefined) {
+        if (token === '-') stack.push(-b); // Unary minus
+        else stack.push(b);
+        continue;
+      }
+      switch (token) {
+        case '+': stack.push(a + b); break;
+        case '-': stack.push(a - b); break;
+        case '*': stack.push(a * b); break;
+        case '/': stack.push(a / b); break;
+        case '**': stack.push(Math.pow(a, b)); break;
+      }
+    }
+  }
+  return stack[0];
+}
+
 export function parseNumber(input: string): ParseResult {
   if (!input || typeof input !== "string") {
     return { value: null, error: "Please enter a number.", normalized: null };
   }
 
   const trimmed = input.trim();
-
   if (trimmed === "") {
     return { value: null, error: "Please enter a number.", normalized: null };
   }
 
-  // Remove commas used as thousands separators
   const withoutCommas = trimmed.replace(/,/g, "");
-
-  // Check for negative
-  if (withoutCommas.startsWith("-")) {
-    return {
-      value: null,
-      error: "Please enter a positive number.",
-      normalized: null,
-    };
-  }
 
   let processed = withoutCommas.toLowerCase();
 
-  // Replace word multipliers with math equivalents
   processed = processed.replace(/\b(k|thousand|thousands)\b/g, '*1000');
   processed = processed.replace(/\b(m|million|millions)\b/g, '*1000000');
   processed = processed.replace(/\b(b|billion|billions)\b/g, '*1000000000');
   processed = processed.replace(/\b(t|trillion|trillions)\b/g, '*1000000000000');
 
-  // Support exponentiation using ^
   processed = processed.replace(/\^/g, '**');
 
-  // Strip anything that is not a digit, operator, dot, e/E, parenthesis, or space
-  // This makes `new Function` relatively safe from arbitrary code execution
   const sanitized = processed.replace(/[^0-9+\-*/().*eE\s]/g, '');
 
   if (sanitized.trim() === '') {
@@ -77,8 +117,7 @@ export function parseNumber(input: string): ParseResult {
   }
 
   try {
-    // Evaluate the mathematical expression
-    const value = new Function(`return (${sanitized})`)();
+    const value = evaluateMath(sanitized);
     
     if (typeof value === 'number' && !isNaN(value)) {
       return validateAndNormalize(value, trimmed);
@@ -89,8 +128,7 @@ export function parseNumber(input: string): ParseResult {
 
   return {
     value: null,
-    error:
-      "Couldn't parse that. Try: 300 * 365, 1.5B, 750k, or a plain number.",
+    error: "Couldn't parse that. Try: 300 * 365, 1.5B, 750k, or a plain number.",
     normalized: null,
   };
 }

@@ -87,7 +87,7 @@ export default async function ProfilePage() {
       <div className="space-y-4">
         {attempts?.length === 0 ? (
           <div className="text-center py-12 bg-surface rounded-2xl border border-border">
-            <p className="text-text-secondary">You haven't made any estimates yet.</p>
+            <p className="text-text-secondary">You haven&apos;t made any estimates yet.</p>
           </div>
         ) : (
           attempts?.map((attempt: any) => (

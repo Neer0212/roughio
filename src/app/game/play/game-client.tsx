@@ -63,8 +63,7 @@ export function GameClient() {
   
   const handleSubmit = () => {
     if (parsedGuess.value && !isSubmitting) {
-      submitGuess();
-      setHintUsed(false);
+      submitGuess(hintUsed);
     }
   };
   
@@ -73,9 +72,20 @@ export function GameClient() {
     // Track hint usage for potential scoring adjustments
   };
   
-  const handleReasoningSubmit = (reasoning: string) => {
-    // In production, save to database
-    console.log('Reasoning submitted:', reasoning);
+  const handleReasoningSubmit = async (reasoning: string) => {
+    if (!reasoning || !user) return;
+    const { lastAttemptId } = useGameStore.getState();
+    if (!lastAttemptId) return;
+
+    try {
+      await fetch('/api/attempts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ attempt_id: lastAttemptId, reasoning }),
+      });
+    } catch (e) {
+      console.error('Failed to save reasoning', e);
+    }
   };
   
   if (isLoading && !currentQuestion) {

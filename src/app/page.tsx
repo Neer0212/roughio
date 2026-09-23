@@ -33,7 +33,7 @@ export default function LandingPage() {
             How close can <span className="text-accent">you</span> get?
           </h1>
           <p className="text-xl md:text-2xl text-text-secondary max-w-2xl mx-auto mb-12">
-            You don't need to know the exact answer. You just need to get close. 
+            You don&apos;t need to know the exact answer. You just need to get close. 
             An unlimited Fermi estimation game to test your intuition.
           </p>
           

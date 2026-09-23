@@ -128,7 +128,7 @@ export default function RankedDashboard() {
       {/* Leaderboard */}
       <div className="bg-surface rounded-3xl p-8 border border-border shadow-xl">
         <h2 className="font-bold text-2xl mb-8 flex items-center gap-3">
-          <Trophy className="text-accent" /> Today's Top Players
+          <Trophy className="text-accent" /> Today&apos;s Top Players
         </h2>
         
         {leaderboard.length === 0 ? (

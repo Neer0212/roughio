@@ -1,4 +1,4 @@
-import type { Category, CategoryId } from "@/types/game";
+import type { Category, CategoryId } from "@/lib/types/game";
 
 export const CATEGORIES: Record<CategoryId, Category> = {
   technology: {

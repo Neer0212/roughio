@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     // 2. Calculate score securely
     const actual = round.questions.reference_answer;
-    const diffMultiplier = DIFFICULTIES[round.questions.difficulty as keyof typeof DIFFICULTIES]?.multiplier || 1.0;
+    const diffMultiplier = DIFFICULTIES[round.questions.difficulty as keyof typeof DIFFICULTIES]?.xpMultiplier || 1.0;
     const secureScore = buildScoreResult(guess, actual, diffMultiplier, false);
 
     // 3. Insert guess

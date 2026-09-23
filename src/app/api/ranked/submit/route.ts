@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       const qDef = questions.find(q => q.id === qId);
       if (!qDef) throw new Error('Missing question data');
 
-      const diffMultiplier = DIFFICULTIES[qDef.difficulty as keyof typeof DIFFICULTIES]?.multiplier || 1.0;
+      const diffMultiplier = DIFFICULTIES[qDef.difficulty as keyof typeof DIFFICULTIES]?.xpMultiplier || 1.0;
       const result = buildScoreResult(guess, qDef.reference_answer, diffMultiplier, false);
       
       totalScore += result.xpEarned;

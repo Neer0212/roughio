@@ -1,4 +1,4 @@
-import type { Question } from "@/types/game";
+import type { Question } from "@/lib/types/game";
 
 export const SEED_QUESTIONS: Omit<Question, "id" | "createdAt">[] = [
   // ============================================================

@@ -24,7 +24,7 @@ function generateSeed() {
       ${escapeSql(q.referencePeriod)},
       ${q.uncertaintyLow || 'NULL'},
       ${q.uncertaintyHigh || 'NULL'},
-      ARRAY[${q.tags.map(t => escapeSql(t)).join(', ')}]::text[],
+      ARRAY[${q.tags.map((t: string) => escapeSql(t)).join(', ')}]::text[],
       'active'
     )`;
   });

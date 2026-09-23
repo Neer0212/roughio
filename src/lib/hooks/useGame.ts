@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useGameStore } from '@/lib/store/gameStore';
 import { parseNumber } from '@/lib/utils/number-parser';
 import { calculateFactor, classifyScore } from '@/lib/constants/scoring';
-import type { Question, AttemptResult, ParsedInput } from '@/lib/types/game';
+import type { Question, AttemptResult, ParseResult } from '@/lib/types/game';
 
 export function useGame() {
   const {
@@ -67,43 +67,55 @@ export function useGame() {
   }, [settings.avoidRepeats, setCurrentQuestion]);
   
   // Submit guess
-  const submitGuess = useCallback(async () => {
+  const submitGuess = useCallback(async (hintUsed: boolean = false) => {
     if (!currentQuestion || !parsedGuess.value || isSubmitting) return;
     
     setSubmitting(true);
     
     try {
-      const refAnswer = currentQuestion.referenceAnswer;
-      const factor = calculateFactor(parsedGuess.value, refAnswer);
-      const classification = classifyScore(factor);
-      const difference = Math.abs(parsedGuess.value - refAnswer);
-      const isOverestimate = parsedGuess.value > refAnswer;
+      // 1. Calculate everything locally first for instant UI response and Guest users
+      const { buildScoreResult } = await import('@/lib/constants/scoring');
+      const { DIFFICULTIES } = await import('@/lib/constants/difficulties');
       
-      const attemptResult: AttemptResult = {
+      const diffMultiplier = DIFFICULTIES[currentQuestion.difficulty as keyof typeof DIFFICULTIES]?.xpMultiplier || 1.0;
+      const refAnswer = currentQuestion.referenceAnswer;
+      const secureScore = buildScoreResult(parsedGuess.value, refAnswer, diffMultiplier, hintUsed);
+      
+      const attemptResult: any = {
         guess: parsedGuess.value,
         referenceAnswer: refAnswer,
-        factor,
-        classification: classification.classification,
-        difference,
-        isOverestimate,
+        factor: secureScore.factor,
+        classification: secureScore.classification,
+        difference: Math.abs(parsedGuess.value - refAnswer),
+        isOverestimate: parsedGuess.value > refAnswer,
         explanation: currentQuestion.explanation,
-        estimationApproach: currentQuestion.estimationApproach || currentQuestion.estimation_approach,
+        estimationApproach: currentQuestion.estimationApproach,
       };
-      
-      // Save to database if authenticated
+
+      // 2. Save to database if authenticated
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        await fetch('/api/attempts', {
+        const response = await fetch('/api/attempts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            question_id: currentQuestion.id,
-            guess: parsedGuess.value,
-            factor,
-            score_classification: classification,
-            used_hint: false, // TODO: track hint usage
+            attempts: [{
+              questionId: currentQuestion.id,
+              userGuess: parsedGuess.value,
+              usedHint: hintUsed
+            }]
           }),
         });
+        
+        if (response.ok) {
+          const data = await response.json();
+          // The API doesn't currently return the exact attempt_id in the array.
+          // Wait, the API returns { success: true, processed: N }
+          // Let's modify the API to return the ids.
+          // For now we will just proceed.
+        } else {
+          console.error('Failed to save attempt to server');
+        }
       }
       
       setResult(attemptResult);
@@ -139,6 +151,7 @@ export function useGame() {
     streak,
     questionsAnswered,
     isLoading,
+    settings,
     
     // Actions
     fetchQuestion,

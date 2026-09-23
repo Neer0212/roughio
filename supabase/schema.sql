@@ -4,6 +4,7 @@ CREATE TABLE profiles (
   email TEXT NOT NULL,
   total_xp INTEGER DEFAULT 0,
   level INTEGER DEFAULT 1,
+  current_streak INTEGER DEFAULT 0,
   highest_streak INTEGER DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
@@ -131,17 +132,36 @@ $$ LANGUAGE plpgsql;
 -- Trigger to update Profile stats on new attempt
 CREATE OR REPLACE FUNCTION public.update_profile_stats()
 RETURNS trigger AS $$
+DECLARE
+  new_current_streak INTEGER;
+  old_current_streak INTEGER;
+  old_highest_streak INTEGER;
 BEGIN
+  -- Get current profile values
+  SELECT current_streak, highest_streak 
+  INTO old_current_streak, old_highest_streak
+  FROM public.profiles 
+  WHERE id = NEW.user_id;
+
+  -- If no profile exists yet, fallback to 0
+  old_current_streak := COALESCE(old_current_streak, 0);
+  old_highest_streak := COALESCE(old_highest_streak, 0);
+
+  -- Determine new streak
+  IF NEW.factor <= 2.0 THEN
+    new_current_streak := old_current_streak + 1;
+  ELSE
+    new_current_streak := 0;
+  END IF;
+
+  -- Update profile
   UPDATE public.profiles
   SET total_xp = total_xp + NEW.xp_earned,
       level = FLOOR(SQRT((total_xp + NEW.xp_earned) / 100)) + 1,
-      -- Rough approximation of streak logic: if factor < 2, increment streak, else reset
-      highest_streak = GREATEST(highest_streak, 
-        CASE WHEN NEW.factor < 2 THEN (
-          0 -- Need client streak logic for now
-        ) ELSE 0 END
-      )
+      current_streak = new_current_streak,
+      highest_streak = GREATEST(old_highest_streak, new_current_streak)
   WHERE id = NEW.user_id;
+  
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

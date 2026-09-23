@@ -1,17 +1,18 @@
 // src/lib/store/gameStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { Question, AttemptResult, GameSettings, ParsedInput } from '@/lib/types/game';
+import type { Question, AttemptResult, GameSettings, ParseResult } from '@/lib/types/game';
 
 interface GameStore {
   // State
   currentQuestion: Question | null;
   previousQuestions: Question[];
   userGuess: string;
-  parsedGuess: ParsedInput;
+  parsedGuess: ParseResult;
   isSubmitting: boolean;
   showResult: boolean;
   result: AttemptResult | null;
+  lastAttemptId: string | null;
   streak: number;
   questionsAnswered: number;
   sessionBest: number | null;
@@ -22,7 +23,7 @@ interface GameStore {
   // Actions
   setCurrentQuestion: (question: Question) => void;
   setUserGuess: (guess: string) => void;
-  setParsedGuess: (parsed: ParsedInput) => void;
+  setParsedGuess: (parsed: ParseResult) => void;
   setSubmitting: (submitting: boolean) => void;
   setResult: (result: AttemptResult) => void;
   nextQuestion: () => void;
@@ -45,10 +46,11 @@ export const useGameStore = create<GameStore>()(
       currentQuestion: null,
       previousQuestions: [],
       userGuess: '',
-      parsedGuess: { value: null, error: null, originalInput: '' },
+      parsedGuess: { value: null, error: null, normalized: null },
       isSubmitting: false,
       showResult: false,
       result: null,
+      lastAttemptId: null,
       streak: 0,
       questionsAnswered: 0,
       sessionBest: null,
@@ -56,7 +58,7 @@ export const useGameStore = create<GameStore>()(
       settings: defaultSettings,
       guestAttempts: [],
       
-      setCurrentQuestion: (question) => set({ currentQuestion: question, showResult: false, result: null, userGuess: '', parsedGuess: { value: null, error: null, originalInput: '' } }),
+      setCurrentQuestion: (question) => set({ currentQuestion: question, showResult: false, result: null, userGuess: '', parsedGuess: { value: null, error: null, normalized: null } }),
       
       setUserGuess: (guess) => set({ userGuess: guess }),
       
@@ -89,7 +91,7 @@ export const useGameStore = create<GameStore>()(
           showResult: false,
           result: null,
           userGuess: '',
-          parsedGuess: { value: null, error: null, originalInput: '' },
+          parsedGuess: { value: null, error: null, normalized: null },
         });
       },
       
@@ -97,7 +99,7 @@ export const useGameStore = create<GameStore>()(
         currentQuestion: null,
         previousQuestions: [],
         userGuess: '',
-        parsedGuess: { value: null, error: null, originalInput: '' },
+        parsedGuess: { value: null, error: null, normalized: null },
         isSubmitting: false,
         showResult: false,
         result: null,

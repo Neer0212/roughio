@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     }
 
     // 1. Collect all unique question IDs
-    const questionIds = [...new Set(attempts.map(a => a.questionId))];
+    const questionIds = Array.from(new Set(attempts.map((a: any) => a.questionId)));
 
     // 2. Fetch the actual answers and difficulty from the database
     const { data: questions, error: qError } = await supabase
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       if (!q) throw new Error(`Question ${att.questionId} not found`);
 
       // Calculate difficulty multiplier
-      const diffMultiplier = DIFFICULTIES[q.difficulty as keyof typeof DIFFICULTIES]?.multiplier || 1.0;
+      const diffMultiplier = DIFFICULTIES[q.difficulty as keyof typeof DIFFICULTIES]?.xpMultiplier || 1.0;
 
       // RE-CALCULATE EVERYTHING SECURELY ON SERVER
       const secureScore = buildScoreResult(
@@ -64,15 +64,38 @@ export async function POST(request: Request) {
       };
     });
 
-    const { error } = await supabase
+    const { data: insertedRows, error } = await supabase
       .from('attempts')
-      .insert(rowsToInsert);
+      .insert(rowsToInsert)
+      .select('id');
 
     if (error) throw error;
 
-    return NextResponse.json({ success: true, processed: rowsToInsert.length });
+    return NextResponse.json({ success: true, processed: rowsToInsert.length, attempts: insertedRows });
   } catch (err: any) {
     console.error('API Attempts Error:', err);
     return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const { attempt_id, reasoning } = await request.json();
+    if (!attempt_id || !reasoning) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+
+    const { error } = await supabase
+      .from('attempts')
+      .update({ user_reasoning: reasoning })
+      .eq('id', attempt_id)
+      .eq('user_id', session.user.id);
+
+    if (error) throw error;
+    return NextResponse.json({ success: true });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-import type { ScoreClassification, ScoreResult, Attempt, UserStats } from "@/types/game";
+import type { ScoreClassification, ScoreResult, Attempt, UserStats } from "@/lib/types/game";
 
 // ============================================================
 // SCORE THRESHOLDS
@@ -197,27 +197,25 @@ export function calculateAverageLogScore(attempts: Attempt[]): number {
 }
 
 /**
- * Get XP required for a given level.
- */
-export function xpForLevel(level: number): number {
-  // Exponential scaling: level 1 = 0, level 2 = 100, level 10 = ~2000
-  if (level <= 1) return 0;
-  return Math.floor(100 * Math.pow(1.35, level - 2));
-}
-
-/**
- * Get cumulative XP required to reach a level.
+ * Get the total XP required to reach a specific level from zero.
+ * Formula: XP = (Level - 1)^2 * 100
  */
 export function cumulativeXPForLevel(level: number): number {
-  let total = 0;
-  for (let i = 2; i <= level; i++) {
-    total += xpForLevel(i);
-  }
-  return total;
+  if (level <= 1) return 0;
+  return Math.pow(level - 1, 2) * 100;
 }
 
 /**
- * Get level from total XP.
+ * Get the XP gap between a level and the previous level.
+ */
+export function xpForLevel(level: number): number {
+  if (level <= 1) return 0;
+  return cumulativeXPForLevel(level) - cumulativeXPForLevel(level - 1);
+}
+
+/**
+ * Get level and progress from total XP.
+ * Formula: Level = floor(sqrt(XP / 100)) + 1
  */
 export function levelFromXP(totalXP: number): {
   level: number;
@@ -225,24 +223,17 @@ export function levelFromXP(totalXP: number): {
   nextLevelXP: number;
   progress: number;
 } {
-  let level = 1;
-  let cumulative = 0;
-
-  while (true) {
-    const nextLevelXP = xpForLevel(level + 1);
-    if (cumulative + nextLevelXP > totalXP) {
-      const currentLevelXP = totalXP - cumulative;
-      return {
-        level,
-        currentLevelXP,
-        nextLevelXP,
-        progress: nextLevelXP > 0 ? currentLevelXP / nextLevelXP : 1,
-      };
-    }
-    cumulative += nextLevelXP;
-    level++;
-    if (level > 100) break;
-  }
-
-  return { level: 100, currentLevelXP: 0, nextLevelXP: 0, progress: 1 };
+  const level = Math.floor(Math.sqrt(totalXP / 100)) + 1;
+  const xpBaseForCurrentLevel = cumulativeXPForLevel(level);
+  const xpBaseForNextLevel = cumulativeXPForLevel(level + 1);
+  
+  const currentLevelXP = totalXP - xpBaseForCurrentLevel;
+  const nextLevelXP = xpBaseForNextLevel - xpBaseForCurrentLevel;
+  
+  return {
+    level,
+    currentLevelXP,
+    nextLevelXP,
+    progress: nextLevelXP > 0 ? currentLevelXP / nextLevelXP : 1,
+  };
 }
