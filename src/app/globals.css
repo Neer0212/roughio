@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+    
+    /* New Deep Blue / Emerald Palette */
+    --background: #0B0E14;
+    --surface: #151A23;
+    --elevated: #1F2937;
+    --border: #374151;
+    --text-primary: #F9FAFB;
+    --text-secondary: #9CA3AF;
+    --accent: #10B981;
+    --success: #34D399;
+    --error: #F87171;
+    --warning: #FBBF24;
+
+    /* RGB Variables for the UI components */
+    --background-rgb: 11 14 20;
+    --foreground: 249 250 251;
+    --muted-foreground: 156 163 175;
+    --muted: 31 41 55;
+    --primary: 16 185 129;
+    --primary-foreground: 11 14 20;
+    --secondary: 21 26 35;
+    --destructive: 248 113 113;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    @apply bg-background text-text-primary;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-text-primary min-h-screen;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-elevated rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a4a;
+  }
+
+  /* Focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-background;
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgba(185, 160, 255, 0.3);
+    color: #F5F5F7;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface border border-border rounded-xl;
+  }
+
+  .card-elevated {
+    @apply bg-elevated border border-border rounded-xl;
+  }
+
+  .text-gradient-accent {
+    @apply bg-gradient-to-r from-accent to-purple-300 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-success {
+    @apply bg-gradient-to-r from-success to-emerald-300 bg-clip-text text-transparent;
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 30px rgba(185, 160, 255, 0.15);
+  }
+
+  .glow-success {
+    box-shadow: 0 0 30px rgba(140, 230, 176, 0.15);
+  }
+
+  /* Grid background */
+  .bg-grid {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Gradient noise overlay */
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Number display */
+  .number-display {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+@layer utilities {
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
