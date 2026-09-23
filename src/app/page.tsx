@@ -17,7 +17,9 @@ export default function LandingPage() {
         <div className="flex items-center gap-8">
           <nav className="hidden md:flex gap-6 text-sm font-medium text-text-secondary">
             <Link href="/game/play" className="hover:text-text-primary transition-colors">Free Play</Link>
-            <Link href="/ladder" className="hover:text-accent text-accent font-bold transition-colors">Fermi Ladder</Link>
+            <Link href="/ladder" className="hover:text-text-primary transition-colors">Campaign</Link>
+            <Link href="/battle" className="hover:text-text-primary transition-colors flex items-center gap-1">Battle</Link>
+            <Link href="/ranked" className="hover:text-accent font-bold text-accent transition-colors">Ranked</Link>
             <Link href="/leaderboard" className="hover:text-text-primary transition-colors">Leaderboard</Link>
           </nav>
           <HeaderAuth />

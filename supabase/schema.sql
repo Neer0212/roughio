@@ -171,3 +171,102 @@ BEGIN
   RETURN stats;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- MULTIPLAYER (FERMI BATTLES) SCHEMA --
+
+CREATE TABLE battles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  short_code TEXT UNIQUE NOT NULL,
+  host_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  status TEXT DEFAULT 'waiting', -- waiting, playing, finished
+  current_round INTEGER DEFAULT 1,
+  max_rounds INTEGER DEFAULT 3,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+CREATE TABLE battle_players (
+  battle_id UUID REFERENCES battles(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  score INTEGER DEFAULT 0,
+  joined_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  PRIMARY KEY (battle_id, user_id)
+);
+
+CREATE TABLE battle_rounds (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  battle_id UUID REFERENCES battles(id) ON DELETE CASCADE,
+  round_number INTEGER NOT NULL,
+  question_id UUID REFERENCES questions(id),
+  status TEXT DEFAULT 'guessing', -- guessing, revealed
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+CREATE TABLE battle_guesses (
+  round_id UUID REFERENCES battle_rounds(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  guess DOUBLE PRECISION NOT NULL,
+  factor DOUBLE PRECISION,
+  points_awarded INTEGER DEFAULT 0,
+  submitted_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  PRIMARY KEY (round_id, user_id)
+);
+
+-- Realtime Publication
+ALTER PUBLICATION supabase_realtime ADD TABLE battles;
+ALTER PUBLICATION supabase_realtime ADD TABLE battle_players;
+ALTER PUBLICATION supabase_realtime ADD TABLE battle_rounds;
+ALTER PUBLICATION supabase_realtime ADD TABLE battle_guesses;
+
+-- RLS for Battles
+ALTER TABLE battles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE battle_players ENABLE ROW LEVEL SECURITY;
+ALTER TABLE battle_rounds ENABLE ROW LEVEL SECURITY;
+ALTER TABLE battle_guesses ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can view battles" ON battles FOR SELECT USING (true);
+CREATE POLICY "Anyone can view battle players" ON battle_players FOR SELECT USING (true);
+CREATE POLICY "Anyone can view battle rounds" ON battle_rounds FOR SELECT USING (true);
+CREATE POLICY "Anyone can view battle guesses" ON battle_guesses FOR SELECT USING (true);
+
+CREATE POLICY "Users can create battles" ON battles FOR INSERT WITH CHECK (auth.uid() = host_id);
+CREATE POLICY "Users can update their battles" ON battles FOR UPDATE USING (auth.uid() = host_id);
+
+CREATE POLICY "Users can join battles" ON battle_players FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update their own score" ON battle_players FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert rounds for their battle" ON battle_rounds FOR INSERT WITH CHECK (
+  EXISTS (SELECT 1 FROM battles WHERE id = battle_id AND host_id = auth.uid())
+);
+CREATE POLICY "Anyone can update rounds" ON battle_rounds FOR UPDATE USING (true);
+
+CREATE POLICY "Users can insert their guesses" ON battle_guesses FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update their guesses" ON battle_guesses FOR UPDATE USING (auth.uid() = user_id);
+
+-- RANKED MODE (DAILY CHALLENGE) SCHEMA --
+
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS elo_rating INTEGER DEFAULT 1200;
+
+CREATE TABLE daily_challenges (
+  date DATE PRIMARY KEY DEFAULT CURRENT_DATE,
+  question_ids UUID[] NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+CREATE TABLE daily_attempts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  date DATE REFERENCES daily_challenges(date) ON DELETE CASCADE,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  total_score INTEGER NOT NULL,
+  elo_change INTEGER NOT NULL,
+  completed_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  UNIQUE(date, user_id)
+);
+
+ALTER TABLE daily_challenges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE daily_attempts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can view daily challenges" ON daily_challenges FOR SELECT USING (true);
+CREATE POLICY "Anyone can initialize today's challenge" ON daily_challenges FOR INSERT WITH CHECK (date = CURRENT_DATE);
+
+CREATE POLICY "Anyone can view daily attempts" ON daily_attempts FOR SELECT USING (true);
+CREATE POLICY "Users can insert their daily attempt" ON daily_attempts FOR INSERT WITH CHECK (auth.uid() = user_id);
