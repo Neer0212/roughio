@@ -17,7 +17,7 @@ interface NumericInputProps {
 }
 
 export const NumericInput = Object.assign(
-  function NumericInput({ value, onChange, onSubmit, disabled, error, placeholder = 'Enter your estimate...', autoFocus = true }: NumericInputProps) {
+  function NumericInput({ value, onChange, onSubmit, disabled, error, placeholder = 'Estimate...', autoFocus = true }: NumericInputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [isFocused, setIsFocused] = useState(false);
     const [showScratchpad, setShowScratchpad] = useState(false);
@@ -65,13 +65,12 @@ export const NumericInput = Object.assign(
             disabled={disabled}
             placeholder={placeholder}
             className={cn(
-              'w-full px-4 sm:px-6 py-6 sm:py-8 text-center text-5xl sm:text-7xl lg:text-8xl font-mono font-bold bg-transparent border-b-4 rounded-none',
-              'text-text-primary placeholder-text-secondary/20',
+              'w-full max-w-full overflow-hidden text-ellipsis px-6 py-4 sm:py-5 text-center text-4xl sm:text-5xl lg:text-6xl font-mono font-bold bg-elevated border border-border rounded-2xl shadow-sm',
+              'text-text-primary placeholder-text-secondary/30',
               'transition-all duration-200',
-              'focus:outline-none focus:border-accent',
+              'focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent',
               'disabled:opacity-50 disabled:cursor-not-allowed',
-              error ? 'border-error focus:border-error' : 'border-border',
-              !error && isFocused && 'border-accent'
+              error && 'border-error focus:border-error focus:ring-error'
             )}
             autoComplete="off"
             spellCheck={false}

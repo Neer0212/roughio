@@ -50,12 +50,11 @@ export function HintButton({ questionId, onHintUsed, disabled }: HintButtonProps
         onClick={handleClick}
         disabled={used || isLoading || disabled}
         className={cn(
-          'flex items-center justify-center gap-2 px-6 py-5 rounded-2xl font-bold text-lg',
-          'bg-surface border-2 border-border shadow-[0_4px_0_var(--border)] active:shadow-none active:translate-y-1',
-          'text-text-secondary hover:text-accent hover:border-accent hover:shadow-[0_4px_0_var(--accent)]',
-          'transition-all duration-100',
+          'flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-lg h-full',
+          'bg-transparent border border-border text-text-secondary hover:text-text-primary hover:bg-elevated',
+          'transition-colors duration-200',
           'disabled:opacity-50 disabled:cursor-not-allowed',
-          used && 'bg-accent/10 border-accent/30 text-accent shadow-none translate-y-0'
+          used && 'bg-elevated/50 border-accent/20 text-text-primary'
         )}
       >
         <Lightbulb className="w-5 h-5" />

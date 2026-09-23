@@ -73,70 +73,31 @@ export function ScoreDisplay({ factor, guess, referenceAnswer, unit, classificat
       </motion.div>
       
       {/* Comparison */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <StatCard
-          label="Your Guess"
-          value={formatNumber(guess)}
-          unit={unit}
-          animate={animate}
-          delay={0.2}
-        />
-        <StatCard
-          label="Actual"
-          value={formatNumber(referenceAnswer)}
-          unit={unit}
-          animate={animate}
-          delay={0.3}
-        />
-        <StatCard
-          label={isOverestimate ? 'Over by' : 'Under by'}
-          value={formatNumber(difference)}
-          unit={unit}
-          animate={animate}
-          delay={0.4}
-          variant={isOverestimate ? 'over' : 'under'}
-        />
-        <StatCard
-          label="Ratio"
-          value={isOverestimate ? (guess / referenceAnswer).toFixed(2) + '×' : (referenceAnswer / guess).toFixed(2) + '×'}
-          animate={animate}
-          delay={0.5}
-          variant="ratio"
-        />
-      </div>
-    </motion.div>
-  );
-}
-
-interface StatCardProps {
-  label: string;
-  value: string;
-  unit?: string;
-  animate?: boolean;
-  delay?: number;
-  variant?: 'default' | 'over' | 'under' | 'ratio';
-}
-
-function StatCard({ label, value, unit, animate = true, delay = 0, variant = 'default' }: StatCardProps) {
-  const variantColors = {
-    default: 'text-[rgb(var(--foreground))]',
-    over: 'text-[rgb(var(--destructive))]',
-    under: 'text-[rgb(var(--success))]',
-    ratio: 'text-[rgb(var(--primary))]',
-  };
-  
-  return (
-    <motion.div
-      initial={animate ? { opacity: 0, y: 20 } : false}
-      animate={animate ? { opacity: 1, y: 0 } : false}
-      transition={{ delay: 0.2 + delay, duration: 0.4 }}
-      className="text-center p-4 rounded-xl bg-[rgb(var(--secondary))] border border-[rgb(var(--border))]"
-    >
-      <p className="text-xs font-medium text-[rgb(var(--muted-foreground))] uppercase tracking-wider mb-1">{label}</p>
-      <p className={cn('text-3xl sm:text-4xl lg:text-5xl font-mono font-bold tabular-nums tracking-tight', variantColors[variant])}>
-        {value}
-        {unit && <span className="text-lg font-normal text-[rgb(var(--muted-foreground))] ml-1">{unit}</span>}
-      </p>
+      <motion.div
+        initial={animate ? { opacity: 0, y: 20 } : false}
+        animate={animate ? { opacity: 1, y: 0 } : false}
+        transition={{ delay: 0.2, duration: 0.4 }}
+        className="flex flex-col gap-4 max-w-md mx-auto mt-8 bg-elevated rounded-2xl p-6 border border-border"
+      >
+        <div className="flex justify-between items-center pb-4 border-b border-border/50">
+          <span className="text-text-secondary font-medium">Your estimate</span>
+          <span className="text-2xl font-mono font-bold text-text-primary">
+            {formatNumber(guess)} <span className="text-sm font-normal text-text-secondary">{unit}</span>
+          </span>
+        </div>
+        <div className="flex justify-between items-center pb-4 border-b border-border/50">
+          <span className="text-text-secondary font-medium">Actual answer</span>
+          <span className="text-2xl font-mono font-bold text-text-primary">
+            {formatNumber(referenceAnswer)} <span className="text-sm font-normal text-text-secondary">{unit}</span>
+          </span>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-text-secondary font-medium">Difference</span>
+          <span className={cn("text-2xl font-mono font-bold", isOverestimate ? 'text-error' : 'text-success')}>
+            {isOverestimate ? '+' : '-'}{formatNumber(difference)} <span className="text-sm font-normal text-text-secondary opacity-70">{unit}</span>
+          </span>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }

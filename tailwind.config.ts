@@ -18,20 +18,24 @@ const config: Config = {
         "text-secondary": "var(--text-secondary)",
         accent: {
           DEFAULT: "var(--accent)",
-          muted: "#10B98126",
-          hover: "#34D399",
+          muted: "rgba(53, 208, 127, 0.15)",
+          hover: "var(--accent-dark)",
         },
         success: {
           DEFAULT: "var(--success)",
-          muted: "#34D39926",
+          muted: "rgba(53, 208, 127, 0.15)",
         },
         error: {
           DEFAULT: "var(--error)",
-          muted: "#F8717126",
+          muted: "rgba(239, 83, 80, 0.15)",
         },
         warning: {
           DEFAULT: "var(--warning)",
-          muted: "#FBBF2426",
+          muted: "rgba(245, 158, 11, 0.15)",
+        },
+        info: {
+          DEFAULT: "var(--info)",
+          muted: "rgba(96, 165, 250, 0.15)",
         },
       },
       fontFamily: {

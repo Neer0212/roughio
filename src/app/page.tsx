@@ -28,56 +28,47 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <main>
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 text-center">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+        <section className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center">
+          <h1 className="text-6xl md:text-[5.5rem] leading-[1.05] font-extrabold tracking-tight mb-6 text-balance">
             How close can <span className="text-accent">you</span> get?
           </h1>
-          <p className="text-xl md:text-2xl text-text-secondary max-w-2xl mx-auto mb-12">
+          <p className="text-xl text-text-secondary max-w-2xl mx-auto mb-12 text-balance">
             You don&apos;t need to know the exact answer. You just need to get close. 
             An unlimited Fermi estimation game to test your intuition.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
             <Link 
               href="/ladder" 
-              className="px-8 py-4 bg-accent hover:brightness-110 shadow-[0_4px_0_rgb(10,135,95)] active:translate-y-1 active:shadow-none text-background font-bold rounded-xl text-lg transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
+              className="px-8 py-4 bg-accent text-background font-bold rounded-xl text-lg hover:bg-accent-dark transition-colors flex items-center gap-2 w-full sm:w-auto justify-center"
             >
               PLAY CAMPAIGN <ArrowRight size={20} />
             </Link>
             <Link 
               href="/game/play" 
-              className="px-8 py-4 bg-elevated hover:bg-border text-text-primary font-bold rounded-xl text-lg transition-transform hover:scale-105 w-full sm:w-auto justify-center flex"
+              className="px-8 py-4 bg-transparent border border-border hover:bg-elevated text-text-primary font-bold rounded-xl text-lg transition-colors w-full sm:w-auto justify-center flex"
             >
               Free Play
             </Link>
           </div>
-        </section>
 
-        {/* Feature Grid */}
-        <section id="how-it-works" className="bg-[#19191F] py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-[#22222B] flex items-center justify-center mb-6 text-[#B9A0FF]">
-                  <Target size={32} />
-                </div>
-                <h3 className="text-xl font-bold mb-3">Estimate Anything</h3>
-                <p className="text-[#9696A5]">From cups of coffee consumed to stars in the galaxy. Estimate quantities you never thought about.</p>
+          {/* Game Preview Card */}
+          <div className="max-w-3xl mx-auto bg-surface border border-border rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden text-left">
+            <div className="absolute top-0 left-0 right-0 h-32 bg-accent/5 blur-[80px] pointer-events-none rounded-t-3xl" />
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <span className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-6 border border-border px-3 py-1 rounded-full">Example</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold mb-8 text-balance">How many basketballs can fit in a school bus?</h2>
+              
+              <div className="w-full max-w-md bg-elevated border border-border rounded-2xl p-6 mb-8 flex flex-col items-center">
+                <span className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-2">Your Estimate</span>
+                <span className="text-4xl font-mono font-bold text-text-primary">120,000</span>
               </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-[#22222B] flex items-center justify-center mb-6 text-[#8CE6B0]">
-                  <Brain size={32} />
-                </div>
-                <h3 className="text-xl font-bold mb-3">Learn to Reason</h3>
-                <p className="text-[#9696A5]">Break down complex problems into simple assumptions. Learn how to arrive at a reasonable answer.</p>
+              
+              <div className="flex items-center gap-4 text-accent">
+                <Target size={32} />
+                <span className="text-5xl font-mono font-bold tracking-tighter">× 1.5</span>
               </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-[#22222B] flex items-center justify-center mb-6 text-[#FF8585]">
-                  <Trophy size={32} />
-                </div>
-                <h3 className="text-xl font-bold mb-3">Compete & Climb</h3>
-                <p className="text-[#9696A5]">Earn XP, unlock achievements, and see how your intuition stacks up against your friends.</p>
-              </div>
+              <span className="text-sm font-bold text-accent uppercase tracking-widest mt-2">Excellent</span>
             </div>
           </div>
         </section>

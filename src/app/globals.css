@@ -3,30 +3,35 @@
 @tailwind utilities;
 
 @layer base {
+
   :root {
     --radius: 0.75rem;
+    /* New Analytical / Scientific Dark Theme */
+    --background: #0A0D0F;
+    --surface: #11161A;
+    --elevated: #171D22;
+    --border: #29332F;
     
-    /* New Deep Blue / Emerald Palette */
-    --background: #0B0E14;
-    --surface: #151A23;
-    --elevated: #1F2937;
-    --border: #374151;
-    --text-primary: #F9FAFB;
-    --text-secondary: #9CA3AF;
-    --accent: #10B981;
-    --success: #34D399;
-    --error: #F87171;
-    --warning: #FBBF24;
+    --text-primary: #F4F7F5;
+    --text-secondary: #9AA6A0;
+    
+    --accent: #35D07F;
+    --accent-dark: #20A968;
+    
+    --success: #35D07F;
+    --error: #EF5350;
+    --warning: #F59E0B;
+    --info: #60A5FA;
 
-    /* RGB Variables for the UI components */
-    --background-rgb: 11 14 20;
-    --foreground: 249 250 251;
-    --muted-foreground: 156 163 175;
-    --muted: 31 41 55;
-    --primary: 16 185 129;
-    --primary-foreground: 11 14 20;
-    --secondary: 21 26 35;
-    --destructive: 248 113 113;
+    /* RGB Variables */
+    --background-rgb: 10 13 15;
+    --foreground: 244 247 245;
+    --muted-foreground: 154 166 160;
+    --muted: 23 29 34;
+    --primary: 53 208 127;
+    --primary-foreground: 10 13 15;
+    --secondary: 17 22 26;
+    --destructive: 239 83 80;
   }
 
   * {

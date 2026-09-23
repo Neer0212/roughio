@@ -17,6 +17,7 @@ import { CATEGORY_MAP, DIFFICULTIES } from '@/lib/constants';
 import { formatLarge as formatNumber } from '@/lib/utils/number-parser';
 import { cn } from '@/lib/utils/formatting';
 import { Calculator as CalcIcon } from 'lucide-react';
+import { BackButton } from '@/components/layout/BackButton';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -118,19 +119,20 @@ export function GameClient() {
   const stage = stageId ? require('@/lib/constants/ladder').LADDER_STAGES.find((s: any) => s.id === stageId) : null;
   
   return (
-    <div className="flex-1 flex flex-col lg:flex-row justify-center w-full px-4 py-6 sm:py-12 gap-6 lg:gap-8 max-w-7xl mx-auto">
-      <div className="flex-1 flex flex-col max-w-4xl w-full mx-auto bg-surface border border-border/50 rounded-[2.5rem] p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+    <div className="flex-1 min-h-[100dvh] flex flex-col lg:flex-row justify-center items-center w-full px-4 py-4 sm:p-6 lg:p-8 gap-6 max-w-7xl mx-auto">
+      <div className="flex flex-col w-full max-w-[900px] bg-surface border border-border rounded-3xl p-6 sm:p-8 relative overflow-hidden">
         
         {/* Subtle background decoration */}
         <div className="absolute top-0 left-0 right-0 h-64 bg-accent/5 blur-[100px] pointer-events-none rounded-t-[2.5rem]" />
 
         {/* Header Stats */}
+        <BackButton fallback="/" />
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-12 relative z-10"
+          className="flex items-center justify-between mb-8 sm:mb-12 relative z-10"
         >
-          <div className="flex items-center gap-4">
+          <div className="flex items-center flex-wrap gap-2 sm:gap-4">
             {stage && (
               <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm bg-accent/20 text-accent flex items-center gap-1.5">
                 <span>{stage.icon}</span> {stage.name}
@@ -219,7 +221,7 @@ export function GameClient() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.4, type: "spring", bounce: 0.4 }}
-            className="space-y-10 relative z-10 flex flex-col flex-1 justify-center"
+            className="space-y-6 relative z-10 flex flex-col flex-1 justify-center py-4"
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -227,10 +229,10 @@ export function GameClient() {
               transition={{ delay: 0.1 }}
               className="text-center space-y-6 max-w-3xl mx-auto"
             >
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-balance text-text-primary drop-shadow-sm">
+              <h1 className="text-[clamp(2rem,4.5vw,4.5rem)] leading-[1.05] font-extrabold text-balance text-text-primary mb-4">
                 {currentQuestion.text}
               </h1>
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-elevated border border-border shadow-inner">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-elevated border border-border">
                 <span className="text-text-secondary text-sm font-bold uppercase tracking-widest">Unit</span>
                 <span className="font-mono font-bold text-accent text-lg">{currentQuestion.unit}</span>
               </div>
