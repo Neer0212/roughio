@@ -54,7 +54,7 @@ export function ScoreDisplay({ factor, guess, referenceAnswer, unit, classificat
             initial={animate ? { opacity: 0 } : false}
             animate={animate ? { opacity: 1 } : false}
             transition={{ delay: 0.3 }}
-            className="text-4xl sm:text-5xl font-mono font-bold tabular-nums"
+            className="text-6xl sm:text-8xl font-mono font-bold tabular-nums tracking-tighter"
             style={{ color }}
           >
             {formatFactor(factor)}
@@ -133,7 +133,7 @@ function StatCard({ label, value, unit, animate = true, delay = 0, variant = 'de
       className="text-center p-4 rounded-xl bg-[rgb(var(--secondary))] border border-[rgb(var(--border))]"
     >
       <p className="text-xs font-medium text-[rgb(var(--muted-foreground))] uppercase tracking-wider mb-1">{label}</p>
-      <p className={cn('text-2xl sm:text-3xl font-mono font-bold tabular-nums', variantColors[variant])}>
+      <p className={cn('text-3xl sm:text-4xl lg:text-5xl font-mono font-bold tabular-nums tracking-tight', variantColors[variant])}>
         {value}
         {unit && <span className="text-lg font-normal text-[rgb(var(--muted-foreground))] ml-1">{unit}</span>}
       </p>

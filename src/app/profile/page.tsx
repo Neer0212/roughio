@@ -1,3 +1,4 @@
+import { BackButton } from '@/components/layout/BackButton';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { formatLarge } from '@/lib/utils/number-parser';
@@ -38,6 +39,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="flex-1 w-full max-w-5xl mx-auto px-4 py-8 sm:py-12">
+        <BackButton />
       <div className="mb-10">
         <h1 className="text-3xl sm:text-5xl font-extrabold mb-2">Estimation Dashboard</h1>
         <p className="text-text-secondary text-lg">{session.user.email}</p>
@@ -119,3 +121,4 @@ export default async function ProfilePage() {
     </div>
   );
 }
+

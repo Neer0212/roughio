@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { Trophy, Medal, Star } from 'lucide-react';
 import { getLevelProgress } from '@/lib/utils/leveling';
+import { BackButton } from '@/components/layout/BackButton';
 
 export const revalidate = 60; // Cache for 60 seconds
 
@@ -27,6 +28,7 @@ export default async function LeaderboardPage() {
 
   return (
     <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-8 sm:py-12">
+        <BackButton />
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-elevated text-accent mb-4">
           <Trophy className="w-8 h-8" />
@@ -99,3 +101,4 @@ export default async function LeaderboardPage() {
     </div>
   );
 }
+

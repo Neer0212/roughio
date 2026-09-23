@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Target, Trophy, Clock, Play, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { BackButton } from '@/components/layout/BackButton';
 import { createClient } from '@/lib/supabase/client';
 import { AuthModal } from '@/components/auth/AuthModal';
 
@@ -67,6 +68,7 @@ export default function RankedDashboard() {
 
   return (
     <div className="flex-1 max-w-5xl mx-auto w-full px-4 py-8 md:py-12">
+        <BackButton />
       <div className="text-center mb-12">
         <div className="w-20 h-20 bg-accent/20 text-accent rounded-full flex items-center justify-center mx-auto mb-6">
           <Target className="w-10 h-10" />
@@ -165,3 +167,4 @@ export default function RankedDashboard() {
     </div>
   );
 }
+

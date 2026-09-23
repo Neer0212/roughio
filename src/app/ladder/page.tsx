@@ -1,3 +1,4 @@
+import { BackButton } from '@/components/layout/BackButton';
 import { createClient } from '@/lib/supabase/server';
 import { LADDER_STAGES } from '@/lib/constants/ladder';
 import { Lock, Play, Trophy } from 'lucide-react';
@@ -28,6 +29,7 @@ export default async function LadderPage() {
 
   return (
     <div className="flex-1 w-full max-w-5xl mx-auto px-4 py-8 sm:py-12">
+        <BackButton />
       <div className="text-center mb-16">
         <h1 className="text-4xl sm:text-6xl font-extrabold mb-4 tracking-tight">The Fermi Ladder</h1>
         <p className="text-lg text-text-secondary max-w-2xl mx-auto">
@@ -114,3 +116,4 @@ export default async function LadderPage() {
     </div>
   );
 }
+

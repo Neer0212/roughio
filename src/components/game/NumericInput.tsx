@@ -52,9 +52,7 @@ export const NumericInput = Object.assign(
       <div className="relative w-full max-w-2xl mx-auto mt-8">
         <motion.div
           initial={false}
-          animate={{ boxShadow: isFocused && !error ? '0 0 0 2px var(--accent), 0 0 30px rgba(16,185,129,0.15)' : 'none' }}
-          transition={{ duration: 0.2 }}
-          className="relative rounded-2xl"
+          className="relative"
         >
           <input
             ref={inputRef}
@@ -67,9 +65,9 @@ export const NumericInput = Object.assign(
             disabled={disabled}
             placeholder={placeholder}
             className={cn(
-              'w-full px-6 py-6 text-center text-3xl sm:text-5xl font-mono font-bold bg-elevated border-2 rounded-2xl',
-              'text-text-primary placeholder-text-secondary/50',
-              'transition-all duration-200 shadow-inner',
+              'w-full px-4 sm:px-6 py-6 sm:py-8 text-center text-5xl sm:text-7xl lg:text-8xl font-mono font-bold bg-transparent border-b-4 rounded-none',
+              'text-text-primary placeholder-text-secondary/20',
+              'transition-all duration-200',
               'focus:outline-none focus:border-accent',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               error ? 'border-error focus:border-error' : 'border-border',
