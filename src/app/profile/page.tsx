@@ -18,6 +18,10 @@ export default async function ProfilePage() {
     .eq('id', session.user.id)
     .single();
 
+  // Fetch advanced stats via RPC
+  const { data: stats } = await supabase
+    .rpc('get_user_statistics', { p_user_id: session.user.id });
+
   // Fetch attempts history
   const { data: attempts } = await supabase
     .from('attempts')
@@ -33,43 +37,68 @@ export default async function ProfilePage() {
     .limit(50);
 
   return (
-    <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div className="flex-1 w-full max-w-5xl mx-auto px-4 py-8 sm:py-12">
       <div className="mb-10">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-2">Your Profile</h1>
-        <p className="text-[rgb(var(--muted-foreground))]">{session.user.email}</p>
+        <h1 className="text-3xl sm:text-5xl font-extrabold mb-2">Estimation Dashboard</h1>
+        <p className="text-text-secondary text-lg">{session.user.email}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-[rgb(var(--secondary))] p-6 rounded-2xl border border-[rgb(var(--border))]">
-          <p className="text-sm font-medium text-[rgb(var(--muted-foreground))] uppercase tracking-wider mb-2">Total XP</p>
-          <p className="text-4xl font-bold font-mono text-[rgb(var(--primary))]">{profile?.total_xp || 0}</p>
+      {/* Core Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <div className="bg-surface p-6 rounded-2xl border border-border shadow-sm">
+          <p className="text-xs sm:text-sm font-bold text-text-secondary uppercase tracking-wider mb-2">Total XP</p>
+          <p className="text-3xl sm:text-4xl font-bold font-mono text-accent">{profile?.total_xp?.toLocaleString() || 0}</p>
         </div>
-        <div className="bg-[rgb(var(--secondary))] p-6 rounded-2xl border border-[rgb(var(--border))]">
-          <p className="text-sm font-medium text-[rgb(var(--muted-foreground))] uppercase tracking-wider mb-2">Level</p>
-          <p className="text-4xl font-bold font-mono text-[rgb(var(--foreground))]">{profile?.level || 1}</p>
+        <div className="bg-surface p-6 rounded-2xl border border-border shadow-sm">
+          <p className="text-xs sm:text-sm font-bold text-text-secondary uppercase tracking-wider mb-2">Level</p>
+          <p className="text-3xl sm:text-4xl font-bold font-mono text-text-primary">{profile?.level || 1}</p>
         </div>
-        <div className="bg-[rgb(var(--secondary))] p-6 rounded-2xl border border-[rgb(var(--border))]">
-          <p className="text-sm font-medium text-[rgb(var(--muted-foreground))] uppercase tracking-wider mb-2">Highest Streak</p>
-          <p className="text-4xl font-bold font-mono text-[rgb(var(--success))]">{profile?.highest_streak || 0} 🔥</p>
+        <div className="bg-surface p-6 rounded-2xl border border-border shadow-sm">
+          <p className="text-xs sm:text-sm font-bold text-text-secondary uppercase tracking-wider mb-2">Highest Streak</p>
+          <p className="text-3xl sm:text-4xl font-bold font-mono text-success">{profile?.highest_streak || 0} 🔥</p>
+        </div>
+        <div className="bg-surface p-6 rounded-2xl border border-border shadow-sm">
+          <p className="text-xs sm:text-sm font-bold text-text-secondary uppercase tracking-wider mb-2">Questions</p>
+          <p className="text-3xl sm:text-4xl font-bold font-mono text-text-primary">{stats?.total_questions || 0}</p>
+        </div>
+      </div>
+
+      {/* Advanced Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <div className="bg-elevated p-5 rounded-2xl border border-border/50">
+          <p className="text-xs font-bold text-text-secondary uppercase mb-1">Average Factor</p>
+          <p className="text-2xl font-bold font-mono">{stats?.avg_factor ? stats.avg_factor.toFixed(2) : '0.00'}x</p>
+        </div>
+        <div className="bg-elevated p-5 rounded-2xl border border-border/50">
+          <p className="text-xs font-bold text-text-secondary uppercase mb-1">Best Estimate</p>
+          <p className="text-2xl font-bold font-mono text-success">{stats?.best_factor ? stats.best_factor.toFixed(2) : '0.00'}x</p>
+        </div>
+        <div className="bg-elevated p-5 rounded-2xl border border-border/50">
+          <p className="text-xs font-bold text-text-secondary uppercase mb-1">Under 2x (Excellent)</p>
+          <p className="text-2xl font-bold font-mono">{stats?.under_2x_count || 0} <span className="text-sm font-normal text-text-secondary">({stats?.total_questions ? Math.round((stats.under_2x_count / stats.total_questions) * 100) : 0}%)</span></p>
+        </div>
+        <div className="bg-elevated p-5 rounded-2xl border border-border/50">
+          <p className="text-xs font-bold text-text-secondary uppercase mb-1">Under 5x (Good)</p>
+          <p className="text-2xl font-bold font-mono">{stats?.under_5x_count || 0} <span className="text-sm font-normal text-text-secondary">({stats?.total_questions ? Math.round((stats.under_5x_count / stats.total_questions) * 100) : 0}%)</span></p>
         </div>
       </div>
 
       <h2 className="text-2xl font-bold mb-6">Recent Estimates</h2>
       <div className="space-y-4">
         {attempts?.length === 0 ? (
-          <div className="text-center py-12 bg-[rgb(var(--secondary))] rounded-2xl border border-[rgb(var(--border))]">
-            <p className="text-[rgb(var(--muted-foreground))]">You haven't made any estimates yet.</p>
+          <div className="text-center py-12 bg-surface rounded-2xl border border-border">
+            <p className="text-text-secondary">You haven't made any estimates yet.</p>
           </div>
         ) : (
           attempts?.map((attempt: any) => (
-            <div key={attempt.id} className="bg-[rgb(var(--secondary))] p-5 rounded-2xl border border-[rgb(var(--border))] flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+            <div key={attempt.id} className="bg-surface p-5 rounded-2xl border border-border flex flex-col sm:flex-row gap-4 sm:items-center justify-between hover:bg-elevated transition-colors">
               <div className="flex-1">
                 <p className="font-medium text-lg mb-1 line-clamp-1" title={attempt.questions?.text}>
                   {attempt.questions?.text}
                 </p>
-                <div className="flex items-center gap-3 text-sm text-[rgb(var(--muted-foreground))]">
-                  <span>Guess: <strong className="text-[rgb(var(--foreground))]">{formatLarge(attempt.guess)}</strong></span>
-                  <span>Actual: <strong className="text-[rgb(var(--foreground))]">{formatLarge(attempt.actual)}</strong></span>
+                <div className="flex items-center gap-3 text-sm text-text-secondary">
+                  <span>Guess: <strong className="text-text-primary">{formatLarge(attempt.guess)}</strong></span>
+                  <span>Actual: <strong className="text-text-primary">{formatLarge(attempt.actual)}</strong></span>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -80,7 +109,7 @@ export default async function ProfilePage() {
                   >
                     {SCORE_LABELS[attempt.score_classification as keyof typeof SCORE_LABELS]}
                   </span>
-                  <p className="text-xs text-[rgb(var(--muted-foreground))] font-mono">{attempt.factor.toFixed(2)}x off</p>
+                  <p className="text-xs text-text-secondary font-mono">{attempt.factor.toFixed(2)}x off</p>
                 </div>
               </div>
             </div>

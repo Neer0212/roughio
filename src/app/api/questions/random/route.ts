@@ -8,11 +8,25 @@ export async function GET(request: Request) {
   const excludeStr = searchParams.get('exclude');
   const exclude = excludeStr ? excludeStr.split(',') : [];
 
-  const supabase = createClient();
+  const stageId = searchParams.get('stage');
 
-  const { data, error } = await supabase.rpc('get_random_question', {
-    p_category: category === 'all' ? null : category,
-    p_difficulty: difficulty === 'all' ? null : difficulty,
+  const supabase = createClient();
+  
+  let categories: string[] | null = category && category !== 'all' ? [category] : null;
+  let difficulties: string[] | null = difficulty && difficulty !== 'all' ? [difficulty] : null;
+
+  if (stageId) {
+    const { LADDER_STAGES } = await import('@/lib/constants/ladder');
+    const stage = LADDER_STAGES.find(s => s.id === stageId);
+    if (stage) {
+      categories = stage.categories;
+      difficulties = stage.difficulties;
+    }
+  }
+
+  const { data, error } = await supabase.rpc('get_random_question_v2', {
+    p_categories: categories,
+    p_difficulties: difficulties,
     p_exclude: exclude
   });
 

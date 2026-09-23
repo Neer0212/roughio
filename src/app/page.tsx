@@ -16,9 +16,9 @@ export default function LandingPage() {
         </div>
         <div className="flex items-center gap-8">
           <nav className="hidden md:flex gap-6 text-sm font-medium text-text-secondary">
-            <Link href="/game/play" className="hover:text-text-primary transition-colors">Play</Link>
+            <Link href="/game/play" className="hover:text-text-primary transition-colors">Free Play</Link>
+            <Link href="/ladder" className="hover:text-accent text-accent font-bold transition-colors">Fermi Ladder</Link>
             <Link href="/leaderboard" className="hover:text-text-primary transition-colors">Leaderboard</Link>
-            <Link href="#how-it-works" className="hover:text-text-primary transition-colors">How it Works</Link>
           </nav>
           <HeaderAuth />
         </div>
@@ -37,16 +37,16 @@ export default function LandingPage() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link 
-              href="/game/play" 
-              className="px-8 py-4 bg-accent hover:bg-accent-hover text-background font-bold rounded-full text-lg transition-transform hover:scale-105 flex items-center gap-2 w-full sm:w-auto justify-center"
+              href="/ladder" 
+              className="px-8 py-4 bg-accent hover:brightness-110 shadow-[0_4px_0_rgb(10,135,95)] active:translate-y-1 active:shadow-none text-background font-bold rounded-xl text-lg transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
             >
-              PLAY NOW <ArrowRight size={20} />
+              PLAY CAMPAIGN <ArrowRight size={20} />
             </Link>
             <Link 
-              href="#categories" 
-              className="px-8 py-4 bg-elevated hover:bg-border text-text-primary font-bold rounded-full text-lg transition-transform hover:scale-105 w-full sm:w-auto justify-center flex"
+              href="/game/play" 
+              className="px-8 py-4 bg-elevated hover:bg-border text-text-primary font-bold rounded-xl text-lg transition-transform hover:scale-105 w-full sm:w-auto justify-center flex"
             >
-              Explore Questions
+              Free Play
             </Link>
           </div>
         </section>

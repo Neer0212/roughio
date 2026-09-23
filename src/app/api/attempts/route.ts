@@ -12,25 +12,57 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { attempts } = body; // Accept an array of attempts for batch migration
+    const { attempts } = body; // Accept an array of attempts
 
     if (!attempts || !Array.isArray(attempts)) {
       return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
     }
 
-    // Map the incoming Attempts to the DB schema
-    const rowsToInsert = attempts.map(att => ({
-      user_id: session.user.id,
-      question_id: att.questionId,
-      guess: att.userGuess,
-      actual: att.scoreResult.referenceAnswer,
-      factor: att.scoreResult.factor,
-      score_classification: att.scoreResult.classification,
-      log_distance: att.scoreResult.logDistance,
-      xp_earned: att.scoreResult.xpEarned || 0,
-      used_hint: att.usedHint || false,
-      user_reasoning: att.userReasoning || null
-    }));
+    // 1. Collect all unique question IDs
+    const questionIds = [...new Set(attempts.map(a => a.questionId))];
+
+    // 2. Fetch the actual answers and difficulty from the database
+    const { data: questions, error: qError } = await supabase
+      .from('questions')
+      .select('id, reference_answer, difficulty')
+      .in('id', questionIds);
+
+    if (qError) throw qError;
+    const questionsMap = new Map(questions.map(q => [q.id, q]));
+
+    // 3. Dynamically import scoring logic (it's safe to use in Node)
+    const { buildScoreResult } = await import('@/lib/constants/scoring');
+    const { DIFFICULTIES } = await import('@/lib/constants/difficulties');
+
+    // 4. Map the incoming attempts to the DB schema, recalculating securely
+    const rowsToInsert = attempts.map(att => {
+      const q = questionsMap.get(att.questionId);
+      if (!q) throw new Error(`Question ${att.questionId} not found`);
+
+      // Calculate difficulty multiplier
+      const diffMultiplier = DIFFICULTIES[q.difficulty as keyof typeof DIFFICULTIES]?.multiplier || 1.0;
+
+      // RE-CALCULATE EVERYTHING SECURELY ON SERVER
+      const secureScore = buildScoreResult(
+        att.userGuess,
+        q.reference_answer,
+        diffMultiplier,
+        att.usedHint || false
+      );
+
+      return {
+        user_id: session.user.id,
+        question_id: att.questionId,
+        guess: att.userGuess,
+        actual: q.reference_answer,
+        factor: secureScore.factor,
+        score_classification: secureScore.classification,
+        log_distance: secureScore.logDistance,
+        xp_earned: secureScore.xpEarned,
+        used_hint: att.usedHint || false,
+        user_reasoning: att.userReasoning || null
+      };
+    });
 
     const { error } = await supabase
       .from('attempts')
@@ -38,10 +70,7 @@ export async function POST(request: Request) {
 
     if (error) throw error;
 
-    // We can also update the profile XP and streak here if needed,
-    // or rely on a database trigger. A trigger is usually better.
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, processed: rowsToInsert.length });
   } catch (err: any) {
     console.error('API Attempts Error:', err);
     return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });

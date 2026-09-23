@@ -24,6 +24,7 @@ export function GameClient() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const challengeId = searchParams.get('challenge');
+  const stageId = searchParams.get('stage');
   
   const {
     currentQuestion,
@@ -52,11 +53,13 @@ export function GameClient() {
     if (!currentQuestion && !isLoading) {
       if (challengeId) {
         fetchQuestion({ challengeId });
+      } else if (stageId) {
+        fetchQuestion({ stageId });
       } else {
         fetchQuestion();
       }
     }
-  }, [currentQuestion, isLoading, fetchQuestion, challengeId]);
+  }, [currentQuestion, isLoading, fetchQuestion, challengeId, stageId]);
   
   const handleSubmit = () => {
     if (parsedGuess.value && !isSubmitting) {
@@ -102,6 +105,7 @@ export function GameClient() {
   
   const category = CATEGORY_MAP[currentQuestion.category];
   const difficulty = DIFFICULTIES[currentQuestion.difficulty];
+  const stage = stageId ? require('@/lib/constants/ladder').LADDER_STAGES.find((s: any) => s.id === stageId) : null;
   
   return (
     <div className="flex-1 flex flex-col lg:flex-row justify-center w-full px-4 py-6 sm:py-12 gap-6 lg:gap-8 max-w-7xl mx-auto">
@@ -117,7 +121,12 @@ export function GameClient() {
           className="flex items-center justify-between mb-12 relative z-10"
         >
           <div className="flex items-center gap-4">
-            {category && (
+            {stage && (
+              <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm bg-accent/20 text-accent flex items-center gap-1.5">
+                <span>{stage.icon}</span> {stage.name}
+              </span>
+            )}
+            {!stage && category && (
               <span
                 className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest hidden sm:inline-block shadow-sm"
                 style={{ backgroundColor: category.accentColor || (category.color + '20'), color: category.color }}
@@ -125,12 +134,14 @@ export function GameClient() {
                 {category.name}
               </span>
             )}
-            <span
-              className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm"
-              style={{ backgroundColor: difficulty.bgColor, color: difficulty.color }}
-            >
-              {difficulty.name}
-            </span>
+            {!stage && (
+              <span
+                className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm"
+                style={{ backgroundColor: difficulty.bgColor, color: difficulty.color }}
+              >
+                {difficulty.name}
+              </span>
+            )}
           </div>
           
           <div className="flex items-center gap-2 sm:gap-3 bg-elevated/50 p-1.5 rounded-2xl backdrop-blur-md border border-border/50 shadow-sm">
@@ -228,18 +239,6 @@ export function GameClient() {
               <SubmitButton onClick={handleSubmit} isLoading={isSubmitting} disabled={!parsedGuess.value || isSubmitting} />
               <HintButton questionId={currentQuestion.id} onHintUsed={handleHintUsed} disabled={isSubmitting || showResult} />
             </div>
-            
-            {currentQuestion.explanation && (
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                whileHover={{ scale: 1.01 }}
-                onClick={() => { /* Show context modal */ }}
-                className="flex items-center justify-center gap-2 text-sm text-[rgb(var(--muted-foreground))] hover:text-[rgb(var(--primary))] transition-colors"
-              >
-                <HelpCircle className="w-4 h-4" />
-                View context & assumptions
-              </motion.button>
-            )}
           </motion.div>
         ) : (
           <motion.div
@@ -254,10 +253,12 @@ export function GameClient() {
               result={result!}
               onNext={() => {
                 nextQuestion();
-                fetchQuestion();
+                if (stageId) fetchQuestion({ stageId });
+                else if (challengeId) fetchQuestion({ challengeId });
+                else fetchQuestion();
               }}
               onReasoningSubmit={handleReasoningSubmit}
-              isGuest={true} // TODO: check
+              isGuest={!user}
             />
           </motion.div>
         )}

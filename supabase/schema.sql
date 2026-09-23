@@ -110,6 +110,24 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Enhanced RPC for Random Question (supports arrays for stages)
+CREATE OR REPLACE FUNCTION get_random_question_v2(
+  p_categories TEXT[] DEFAULT NULL,
+  p_difficulties TEXT[] DEFAULT NULL,
+  p_exclude UUID[] DEFAULT '{}'
+) RETURNS SETOF questions AS $$
+BEGIN
+  RETURN QUERY
+  SELECT * FROM questions
+  WHERE status = 'active'
+    AND (p_categories IS NULL OR category = ANY(p_categories))
+    AND (p_difficulties IS NULL OR difficulty = ANY(p_difficulties))
+    AND (id != ALL(p_exclude))
+  ORDER BY random()
+  LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Trigger to update Profile stats on new attempt
 CREATE OR REPLACE FUNCTION public.update_profile_stats()
 RETURNS trigger AS $$
@@ -131,3 +149,25 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_attempt_inserted
   AFTER INSERT ON attempts
   FOR EACH ROW EXECUTE PROCEDURE public.update_profile_stats();
+
+-- RPC for User Statistics
+CREATE OR REPLACE FUNCTION get_user_statistics(p_user_id UUID)
+RETURNS JSON AS $$
+DECLARE
+  stats JSON;
+BEGIN
+  SELECT json_build_object(
+    'total_questions', COUNT(*),
+    'best_factor', COALESCE(MIN(factor), 0),
+    'worst_factor', COALESCE(MAX(factor), 0),
+    'avg_factor', COALESCE(AVG(factor), 0),
+    'under_2x_count', COALESCE(SUM(CASE WHEN factor <= 2.0 THEN 1 ELSE 0 END), 0),
+    'under_5x_count', COALESCE(SUM(CASE WHEN factor <= 5.0 THEN 1 ELSE 0 END), 0)
+  )
+  INTO stats
+  FROM attempts
+  WHERE user_id = p_user_id;
+
+  RETURN stats;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

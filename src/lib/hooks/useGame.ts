@@ -31,7 +31,7 @@ export function useGame() {
   const supabase = createClient();
   
   // Fetch a new question
-  const fetchQuestion = useCallback(async (options?: { category?: string; difficulty?: string; challengeId?: string }) => {
+  const fetchQuestion = useCallback(async (options?: { category?: string; difficulty?: string; challengeId?: string; stageId?: string }) => {
     setIsLoading(true);
     try {
       if (options?.challengeId) {
@@ -45,6 +45,8 @@ export function useGame() {
       const params = new URLSearchParams();
       if (options?.category) params.set('category', options.category);
       if (options?.difficulty) params.set('difficulty', options.difficulty);
+      if (options?.stageId) params.set('stage', options.stageId);
+      
       if (settings.avoidRepeats) {
         const { previousQuestions } = useGameStore.getState();
         if (previousQuestions.length > 0) {
