@@ -1,0 +1,1427 @@
+[
+    {
+        "text": "How many total points did LeBron James score in his NBA regular season career to become the all-time scoring leader?",
+        "referenceAnswer": 40474,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "LeBron James passed Kareem Abdul-Jabbar's record of 38,387 points in 2023.",
+        "estimationApproach": "Estimate 20 seasons, 70 games a season, 27 points per game. 20 * 70 = 1400. 1400 * 27 = 37,800. Add a few more seasons.",
+        "hint": "He averages around 27 points per game.",
+        "sourceName": "NBA",
+        "referencePeriod": "End of 2023-2024 Season",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the official seating capacity of the Narendra Modi Stadium in India?",
+        "referenceAnswer": 132000,
+        "unit": "seat",
+        "unitPlural": "seats",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Narendra Modi Stadium in Ahmedabad overtook the MCG as the largest cricket stadium.",
+        "estimationApproach": "The largest stadiums in the world hold around 100k.",
+        "hint": "It is slightly over 130,000.",
+        "sourceName": "ICC",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many career passing yards did Tom Brady accumulate in the NFL regular season?",
+        "referenceAnswer": 89214,
+        "unit": "yard",
+        "unitPlural": "yards",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "Tom Brady holds the record for the most regular-season passing yards in NFL history.",
+        "estimationApproach": "23 seasons. Assume 15 seasons of 4k yards (60k), plus 8 seasons of 3.5k yards (28k).",
+        "hint": "It's just shy of 90,000 yards.",
+        "sourceName": "Pro Football Reference",
+        "referencePeriod": "2023",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many Olympic gold medals has Michael Phelps won in his career?",
+        "referenceAnswer": 23,
+        "unit": "medal",
+        "unitPlural": "medals",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Michael Phelps is the most decorated Olympian of all time.",
+        "estimationApproach": "He dominated 4 Olympics, winning 6, 8, 4, and 5 golds respectively.",
+        "hint": "He won 8 golds in Beijing alone.",
+        "sourceName": "IOC",
+        "referencePeriod": "2016",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What was the estimated global TV audience for the 2022 FIFA World Cup final?",
+        "referenceAnswer": 1500000000,
+        "unit": "viewer",
+        "unitPlural": "viewers",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "The 2022 World Cup final was one of the most-watched sporting events.",
+        "estimationApproach": "Global pop is 8B. Maybe 1 in 5 people worldwide watched.",
+        "hint": "It's between 1 and 2 billion.",
+        "sourceName": "FIFA",
+        "referencePeriod": "2022",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many dimples are on a standard golf ball?",
+        "referenceAnswer": 336,
+        "unit": "dimple",
+        "unitPlural": "dimples",
+        "category": "sports",
+        "difficulty": "unhinged",
+        "explanation": "Most standard golf balls have between 300 and 400 dimples.",
+        "estimationApproach": "Surface area is 18 cm^2. A dimple is 0.15 cm in diameter. Packing gives 300-400.",
+        "hint": "It's generally between 300 and 400.",
+        "sourceName": "USGA",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many grand slam singles titles has Serena Williams won?",
+        "referenceAnswer": 23,
+        "unit": "title",
+        "unitPlural": "titles",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Serena Williams holds the record for most Grand Slam titles in the Open Era.",
+        "estimationApproach": "She played for over 20 years, winning 1-2 slams a year on average.",
+        "hint": "She is one shy of Margaret Court's all-time record.",
+        "sourceName": "WTA",
+        "referencePeriod": "2022",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the distance of a standard marathon in meters?",
+        "referenceAnswer": 42195,
+        "unit": "meter",
+        "unitPlural": "meters",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "A marathon is exactly 26.2 miles.",
+        "estimationApproach": "26.2 * 1.609 km = 42.195 km = 42,195 m.",
+        "hint": "It is about 26.2 miles.",
+        "sourceName": "World Athletics",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many games are played in a full Major League Baseball (MLB) regular season by all 30 teams combined?",
+        "referenceAnswer": 2430,
+        "unit": "game",
+        "unitPlural": "games",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Each of the 30 teams plays 162 games.",
+        "estimationApproach": "(30 * 162) / 2 = 2430 games.",
+        "hint": "30 teams, each playing 162 games.",
+        "sourceName": "MLB",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the seating capacity of the Michigan Stadium?",
+        "referenceAnswer": 107601,
+        "unit": "seat",
+        "unitPlural": "seats",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The University of Michigan's football stadium is the largest stadium in the US.",
+        "estimationApproach": "The largest college football stadiums are just over 100k.",
+        "hint": "It frequently hosts over 107,000 fans.",
+        "sourceName": "University of Michigan",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many goals did Wayne Gretzky score in his NHL career (regular season)?",
+        "referenceAnswer": 894,
+        "unit": "goal",
+        "unitPlural": "goals",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Wayne Gretzky is the all-time leading goal scorer in NHL history.",
+        "estimationApproach": "He played about 20 seasons, averaging over 40 goals a season.",
+        "hint": "It is just shy of 900 goals.",
+        "sourceName": "NHL",
+        "referencePeriod": "1999",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total medals did the USA win at the 2020 Tokyo Summer Olympics?",
+        "referenceAnswer": 113,
+        "unit": "medal",
+        "unitPlural": "medals",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The USA led the overall medal count at the delayed 2020 Tokyo Olympics.",
+        "estimationApproach": "The US usually wins between 100 and 120 medals at the Summer Games.",
+        "hint": "It's slightly over 110.",
+        "sourceName": "IOC",
+        "referencePeriod": "2021",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the total prize money purse for the US Open tennis tournament (in USD)?",
+        "referenceAnswer": 65000000,
+        "unit": "USD",
+        "unitPlural": "USD",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "The US Open has the largest prize money purse of all the Grand Slams.",
+        "estimationApproach": "Winners get about $3M each. Adds up to tens of millions.",
+        "hint": "It was raised to $65 million recently.",
+        "sourceName": "USTA",
+        "referencePeriod": "2023",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many minutes long is a standard professional soccer match (excluding stoppage time)?",
+        "referenceAnswer": 90,
+        "unit": "minute",
+        "unitPlural": "minutes",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "A standard match consists of two 45-minute halves.",
+        "estimationApproach": "Two halves of 45 minutes each.",
+        "hint": "2 times 45.",
+        "sourceName": "FIFA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What was the average annual salary of an NBA player during the 2023-2024 season (in USD)?",
+        "referenceAnswer": 9700000,
+        "unit": "USD",
+        "unitPlural": "USD",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "NBA players have the highest average salary among major sports leagues.",
+        "estimationApproach": "Salary cap is around $136M. 15 players per team. $136M / 15 = ~$9M average.",
+        "hint": "It is nearly $10 million.",
+        "sourceName": "NBA",
+        "referencePeriod": "2023-2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many distinct events are there in the decathlon?",
+        "referenceAnswer": 10,
+        "unit": "event",
+        "unitPlural": "events",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "The prefix 'deca-' means ten.",
+        "estimationApproach": "Deca means 10.",
+        "hint": "Think of the prefix.",
+        "sourceName": "World Athletics",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total times has Rafael Nadal won the French Open men's singles title?",
+        "referenceAnswer": 14,
+        "unit": "title",
+        "unitPlural": "titles",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Rafael Nadal's dominance on clay led him to win Roland Garros a record 14 times.",
+        "estimationApproach": "He dominated from 2005 to 2022. He won it almost every year.",
+        "hint": "It's exactly double of 7.",
+        "sourceName": "ATP",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many Super Bowl rings does the New England Patriots franchise have?",
+        "referenceAnswer": 6,
+        "unit": "ring",
+        "unitPlural": "rings",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The Patriots have won 6 Super Bowls, all under Belichick and Brady.",
+        "estimationApproach": "They won in 2001, 2003, 2004, 2014, 2016, and 2018.",
+        "hint": "Tied for the most in NFL history.",
+        "sourceName": "NFL",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many points is a touchdown worth in American football (excluding the extra point)?",
+        "referenceAnswer": 6,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "A standard touchdown is worth 6 points.",
+        "estimationApproach": "Common knowledge of NFL rules.",
+        "hint": "It's half a dozen.",
+        "sourceName": "NFL",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the weight of a standard Olympic men's shot put in kilograms?",
+        "referenceAnswer": 7.26,
+        "unit": "kilogram",
+        "unitPlural": "kilograms",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "The men's shot put weighs exactly 16 pounds.",
+        "estimationApproach": "16 / 2.2 = ~7.26 kg.",
+        "hint": "It is exactly 16 pounds.",
+        "sourceName": "World Athletics",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total matches are played in a standard 32-team FIFA World Cup tournament?",
+        "referenceAnswer": 64,
+        "unit": "match",
+        "unitPlural": "matches",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "8 groups of 4 teams = 48 group stage matches. 16 knockout matches = 64 total.",
+        "estimationApproach": "(8 * 6) + 16 = 64.",
+        "hint": "A nice power of 2.",
+        "sourceName": "FIFA",
+        "referencePeriod": "2022",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the maximum number of clubs a golfer can carry in their bag?",
+        "referenceAnswer": 14,
+        "unit": "club",
+        "unitPlural": "clubs",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "The USGA and R&A rules state a player is allowed a maximum of 14 clubs.",
+        "estimationApproach": "Driver, 2 woods, 7 irons, 3 wedges, 1 putter.",
+        "hint": "Two weeks is this many days.",
+        "sourceName": "USGA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many home runs did Barry Bonds hit in his record-breaking 2001 MLB season?",
+        "referenceAnswer": 73,
+        "unit": "home run",
+        "unitPlural": "home runs",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Barry Bonds set the single-season MLB home run record with 73.",
+        "estimationApproach": "Mark McGwire hit 70. Bonds beat him by a few.",
+        "hint": "It is in the lower 70s.",
+        "sourceName": "MLB",
+        "referencePeriod": "2001",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the diameter of a standard basketball hoop in inches?",
+        "referenceAnswer": 18,
+        "unit": "inch",
+        "unitPlural": "inches",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "A standard basketball rim is exactly 18 inches in diameter.",
+        "estimationApproach": "A basketball is about 9.5 inches in diameter. The hoop is about twice that size.",
+        "hint": "It is 1.5 feet.",
+        "sourceName": "NBA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total rounds are there in the NFL Draft?",
+        "referenceAnswer": 7,
+        "unit": "round",
+        "unitPlural": "rounds",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Since 1994, the NFL draft has consisted of 7 rounds.",
+        "estimationApproach": "There are about 250 picks across 32 teams. 250 / 32 is roughly 7.",
+        "hint": "Lucky number.",
+        "sourceName": "NFL",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the height of a regulation tennis net at the center in inches?",
+        "referenceAnswer": 36,
+        "unit": "inch",
+        "unitPlural": "inches",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "A tennis net is 3 feet (36 inches) high at the center.",
+        "estimationApproach": "It is exactly one yard tall at the center.",
+        "hint": "It is exactly 3 feet.",
+        "sourceName": "ITF",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many players are on the field for one team in a standard field hockey match?",
+        "referenceAnswer": 11,
+        "unit": "player",
+        "unitPlural": "players",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Like soccer and cricket, a field hockey team fields 11 players.",
+        "estimationApproach": "Same number as soccer.",
+        "hint": "Same as soccer.",
+        "sourceName": "FIH",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What was the highest attendance ever recorded for WrestleMania (WrestleMania 32)?",
+        "referenceAnswer": 101763,
+        "unit": "person",
+        "unitPlural": "people",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "WrestleMania 32 at AT&T Stadium claimed an attendance of over 101,000.",
+        "estimationApproach": "AT&T stadium holds 80k for football, but adds floor seating for wrestling.",
+        "hint": "Just over 100,000.",
+        "sourceName": "WWE",
+        "referencePeriod": "2016",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many matches did the Undertaker win at WrestleMania before his first loss?",
+        "referenceAnswer": 21,
+        "unit": "win",
+        "unitPlural": "wins",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The Undertaker had a 21-0 undefeated Streak at WrestleMania.",
+        "estimationApproach": "He debuted in 1990 and lost in 2014.",
+        "hint": "The age of majority in the US.",
+        "sourceName": "WWE",
+        "referencePeriod": "2014",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many personal fouls does an NBA player need to commit to foul out?",
+        "referenceAnswer": 6,
+        "unit": "foul",
+        "unitPlural": "fouls",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "In the NBA, a player fouls out after their 6th personal foul.",
+        "estimationApproach": "NBA games are 48 minutes, longer than college, so they get 6 fouls.",
+        "hint": "One more than college basketball.",
+        "sourceName": "NBA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total Grand Prix races were scheduled in the 2024 Formula 1 season?",
+        "referenceAnswer": 24,
+        "unit": "race",
+        "unitPlural": "races",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The 2024 F1 calendar features a record 24 Grands Prix.",
+        "estimationApproach": "The calendar has been expanding from around 20.",
+        "hint": "Exactly two dozen.",
+        "sourceName": "FIA",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the length of a standard Olympic swimming pool in meters?",
+        "referenceAnswer": 50,
+        "unit": "meter",
+        "unitPlural": "meters",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Olympic pools are also known as long course pools and are 50 meters long.",
+        "estimationApproach": "Half of 100.",
+        "hint": "5000 centimeters.",
+        "sourceName": "FINA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many balls are used in a standard game of snooker?",
+        "referenceAnswer": 22,
+        "unit": "ball",
+        "unitPlural": "balls",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "A snooker game uses 1 cue ball, 15 red balls, and 6 colored balls.",
+        "estimationApproach": "15 + 6 + 1 = 22.",
+        "hint": "15 reds, 6 colors, 1 cue.",
+        "sourceName": "WPBSA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many times has Brazil won the FIFA Men's World Cup?",
+        "referenceAnswer": 5,
+        "unit": "title",
+        "unitPlural": "titles",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Brazil is the most successful nation in World Cup history with 5 titles.",
+        "estimationApproach": "They have 5 stars on their jersey.",
+        "hint": "Pentacampe\u00e3o.",
+        "sourceName": "FIFA",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many points is a drop goal worth in rugby union?",
+        "referenceAnswer": 3,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "In rugby union, a drop goal is worth 3 points.",
+        "estimationApproach": "Same as a penalty kick in rugby union.",
+        "hint": "Same as a field goal in American football.",
+        "sourceName": "World Rugby",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What was the highest score ever achieved by a single player in an NBA game?",
+        "referenceAnswer": 100,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Wilt Chamberlain scored 100 points in a game in 1962.",
+        "estimationApproach": "Famous sports trivia.",
+        "hint": "Three digits.",
+        "sourceName": "NBA",
+        "referencePeriod": "1962",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many periods are in a standard NHL ice hockey game?",
+        "referenceAnswer": 3,
+        "unit": "period",
+        "unitPlural": "periods",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Ice hockey is played in three 20-minute periods.",
+        "estimationApproach": "Unlike halves or quarters, it's divided into thirds.",
+        "hint": "A hat trick is when a player scores this many goals.",
+        "sourceName": "NHL",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many times did Usain Bolt win the 100m Olympic gold medal?",
+        "referenceAnswer": 3,
+        "unit": "medal",
+        "unitPlural": "medals",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Usain Bolt won three consecutive 100m golds in 2008, 2012, and 2016.",
+        "estimationApproach": "He dominated three Olympic cycles.",
+        "hint": "He also won the 200m the same number of times.",
+        "sourceName": "IOC",
+        "referencePeriod": "2016",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the weight of a standard ten-pin bowling ball used by male pros in pounds?",
+        "referenceAnswer": 16,
+        "unit": "pound",
+        "unitPlural": "pounds",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "The maximum legal weight for a bowling ball is 16 pounds.",
+        "estimationApproach": "Usually between 14 and 16 pounds.",
+        "hint": "Maximum allowed weight.",
+        "sourceName": "USBC",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total squares are on a standard chessboard?",
+        "referenceAnswer": 64,
+        "unit": "square",
+        "unitPlural": "squares",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "A chessboard is an 8x8 grid.",
+        "estimationApproach": "8 multiplied by 8.",
+        "hint": "8 squared.",
+        "sourceName": "FIDE",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many sets are needed to win a men's singles match at a Grand Slam?",
+        "referenceAnswer": 3,
+        "unit": "set",
+        "unitPlural": "sets",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Men's Grand Slam matches are best of five sets.",
+        "estimationApproach": "Best of 5 means first to 3.",
+        "hint": "Majority of 5.",
+        "sourceName": "ITF",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the world record time for the men's marathon in seconds?",
+        "referenceAnswer": 7235,
+        "unit": "second",
+        "unitPlural": "seconds",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "Kelvin Kiptum ran 2:00:35, which is 7235 seconds.",
+        "estimationApproach": "2 hours is 7200 seconds. Add a little bit.",
+        "hint": "Just over 7200.",
+        "sourceName": "World Athletics",
+        "referencePeriod": "2023",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many regular season games does an NFL team play (as of 2021)?",
+        "referenceAnswer": 17,
+        "unit": "game",
+        "unitPlural": "games",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "The NFL expanded the regular season from 16 to 17 games starting in 2021.",
+        "estimationApproach": "It was 16 for a long time, now it's 17.",
+        "hint": "One more than 16.",
+        "sourceName": "NFL",
+        "referencePeriod": "2021",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the diameter of a standard Table Tennis ball in millimeters?",
+        "referenceAnswer": 40,
+        "unit": "millimeter",
+        "unitPlural": "millimeters",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "In 2000, the ITTF increased the ball diameter from 38mm to 40mm.",
+        "estimationApproach": "It's about 4 cm.",
+        "hint": "It was changed from 38mm to this nice round number.",
+        "sourceName": "ITTF",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total bases are there on a baseball field (including home plate)?",
+        "referenceAnswer": 4,
+        "unit": "base",
+        "unitPlural": "bases",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "First, second, third base, and home plate make 4.",
+        "estimationApproach": "A 'home run' touches all 4.",
+        "hint": "The number of balls for a walk.",
+        "sourceName": "MLB",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What was the transfer fee paid for Neymar to PSG in euros?",
+        "referenceAnswer": 222000000,
+        "unit": "euro",
+        "unitPlural": "euros",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "PSG paid Neymar's \u20ac222 million release clause.",
+        "estimationApproach": "It was over 200 million euros.",
+        "hint": "222 followed by six zeros.",
+        "sourceName": "PSG",
+        "referencePeriod": "2017",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many times did Muhammad Ali win the World Heavyweight Boxing Championship?",
+        "referenceAnswer": 3,
+        "unit": "time",
+        "unitPlural": "times",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Ali won the championship three times (1964, 1974, 1978).",
+        "estimationApproach": "He had distinct eras: Liston, Foreman, and Spinks.",
+        "hint": "He won it in three different decades.",
+        "sourceName": "WBA",
+        "referencePeriod": "1978",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the maximum break in a single visit to the table in snooker?",
+        "referenceAnswer": 147,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Potting all 15 reds with 15 blacks (120), then 6 colors (27) equals 147.",
+        "estimationApproach": "120 + 27 = 147.",
+        "hint": "One hundred and forty-seven.",
+        "sourceName": "WPBSA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many minutes long is a standard quarter in an NFL game?",
+        "referenceAnswer": 15,
+        "unit": "minute",
+        "unitPlural": "minutes",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "An NFL game has four 15-minute quarters.",
+        "estimationApproach": "60 minutes divided by 4.",
+        "hint": "A quarter of an hour.",
+        "sourceName": "NFL",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the height of a regulation NBA basketball hoop in feet?",
+        "referenceAnswer": 10,
+        "unit": "foot",
+        "unitPlural": "feet",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "The standard height for a basketball hoop is 10 feet.",
+        "estimationApproach": "Common knowledge.",
+        "hint": "Double five.",
+        "sourceName": "NBA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many points does a player get for a bullseye in standard Darts?",
+        "referenceAnswer": 50,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The inner bullseye is worth 50 points.",
+        "estimationApproach": "It's a nice round number in darts.",
+        "hint": "Half a century.",
+        "sourceName": "PDC",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many times did the Chicago Bulls win the NBA Championship in the 1990s?",
+        "referenceAnswer": 6,
+        "unit": "championship",
+        "unitPlural": "championships",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "The Bulls won two three-peats in 1991-93 and 1996-98.",
+        "estimationApproach": "Two three-peats.",
+        "hint": "3 + 3.",
+        "sourceName": "NBA",
+        "referencePeriod": "1999",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many players make up a standard volleyball team on the court?",
+        "referenceAnswer": 6,
+        "unit": "player",
+        "unitPlural": "players",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Indoor volleyball has 6 players on the court per team.",
+        "estimationApproach": "3 in the front row, 3 in the back row.",
+        "hint": "Half a dozen.",
+        "sourceName": "FIVB",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the total distance of an Ironman Triathlon in miles?",
+        "referenceAnswer": 140.6,
+        "unit": "mile",
+        "unitPlural": "miles",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "An Ironman is a 2.4-mile swim, 112-mile bike, and a 26.2-mile run.",
+        "estimationApproach": "2.4 + 112 + 26.2 = 140.6.",
+        "hint": "It's about 140.",
+        "sourceName": "World Triathlon",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many gold medals did the Miracle on Ice US men's hockey team win in 1980?",
+        "referenceAnswer": 1,
+        "unit": "medal",
+        "unitPlural": "medals",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "They won the gold medal after upsetting the Soviet Union.",
+        "estimationApproach": "A team only wins one gold medal per tournament.",
+        "hint": "It was the ultimate prize.",
+        "sourceName": "IOC",
+        "referencePeriod": "1980",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the length of a standard cricket pitch in yards?",
+        "referenceAnswer": 22,
+        "unit": "yard",
+        "unitPlural": "yards",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "A cricket pitch is exactly 22 yards long, which is also one chain.",
+        "estimationApproach": "It is exactly 1 chain.",
+        "hint": "The number of players on a soccer field total.",
+        "sourceName": "ICC",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many points is a try worth in modern Rugby Union?",
+        "referenceAnswer": 5,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "A try was increased to 5 points in 1992.",
+        "estimationApproach": "It's the highest scoring play, more than a penalty (3).",
+        "hint": "One hand of fingers.",
+        "sourceName": "World Rugby",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total games are required to win a standard set in tennis (without a tiebreak)?",
+        "referenceAnswer": 6,
+        "unit": "game",
+        "unitPlural": "games",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "A player must win 6 games to win a standard set.",
+        "estimationApproach": "First to 6 wins the set.",
+        "hint": "Half a dozen.",
+        "sourceName": "ITF",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the par for a typical 18-hole championship golf course?",
+        "referenceAnswer": 72,
+        "unit": "stroke",
+        "unitPlural": "strokes",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Most standard 18-hole courses have a par of 72.",
+        "estimationApproach": "Average par per hole is 4. 18 * 4 = 72.",
+        "hint": "18 times 4.",
+        "sourceName": "USGA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many times did the New York Yankees win the World Series in the 20th century?",
+        "referenceAnswer": 25,
+        "unit": "championship",
+        "unitPlural": "championships",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The Yankees won 25 of their 27 championships in the 20th century.",
+        "estimationApproach": "They have 27 total. 2000 and 2009 were in the 21st century.",
+        "hint": "A quarter of a hundred.",
+        "sourceName": "MLB",
+        "referencePeriod": "2000",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many starting players are there on a Canadian Football League (CFL) team on the field?",
+        "referenceAnswer": 12,
+        "unit": "player",
+        "unitPlural": "players",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The CFL uses 12 players per side, unlike the NFL's 11.",
+        "estimationApproach": "One more than American football.",
+        "hint": "A dozen.",
+        "sourceName": "CFL",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the weight of a standard men's Olympic discus in kilograms?",
+        "referenceAnswer": 2,
+        "unit": "kilogram",
+        "unitPlural": "kilograms",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The men's discus weighs 2.0 kg.",
+        "estimationApproach": "It's relatively light compared to the shot put, exactly 2 kg.",
+        "hint": "Two.",
+        "sourceName": "World Athletics",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many minutes does a player sit in the penalty box for a minor penalty in ice hockey?",
+        "referenceAnswer": 2,
+        "unit": "minute",
+        "unitPlural": "minutes",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "A minor penalty in the NHL results in a 2-minute disadvantage.",
+        "estimationApproach": "Standard powerplay length.",
+        "hint": "One hundred and twenty seconds.",
+        "sourceName": "NHL",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many points is a safety worth in American football?",
+        "referenceAnswer": 2,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "Tackling an offensive player in their own end zone results in a safety, worth 2 points.",
+        "estimationApproach": "It's a rare scoring play worth less than a field goal.",
+        "hint": "Same as a two-point conversion.",
+        "sourceName": "NFL",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the distance of the Kentucky Derby horse race in furlongs?",
+        "referenceAnswer": 10,
+        "unit": "furlong",
+        "unitPlural": "furlongs",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "The Kentucky Derby is 1 and 1/4 miles, which equals 10 furlongs.",
+        "estimationApproach": "1.25 miles = 10/8 miles = 10 furlongs.",
+        "hint": "1 and 1/4 miles.",
+        "sourceName": "Churchill Downs",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total periods of overtime can be played in an NHL regular season game before a shootout?",
+        "referenceAnswer": 1,
+        "unit": "period",
+        "unitPlural": "periods",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "In the regular season, there is one 5-minute overtime period.",
+        "estimationApproach": "They want to end games quickly in the regular season.",
+        "hint": "Just a single 5-minute period.",
+        "sourceName": "NHL",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many hurdles are cleared by a runner in a standard 110m hurdle race?",
+        "referenceAnswer": 10,
+        "unit": "hurdle",
+        "unitPlural": "hurdles",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Athletes clear 10 hurdles over the 110m distance.",
+        "estimationApproach": "It's a nice even number, 10 hurdles.",
+        "hint": "A decade.",
+        "sourceName": "World Athletics",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the maximum number of players on a standard active NFL roster?",
+        "referenceAnswer": 53,
+        "unit": "player",
+        "unitPlural": "players",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "NFL teams are limited to 53 players on their active roster.",
+        "estimationApproach": "It's in the low 50s. 53-man roster is famous.",
+        "hint": "Fifty-three.",
+        "sourceName": "NFL",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many times did Tiger Woods win the Masters Tournament?",
+        "referenceAnswer": 5,
+        "unit": "win",
+        "unitPlural": "wins",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Tiger Woods won the Masters in 1997, 2001, 2002, 2005, and 2019.",
+        "estimationApproach": "He is one behind Jack Nicklaus's record of 6.",
+        "hint": "He won his latest in 2019.",
+        "sourceName": "Augusta National",
+        "referencePeriod": "2024",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many pins are set up at the end of a lane in standard ten-pin bowling?",
+        "referenceAnswer": 10,
+        "unit": "pin",
+        "unitPlural": "pins",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "The name of the sport is ten-pin bowling.",
+        "estimationApproach": "It's in the name.",
+        "hint": "Ten-pin bowling.",
+        "sourceName": "USBC",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "What is the perfect score in a gymnastics floor routine (pre-2006 scoring system)?",
+        "referenceAnswer": 10,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "The Perfect 10 was the hallmark of gymnastics scoring.",
+        "estimationApproach": "Nadia Com\u0103neci's famous score.",
+        "hint": "A perfect ten.",
+        "sourceName": "FIG",
+        "referencePeriod": "1976",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many total matches are played in a standard Premier League season by all teams combined?",
+        "referenceAnswer": 380,
+        "unit": "match",
+        "unitPlural": "matches",
+        "category": "sports",
+        "difficulty": "hard",
+        "explanation": "20 teams play 38 matches each. 20 * 38 / 2 = 380.",
+        "estimationApproach": "20 teams, each plays 38 games. (20 * 38)/2 = 380.",
+        "hint": "Ten times the number of matches each team plays.",
+        "sourceName": "Premier League",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many gold medals did Eric Heiden win at the 1980 Winter Olympics?",
+        "referenceAnswer": 5,
+        "unit": "medal",
+        "unitPlural": "medals",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "Eric Heiden won all 5 individual men's speed skating events.",
+        "estimationApproach": "He swept the speed skating events.",
+        "hint": "One for each finger on a hand.",
+        "sourceName": "IOC",
+        "referencePeriod": "1980",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many points is a free throw worth in basketball?",
+        "referenceAnswer": 1,
+        "unit": "point",
+        "unitPlural": "points",
+        "category": "sports",
+        "difficulty": "easy",
+        "explanation": "A free throw is worth 1 point.",
+        "estimationApproach": "The lowest scoring play in basketball.",
+        "hint": "Uno.",
+        "sourceName": "NBA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    },
+    {
+        "text": "How many players are on a standard water polo team in the water at one time?",
+        "referenceAnswer": 7,
+        "unit": "player",
+        "unitPlural": "players",
+        "category": "sports",
+        "difficulty": "medium",
+        "explanation": "A water polo team consists of 6 outfield players and 1 goalkeeper.",
+        "estimationApproach": "6 + 1 = 7.",
+        "hint": "One more than ice hockey.",
+        "sourceName": "FINA",
+        "referencePeriod": "Constant",
+        "tags": [
+            "sports",
+            "fermi",
+            "trivia"
+        ],
+        "status": "active"
+    }
+]

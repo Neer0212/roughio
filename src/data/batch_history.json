@@ -1,0 +1,1427 @@
+[
+  {
+    "text": "What was the estimated population of the Roman Empire at its peak?",
+    "referenceAnswer": 60000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "At its peak, the Roman Empire governed around 20% of the world's population.",
+    "estimationApproach": "Estimate 20% of the world population at the time (roughly 300 million).",
+    "hint": "Think of modern populations of the Mediterranean region, scaled down.",
+    "sourceName": "Maddison",
+    "referencePeriod": "117 AD",
+    "tags": [
+      "rome",
+      "population",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Roman Empire exist from the founding of Rome to the fall of Constantinople?",
+    "referenceAnswer": 2206,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "From 753 BC to 1453 AD.",
+    "estimationApproach": "750 BC to 1450 AD is roughly 2200 years.",
+    "hint": "Founded in the 8th century BC, Eastern half fell in the 15th century AD.",
+    "sourceName": "Consensus",
+    "referencePeriod": "753 BC - 1453 AD",
+    "tags": [
+      "rome",
+      "duration",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the Western Roman Empire fall?",
+    "referenceAnswer": 476,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Romulus Augustulus was deposed by Odoacer.",
+    "estimationApproach": "Late 5th century.",
+    "hint": "Late 400s AD.",
+    "sourceName": "Consensus",
+    "referencePeriod": "476 AD",
+    "tags": [
+      "rome",
+      "date",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the estimated global human population in 1 AD?",
+    "referenceAnswer": 170000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Human population grew slowly before the modern era.",
+    "estimationApproach": "Estimate a few times the population of the Roman Empire.",
+    "hint": "Less than a quarter of a billion.",
+    "sourceName": "Maddison",
+    "referencePeriod": "1 AD",
+    "tags": [
+      "population",
+      "antiquity",
+      "global"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the peak land area of the British Empire in square kilometers?",
+    "referenceAnswer": 35500000,
+    "unit": "sq km",
+    "unitPlural": "sq km",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "It was the largest empire in history.",
+    "estimationApproach": "Take the area of Canada, Australia, and parts of Africa/Asia, which sum to roughly a quarter of Earth's land.",
+    "hint": "About 24% of Earth's total land area.",
+    "sourceName": "Guinness",
+    "referencePeriod": "1920",
+    "tags": [
+      "british",
+      "area",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the estimated population of the British Empire at its peak?",
+    "referenceAnswer": 412000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "It contained roughly 23% of the world's population at the time.",
+    "estimationApproach": "World population was roughly 1.8 billion, 23% is around 400M.",
+    "hint": "Roughly 400 million.",
+    "sourceName": "Census",
+    "referencePeriod": "1920",
+    "tags": [
+      "british",
+      "population",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Ottoman Empire last?",
+    "referenceAnswer": 623,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "From 1299 to 1922.",
+    "estimationApproach": "1300 to 1920 is roughly 600 years.",
+    "hint": "Started around 1300, ended after WWI.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1299-1922",
+    "tags": [
+      "ottoman",
+      "duration",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Mongol Empire last as a unified state before fragmenting?",
+    "referenceAnswer": 162,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "From 1206 (Genghis Khan) to 1368 (Fall of Yuan Dynasty).",
+    "estimationApproach": "Roughly a century and a half.",
+    "hint": "Started early 1200s, fragmented late 1300s.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1206-1368",
+    "tags": [
+      "mongol",
+      "duration",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the peak land area of the Mongol Empire in square kilometers?",
+    "referenceAnswer": 24000000,
+    "unit": "sq km",
+    "unitPlural": "sq km",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "The largest contiguous land empire in history.",
+    "estimationApproach": "Roughly the area of modern Russia plus China.",
+    "hint": "Between 20 and 30 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1270",
+    "tags": [
+      "mongol",
+      "area",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the estimated peak population of the Mongol Empire?",
+    "referenceAnswer": 100000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Governed a huge swath of Eurasia including populous China.",
+    "estimationApproach": "Estimate 25% of world population at the time.",
+    "hint": "Around 100 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1290",
+    "tags": [
+      "mongol",
+      "population",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Qing Dynasty rule China?",
+    "referenceAnswer": 268,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "From 1644 to 1912.",
+    "estimationApproach": "Mid 1600s to early 1900s.",
+    "hint": "Just over two and a half centuries.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1644-1912",
+    "tags": [
+      "china",
+      "duration",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many estimated total casualties (military and civilian) occurred during World War II?",
+    "referenceAnswer": 75000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "The deadliest conflict in human history.",
+    "estimationApproach": "Think of 3-4% of the global population of 2.3 billion.",
+    "hint": "Between 70 and 85 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1939-1945",
+    "tags": [
+      "ww2",
+      "casualties",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many estimated total casualties occurred during World War I?",
+    "referenceAnswer": 20000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Includes roughly 10M military and 10M civilian deaths.",
+    "estimationApproach": "Half to a third of WWII casualties.",
+    "hint": "Around 20 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1914-1918",
+    "tags": [
+      "ww1",
+      "casualties",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many days did World War I last?",
+    "referenceAnswer": 1566,
+    "unit": "day",
+    "unitPlural": "days",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "From July 28, 1914 to November 11, 1918.",
+    "estimationApproach": "4 years and a few months is ~4 * 365 + 100.",
+    "hint": "Slightly over 1,500 days.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1914-1918",
+    "tags": [
+      "ww1",
+      "duration",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many days did World War II last (European theater)?",
+    "referenceAnswer": 2194,
+    "unit": "day",
+    "unitPlural": "days",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "From September 1, 1939 to September 2, 1945.",
+    "estimationApproach": "Exactly 6 years plus 1 day.",
+    "hint": "Just under 2,200 days.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1939-1945",
+    "tags": [
+      "ww2",
+      "duration",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Hundred Years' War actually last?",
+    "referenceAnswer": 116,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "From 1337 to 1453.",
+    "estimationApproach": "It is slightly longer than a century.",
+    "hint": "More than 100, less than 120.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1337-1453",
+    "tags": [
+      "war",
+      "duration",
+      "europe"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many military casualties occurred in the American Civil War?",
+    "referenceAnswer": 620000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "The deadliest war in American history for US citizens.",
+    "estimationApproach": "About 2% of the US population at the time.",
+    "hint": "Around 600k.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1861-1865",
+    "tags": [
+      "usa",
+      "casualties",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the French Revolution begin?",
+    "referenceAnswer": 1789,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Storming of the Bastille.",
+    "estimationApproach": "Late 18th century, right after the US constitution.",
+    "hint": "Ends in an 9.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1789",
+    "tags": [
+      "france",
+      "date",
+      "revolution"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many days did the American Revolutionary War last (Lexington to Treaty of Paris)?",
+    "referenceAnswer": 3059,
+    "unit": "day",
+    "unitPlural": "days",
+    "category": "history",
+    "difficulty": "unhinged",
+    "explanation": "April 19, 1775 to September 3, 1783.",
+    "estimationApproach": "8 years and a few months. 8 * 365 = 2920.",
+    "hint": "Around 3000 days.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1775-1783",
+    "tags": [
+      "usa",
+      "duration",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many people were killed by the Black Death in Eurasia?",
+    "referenceAnswer": 100000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Wiped out 30-60% of Europe's population.",
+    "estimationApproach": "Roughly 1/4 of the global population.",
+    "hint": "Between 75 and 200 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1346-1353",
+    "tags": [
+      "disease",
+      "casualties",
+      "europe"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the Black Death peak in Europe?",
+    "referenceAnswer": 1347,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Arrived in Sicily in 1347.",
+    "estimationApproach": "Mid 14th century.",
+    "hint": "Late 1340s.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1347",
+    "tags": [
+      "disease",
+      "date",
+      "europe"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the construction of the Great Pyramid of Giza take?",
+    "referenceAnswer": 27,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Built during the reign of Khufu.",
+    "estimationApproach": "Roughly a generation.",
+    "hint": "Between 20 and 30 years.",
+    "sourceName": "Egyptology",
+    "referencePeriod": "c. 26th Century BC",
+    "tags": [
+      "pyramid",
+      "duration",
+      "antiquity"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what approximate year BC was the Great Pyramid of Giza completed?",
+    "referenceAnswer": 2560,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Completed around 2560 BC.",
+    "estimationApproach": "Mid 3rd millennium BC.",
+    "hint": "Around 2500 BC.",
+    "sourceName": "Egyptology",
+    "referencePeriod": "Antiquity",
+    "tags": [
+      "pyramid",
+      "date",
+      "antiquity"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the original height of the Great Pyramid of Giza in meters?",
+    "referenceAnswer": 146,
+    "unit": "meter",
+    "unitPlural": "meters",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Tallest man-made structure for over 3,800 years.",
+    "estimationApproach": "A modern 40-story building.",
+    "hint": "Around 150 meters.",
+    "sourceName": "Egyptology",
+    "referencePeriod": "Antiquity",
+    "tags": [
+      "pyramid",
+      "height",
+      "antiquity"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many stone blocks were used to build the Great Pyramid of Giza?",
+    "referenceAnswer": 2300000,
+    "unit": "block",
+    "unitPlural": "blocks",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Massive logistical effort.",
+    "estimationApproach": "Low millions.",
+    "hint": "Over 2 million.",
+    "sourceName": "Egyptology",
+    "referencePeriod": "Antiquity",
+    "tags": [
+      "pyramid",
+      "count",
+      "antiquity"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year BC was Julius Caesar assassinated?",
+    "referenceAnswer": 44,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "The Ides of March.",
+    "estimationApproach": "Mid 1st century BC.",
+    "hint": "44 BC.",
+    "sourceName": "Consensus",
+    "referencePeriod": "44 BC",
+    "tags": [
+      "rome",
+      "date",
+      "antiquity"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did Queen Victoria rule the British Empire?",
+    "referenceAnswer": 63,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "1837 to 1901.",
+    "estimationApproach": "Over 60 years.",
+    "hint": "63 years.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1837-1901",
+    "tags": [
+      "british",
+      "duration",
+      "monarch"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did Queen Elizabeth II rule?",
+    "referenceAnswer": 70,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "1952 to 2022.",
+    "estimationApproach": "Exactly seven decades.",
+    "hint": "70 years.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1952-2022",
+    "tags": [
+      "british",
+      "duration",
+      "monarch"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did Louis XIV of France rule?",
+    "referenceAnswer": 72,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "The longest recorded reign of any monarch of a sovereign state.",
+    "estimationApproach": "Early 1640s to 1715.",
+    "hint": "Just over 70 years.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1643-1715",
+    "tags": [
+      "france",
+      "duration",
+      "monarch"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "At what age did Alexander the Great die?",
+    "referenceAnswer": 32,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Died in Babylon in 323 BC.",
+    "estimationApproach": "Early 30s.",
+    "hint": "32 years old.",
+    "sourceName": "Consensus",
+    "referencePeriod": "323 BC",
+    "tags": [
+      "greece",
+      "age",
+      "antiquity"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the peak land area of Alexander the Great's empire in square kilometers?",
+    "referenceAnswer": 5200000,
+    "unit": "sq km",
+    "unitPlural": "sq km",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Stretched from Greece to India.",
+    "estimationApproach": "Roughly half the size of the US.",
+    "hint": "Around 5 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "323 BC",
+    "tags": [
+      "greece",
+      "area",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did Christopher Columbus reach the Americas?",
+    "referenceAnswer": 1492,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Sailed the ocean blue.",
+    "estimationApproach": "Late 15th century.",
+    "hint": "1492.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1492",
+    "tags": [
+      "exploration",
+      "date",
+      "americas"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Spanish Empire last (Americas discovery to Spanish-American War)?",
+    "referenceAnswer": 406,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "From 1492 to 1898.",
+    "estimationApproach": "Around 4 centuries.",
+    "hint": "Just over 400 years.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1492-1898",
+    "tags": [
+      "spain",
+      "duration",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year was the Magna Carta signed?",
+    "referenceAnswer": 1215,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Signed by King John.",
+    "estimationApproach": "Early 13th century.",
+    "hint": "1215.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1215",
+    "tags": [
+      "england",
+      "date",
+      "law"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Cold War last?",
+    "referenceAnswer": 44,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "From the Truman Doctrine (1947) to the fall of the USSR (1991).",
+    "estimationApproach": "Late 1940s to early 1990s.",
+    "hint": "Around 45 years.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1947-1991",
+    "tags": [
+      "coldwar",
+      "duration",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the Berlin Wall fall?",
+    "referenceAnswer": 1989,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Symbolic end of the Cold War.",
+    "estimationApproach": "Late 80s.",
+    "hint": "1989.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1989",
+    "tags": [
+      "germany",
+      "date",
+      "coldwar"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many people have served as US President as of 2024?",
+    "referenceAnswer": 46,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Grover Cleveland is counted twice.",
+    "estimationApproach": "Mid 40s.",
+    "hint": "46.",
+    "sourceName": "Consensus",
+    "referencePeriod": "2024",
+    "tags": [
+      "usa",
+      "count",
+      "presidents"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did humans first land on the moon?",
+    "referenceAnswer": 1969,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Apollo 11.",
+    "estimationApproach": "Late 60s.",
+    "hint": "1969.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1969",
+    "tags": [
+      "space",
+      "date",
+      "exploration"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many humans have walked on the moon?",
+    "referenceAnswer": 12,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Six Apollo missions, two astronauts each.",
+    "estimationApproach": "A dozen.",
+    "hint": "12.",
+    "sourceName": "NASA",
+    "referencePeriod": "1969-1972",
+    "tags": [
+      "space",
+      "count",
+      "exploration"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Byzantine Empire survive after the fall of the Western Roman Empire?",
+    "referenceAnswer": 977,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "476 AD to 1453 AD.",
+    "estimationApproach": "Almost a millennium.",
+    "hint": "Close to 1000 years.",
+    "sourceName": "Consensus",
+    "referencePeriod": "476-1453",
+    "tags": [
+      "rome",
+      "duration",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the peak land area of the Roman Empire in square kilometers?",
+    "referenceAnswer": 5000000,
+    "unit": "sq km",
+    "unitPlural": "sq km",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Encircled the Mediterranean.",
+    "estimationApproach": "Roughly half the size of the USA.",
+    "hint": "5 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "117 AD",
+    "tags": [
+      "rome",
+      "area",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many soldiers were in the Roman army at its peak?",
+    "referenceAnswer": 450000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Under Septimius Severus.",
+    "estimationApproach": "Roughly 30-40 legions plus auxiliaries.",
+    "hint": "Around half a million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "211 AD",
+    "tags": [
+      "rome",
+      "count",
+      "military"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many Terracotta warriors are estimated to be in Qin Shi Huang's tomb?",
+    "referenceAnswer": 8000,
+    "unit": "warrior",
+    "unitPlural": "warriors",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Buried to protect the emperor in the afterlife.",
+    "estimationApproach": "High thousands.",
+    "hint": "Around 8000.",
+    "sourceName": "Archaeology",
+    "referencePeriod": "210 BC",
+    "tags": [
+      "china",
+      "count",
+      "antiquity"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did Gutenberg invent the printing press?",
+    "referenceAnswer": 1440,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Began the printing revolution.",
+    "estimationApproach": "Mid 15th century.",
+    "hint": "1440.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1440",
+    "tags": [
+      "invention",
+      "date",
+      "technology"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many wives did Henry VIII have?",
+    "referenceAnswer": 6,
+    "unit": "wife",
+    "unitPlural": "wives",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Divorced, beheaded, died, divorced, beheaded, survived.",
+    "estimationApproach": "More than 5.",
+    "hint": "6.",
+    "sourceName": "Consensus",
+    "referencePeriod": "16th Century",
+    "tags": [
+      "england",
+      "count",
+      "monarch"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the Titanic sink?",
+    "referenceAnswer": 1912,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Hit an iceberg on its maiden voyage.",
+    "estimationApproach": "Early 1910s.",
+    "hint": "1912.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1912",
+    "tags": [
+      "disaster",
+      "date",
+      "maritime"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many passengers and crew died when the Titanic sank?",
+    "referenceAnswer": 1500,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "One of the deadliest commercial peacetime maritime disasters.",
+    "estimationApproach": "About two thirds of those on board.",
+    "hint": "Roughly 1500.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1912",
+    "tags": [
+      "disaster",
+      "casualties",
+      "maritime"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year was the first successful powered flight by the Wright Brothers?",
+    "referenceAnswer": 1903,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Kitty Hawk, North Carolina.",
+    "estimationApproach": "Very early 20th century.",
+    "hint": "1903.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1903",
+    "tags": [
+      "invention",
+      "date",
+      "aviation"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the distance in feet of the first Wright Brothers flight?",
+    "referenceAnswer": 120,
+    "unit": "foot",
+    "unitPlural": "feet",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Flown by Orville Wright.",
+    "estimationApproach": "Shorter than a football field.",
+    "hint": "120 feet.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1903",
+    "tags": [
+      "invention",
+      "distance",
+      "aviation"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many seconds did the first Wright Brothers flight last?",
+    "referenceAnswer": 12,
+    "unit": "second",
+    "unitPlural": "seconds",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Very brief first attempt.",
+    "estimationApproach": "Less than 15 seconds.",
+    "hint": "12 seconds.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1903",
+    "tags": [
+      "invention",
+      "duration",
+      "aviation"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year was the atomic bomb dropped on Hiroshima?",
+    "referenceAnswer": 1945,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Nearing the end of WWII.",
+    "estimationApproach": "1945.",
+    "hint": "1945.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1945",
+    "tags": [
+      "ww2",
+      "date",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many people were killed instantly in the Hiroshima bombing?",
+    "referenceAnswer": 70000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Does not include those who died later from radiation.",
+    "estimationApproach": "Tens of thousands.",
+    "hint": "70,000.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1945",
+    "tags": [
+      "ww2",
+      "casualties",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the United States declare independence?",
+    "referenceAnswer": 1776,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "July 4th.",
+    "estimationApproach": "Late 18th century.",
+    "hint": "1776.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1776",
+    "tags": [
+      "usa",
+      "date",
+      "revolution"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many delegates signed the US Declaration of Independence?",
+    "referenceAnswer": 56,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Representatives from the 13 colonies.",
+    "estimationApproach": "Mid 50s.",
+    "hint": "56.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1776",
+    "tags": [
+      "usa",
+      "count",
+      "revolution"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the Soviet Union formally collapse?",
+    "referenceAnswer": 1991,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Christmas Day resignation of Gorbachev.",
+    "estimationApproach": "Early 90s.",
+    "hint": "1991.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1991",
+    "tags": [
+      "ussr",
+      "date",
+      "coldwar"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many republics made up the Soviet Union?",
+    "referenceAnswer": 15,
+    "unit": "republic",
+    "unitPlural": "republics",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "They became independent states in 1991.",
+    "estimationApproach": "Mid teens.",
+    "hint": "15.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1991",
+    "tags": [
+      "ussr",
+      "count",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the peak land area of the Russian Empire in square kilometers?",
+    "referenceAnswer": 22800000,
+    "unit": "sq km",
+    "unitPlural": "sq km",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Covered much of Eurasia.",
+    "estimationApproach": "Slightly less than the Mongol Empire.",
+    "hint": "Around 23 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1895",
+    "tags": [
+      "russia",
+      "area",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year was the first FIFA World Cup held?",
+    "referenceAnswer": 1930,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Hosted by Uruguay.",
+    "estimationApproach": "Interwar period.",
+    "hint": "1930.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1930",
+    "tags": [
+      "sports",
+      "date",
+      "culture"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year was the United Nations founded?",
+    "referenceAnswer": 1945,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Established after WWII to prevent future conflicts.",
+    "estimationApproach": "Same year WWII ended.",
+    "hint": "1945.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1945",
+    "tags": [
+      "un",
+      "date",
+      "diplomacy"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many original member states joined the United Nations in 1945?",
+    "referenceAnswer": 51,
+    "unit": "state",
+    "unitPlural": "states",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Included the major Allied powers.",
+    "estimationApproach": "Around 50.",
+    "hint": "51.",
+    "sourceName": "UN",
+    "referencePeriod": "1945",
+    "tags": [
+      "un",
+      "count",
+      "diplomacy"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year were the first modern Olympic Games held?",
+    "referenceAnswer": 1896,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Held in Athens, Greece.",
+    "estimationApproach": "Late 19th century.",
+    "hint": "1896.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1896",
+    "tags": [
+      "sports",
+      "date",
+      "culture"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did Mount Vesuvius erupt and destroy Pompeii?",
+    "referenceAnswer": 79,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Buried the city in ash.",
+    "estimationApproach": "Late 1st century AD.",
+    "hint": "79 AD.",
+    "sourceName": "Consensus",
+    "referencePeriod": "79 AD",
+    "tags": [
+      "disaster",
+      "date",
+      "rome"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the estimated population of Pompeii before the eruption?",
+    "referenceAnswer": 12000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "A thriving provincial Roman city.",
+    "estimationApproach": "Around 10,000 to 15,000.",
+    "hint": "12,000.",
+    "sourceName": "Consensus",
+    "referencePeriod": "79 AD",
+    "tags": [
+      "rome",
+      "population",
+      "antiquity"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the Battle of Hastings occur?",
+    "referenceAnswer": 1066,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "easy",
+    "explanation": "Norman conquest of England.",
+    "estimationApproach": "Mid 11th century.",
+    "hint": "1066.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1066",
+    "tags": [
+      "england",
+      "date",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did the Ming Dynasty rule China?",
+    "referenceAnswer": 276,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "1368 to 1644.",
+    "estimationApproach": "Close to three centuries.",
+    "hint": "276 years.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1368-1644",
+    "tags": [
+      "china",
+      "duration",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the estimated population of the Aztec Empire before the Spanish conquest?",
+    "referenceAnswer": 5000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Central Mexico region.",
+    "estimationApproach": "Low millions.",
+    "hint": "Around 5 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1519",
+    "tags": [
+      "americas",
+      "population",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the estimated population of Tenochtitlan at its peak?",
+    "referenceAnswer": 200000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "One of the largest cities in the world at the time.",
+    "estimationApproach": "A few hundred thousand.",
+    "hint": "200,000.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1519",
+    "tags": [
+      "americas",
+      "population",
+      "city"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the estimated peak population of the Inca Empire?",
+    "referenceAnswer": 10000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Largest empire in pre-Columbian America.",
+    "estimationApproach": "Around 10 million.",
+    "hint": "10 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1520",
+    "tags": [
+      "americas",
+      "population",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "What was the peak land area of the Inca Empire in square kilometers?",
+    "referenceAnswer": 2000000,
+    "unit": "sq km",
+    "unitPlural": "sq km",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Stretched along the Andes.",
+    "estimationApproach": "About 1/5th the size of the US.",
+    "hint": "2 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1520",
+    "tags": [
+      "americas",
+      "area",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did Genghis Khan die?",
+    "referenceAnswer": 1227,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "hard",
+    "explanation": "Died during the campaign against the Western Xia.",
+    "estimationApproach": "Early 13th century.",
+    "hint": "1227.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1227",
+    "tags": [
+      "mongol",
+      "date",
+      "empire"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many estimated casualties occurred during the Taiping Rebellion?",
+    "referenceAnswer": 25000000,
+    "unit": "person",
+    "unitPlural": "people",
+    "category": "history",
+    "difficulty": "unhinged",
+    "explanation": "One of the deadliest conflicts in history.",
+    "estimationApproach": "Tens of millions.",
+    "hint": "20-30 million.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1850-1864",
+    "tags": [
+      "china",
+      "casualties",
+      "war"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many voyages did Zheng He command?",
+    "referenceAnswer": 7,
+    "unit": "voyage",
+    "unitPlural": "voyages",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Ming dynasty treasure voyages.",
+    "estimationApproach": "Less than 10.",
+    "hint": "7.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1405-1433",
+    "tags": [
+      "china",
+      "count",
+      "exploration"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the Suez Canal officially open?",
+    "referenceAnswer": 1869,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Connected the Mediterranean to the Red Sea.",
+    "estimationApproach": "Late 19th century.",
+    "hint": "1869.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1869",
+    "tags": [
+      "infrastructure",
+      "date",
+      "maritime"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "How many years did it take to build the Suez Canal?",
+    "referenceAnswer": 10,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Constructed by the Suez Canal Company.",
+    "estimationApproach": "A decade.",
+    "hint": "10 years.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1859-1869",
+    "tags": [
+      "infrastructure",
+      "duration",
+      "maritime"
+    ],
+    "status": "active"
+  },
+  {
+    "text": "In what year did the Panama Canal officially open?",
+    "referenceAnswer": 1914,
+    "unit": "year",
+    "unitPlural": "years",
+    "category": "history",
+    "difficulty": "medium",
+    "explanation": "Opened the same year WWI started.",
+    "estimationApproach": "Early 20th century.",
+    "hint": "1914.",
+    "sourceName": "Consensus",
+    "referencePeriod": "1914",
+    "tags": [
+      "infrastructure",
+      "date",
+      "maritime"
+    ],
+    "status": "active"
+  }
+]
