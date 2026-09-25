@@ -81,15 +81,25 @@ export function useGame() {
       const refAnswer = currentQuestion.referenceAnswer;
       const secureScore = buildScoreResult(parsedGuess.value, refAnswer, diffMultiplier, hintUsed);
       
+      const isOverestimate = parsedGuess.value > refAnswer;
+      const difference = Math.abs(parsedGuess.value - refAnswer);
+      
+      const achievements: string[] = [];
+      if (secureScore.factor <= 1.1 && !hintUsed) achievements.push("🎯 The Sniper");
+      if (secureScore.factor >= 1000) achievements.push("🚀 Astronomical");
+      if (difference === 0) achievements.push("🤯 Bullseye");
+      if (isOverestimate && secureScore.factor > 10) achievements.push("📈 Too Optimistic");
+      
       const attemptResult: any = {
         guess: parsedGuess.value,
         referenceAnswer: refAnswer,
         factor: secureScore.factor,
         classification: secureScore.classification,
-        difference: Math.abs(parsedGuess.value - refAnswer),
-        isOverestimate: parsedGuess.value > refAnswer,
+        difference,
+        isOverestimate,
         explanation: currentQuestion.explanation,
         estimationApproach: currentQuestion.estimationApproach,
+        achievements
       };
 
       // 2. Save to database if authenticated

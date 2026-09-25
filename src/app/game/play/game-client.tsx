@@ -64,6 +64,7 @@ export function GameClient() {
   
   const handleSubmit = () => {
     if (parsedGuess.value && !isSubmitting) {
+      import('@/lib/utils/audio').then(({ audio }) => audio.playLockSound());
       submitGuess(hintUsed);
     }
   };

@@ -18,7 +18,21 @@ interface ResultRevealProps {
   isGuest?: boolean;
 }
 
+import { useEffect } from 'react';
+
 export function ResultReveal({ question, result, onNext, onReasoningSubmit, showReasoning = true, isGuest = false }: ResultRevealProps) {
+  useEffect(() => {
+    import('@/lib/utils/audio').then(({ audio }) => {
+      if (result.factor <= 1.5) {
+        audio.playSuccessSound();
+      } else if (result.factor >= 10) {
+        audio.playFailSound();
+      } else {
+        audio.playNeutralSound();
+      }
+    });
+  }, [result.factor]);
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -46,6 +60,22 @@ export function ResultReveal({ question, result, onNext, onReasoningSubmit, show
           difference={result.difference}
           animate={true}
         />
+        
+        {/* Dynamic Achievements */}
+        {result.achievements && result.achievements.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, type: 'spring' }}
+            className="flex flex-wrap justify-center gap-3 mt-4"
+          >
+            {result.achievements.map((ach: string, i: number) => (
+              <div key={i} className="px-4 py-2 rounded-full bg-warning text-accent font-black text-sm uppercase tracking-widest shadow-md transform rotate-1 hover:rotate-0 transition-transform">
+                {ach}
+              </div>
+            ))}
+          </motion.div>
+        )}
         
         {/* Explanation */}
         <motion.div

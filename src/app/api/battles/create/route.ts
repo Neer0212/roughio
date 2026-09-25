@@ -50,12 +50,11 @@ export async function POST(request: Request) {
       
     if (playerError) throw playerError;
 
-    // 4. Pre-fetch questions for the rounds
+    // 4. Pre-fetch ALL questions to shuffle and prevent repeating the same 20
     const { data: questions, error: qError } = await supabase
       .from('questions')
       .select('id')
-      .eq('status', 'active')
-      .limit(20);
+      .eq('status', 'active');
       
     if (qError) throw qError;
     

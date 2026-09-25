@@ -94,6 +94,7 @@ export interface AttemptResult {
   isOverestimate: boolean;
   explanation: string;
   estimationApproach: string;
+  achievements?: string[];
 }
 
 // ============================================================

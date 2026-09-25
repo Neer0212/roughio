@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { formatLarge } from '@/lib/utils/number-parser';
 import { SCORE_COLORS, SCORE_LABELS } from '@/lib/constants/scoring';
+import { AvatarSelect } from '@/components/profile/AvatarSelect';
 
 export default async function ProfilePage() {
   const supabase = createClient();

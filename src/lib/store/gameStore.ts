@@ -125,6 +125,7 @@ export const useGameStore = create<GameStore>()(
         questionsAnswered: state.questionsAnswered,
         sessionBest: state.sessionBest,
         sessionWorst: state.sessionWorst,
+        previousQuestions: state.previousQuestions,
       }),
     }
   )
