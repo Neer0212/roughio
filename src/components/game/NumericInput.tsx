@@ -40,7 +40,15 @@ export const NumericInput = Object.assign(
     };
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.value);
+      let val = e.target.value;
+      const rawVal = val.replace(/,/g, '');
+      
+      // Auto-add commas if they are typing a pure integer
+      if (/^[0-9]+$/.test(rawVal)) {
+        val = Number(rawVal).toLocaleString('en-US');
+      }
+      
+      onChange(val);
     };
     
     const handleClear = () => {
@@ -65,12 +73,12 @@ export const NumericInput = Object.assign(
             disabled={disabled}
             placeholder={placeholder}
             className={cn(
-              'w-full max-w-full overflow-hidden text-ellipsis px-6 py-4 sm:py-5 text-center text-4xl sm:text-5xl lg:text-6xl font-mono font-bold bg-elevated border border-border rounded-2xl shadow-sm',
-              'text-text-primary placeholder-text-secondary/30',
+              'w-full max-w-full overflow-hidden text-ellipsis px-2 py-4 sm:py-5 text-left text-4xl sm:text-5xl lg:text-6xl font-mono font-bold bg-transparent border-b-2 border-white/50 rounded-none',
+              'text-white placeholder-white/30',
               'transition-all duration-200',
-              'focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent',
+              'focus:outline-none focus:border-white',
               'disabled:opacity-50 disabled:cursor-not-allowed',
-              error && 'border-error focus:border-error focus:ring-error'
+              error && 'border-error focus:border-error'
             )}
             autoComplete="off"
             spellCheck={false}

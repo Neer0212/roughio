@@ -36,68 +36,53 @@ export function ScoreDisplay({ factor, guess, referenceAnswer, unit, classificat
   const Icon = icons[classification];
   return (
     <motion.div
-      initial={animate ? { opacity: 0, scale: 0.9, y: 20 } : false}
+      initial={animate ? { opacity: 0, scale: 0.95, y: 10 } : false}
       animate={animate ? { opacity: 1, scale: 1, y: 0 } : false}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-6"
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="flex flex-col gap-8 w-full mt-2"
     >
-      {/* Main Factor Score */}
-      <motion.div
-        initial={animate ? { opacity: 0, scale: 0.5 } : false}
-        animate={animate ? { opacity: 1, scale: 1 } : false}
-        transition={{ delay: 0.1, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
-        className="text-center"
-      >
-        <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl" style={{ backgroundColor: `${color}1A`, borderColor: `${color}40` }}>
-          <Icon className="w-8 h-8" style={{ color }} />
-          <motion.span
-            initial={animate ? { opacity: 0 } : false}
-            animate={animate ? { opacity: 1 } : false}
-            transition={{ delay: 0.3 }}
-            className="text-6xl sm:text-8xl font-mono font-bold tabular-nums tracking-tighter"
-            style={{ color }}
-          >
-            {formatFactor(factor)}
-          </motion.span>
+      {/* Top Row: Guess and Answer */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* You Guessed */}
+        <div className="bg-white/10 rounded-3xl p-6 border border-white/20 flex flex-col justify-center text-left">
+          <span className="text-white/90 font-bold uppercase tracking-widest text-xs mb-2">You Guessed</span>
+          <span className="text-3xl sm:text-4xl font-black text-white">{formatNumber(guess)}</span>
         </div>
         
-        <motion.p
-          initial={animate ? { opacity: 0, y: 10 } : false}
-          animate={animate ? { opacity: 1, y: 0 } : false}
-          transition={{ delay: 0.4 }}
-          className="mt-3 text-lg font-medium uppercase tracking-wider"
-          style={{ color }}
-        >
-          {label}
-        </motion.p>
-      </motion.div>
+        {/* Answer */}
+        <div className="bg-white rounded-3xl p-6 border-[3px] border-warning shadow-[6px_6px_0_var(--warning)] flex flex-col justify-center text-left">
+          <span className="text-text-secondary font-bold uppercase tracking-widest text-xs mb-2">Answer</span>
+          <span className="text-3xl sm:text-4xl font-black text-text-primary">{formatNumber(referenceAnswer)}</span>
+          <span className="text-text-secondary text-sm font-bold uppercase tracking-wider mt-1">{unit}</span>
+        </div>
+      </div>
       
-      {/* Comparison */}
-      <motion.div
-        initial={animate ? { opacity: 0, y: 20 } : false}
-        animate={animate ? { opacity: 1, y: 0 } : false}
-        transition={{ delay: 0.2, duration: 0.4 }}
-        className="flex flex-col gap-4 max-w-md mx-auto mt-8 bg-elevated rounded-2xl p-6 border border-border"
-      >
-        <div className="flex justify-between items-center pb-4 border-b border-border/50">
-          <span className="text-text-secondary font-medium">Your estimate</span>
-          <span className="text-2xl font-mono font-bold text-text-primary">
-            {formatNumber(guess)} <span className="text-sm font-normal text-text-secondary">{unit}</span>
-          </span>
-        </div>
-        <div className="flex justify-between items-center pb-4 border-b border-border/50">
-          <span className="text-text-secondary font-medium">Actual answer</span>
-          <span className="text-2xl font-mono font-bold text-text-primary">
-            {formatNumber(referenceAnswer)} <span className="text-sm font-normal text-text-secondary">{unit}</span>
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-text-secondary font-medium">Difference</span>
-          <span className={cn("text-2xl font-mono font-bold", isOverestimate ? 'text-error' : 'text-success')}>
-            {isOverestimate ? '+' : '-'}{formatNumber(difference)} <span className="text-sm font-normal text-text-secondary opacity-70">{unit}</span>
-          </span>
-        </div>
-      </motion.div>
+      {/* Bottom Row: Score */}
+      <div className="flex flex-col items-start text-left mt-2">
+        <span className="text-white/90 font-bold uppercase tracking-widest text-xs mb-2">You Landed</span>
+        
+        <motion.div
+          initial={animate ? { opacity: 0, x: -20 } : false}
+          animate={animate ? { opacity: 1, x: 0 } : false}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="text-[4rem] sm:text-[5.5rem] font-black text-warning leading-none tracking-tighter">
+            {formatFactor(factor)}
+          </div>
+          <div className="text-3xl sm:text-4xl font-black text-warning mt-1">
+            {isOverestimate ? 'Too High' : 'Too Low'}
+          </div>
+        </motion.div>
+        
+        <motion.div 
+          initial={animate ? { opacity: 0 } : false}
+          animate={animate ? { opacity: 1 } : false}
+          transition={{ delay: 0.4 }}
+          className="mt-6 text-white font-bold leading-snug max-w-xs"
+        >
+          {label} • Difference of {formatNumber(difference)}
+        </motion.div>
+      </div>
     </motion.div>
   );
 }

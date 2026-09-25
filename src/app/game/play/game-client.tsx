@@ -120,10 +120,7 @@ export function GameClient() {
   
   return (
     <div className="flex-1 min-h-[100dvh] flex flex-col lg:flex-row justify-center items-center w-full px-4 py-4 sm:p-6 lg:p-8 gap-6 max-w-7xl mx-auto">
-      <div className="flex flex-col w-full max-w-[900px] bg-surface border border-border rounded-3xl p-6 sm:p-8 relative overflow-hidden">
-        
-        {/* Subtle background decoration */}
-        <div className="absolute top-0 left-0 right-0 h-64 bg-accent/5 blur-[100px] pointer-events-none rounded-t-[2.5rem]" />
+      <div className={cn("flex flex-col w-full max-w-[900px] text-white rounded-[2.5rem] p-6 sm:p-8 md:p-12 relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-colors duration-500", showResult ? "bg-info" : "bg-accent")}>
 
         {/* Header Stats */}
         <BackButton fallback="/" />
@@ -156,7 +153,7 @@ export function GameClient() {
             )}
           </div>
           
-          <div className="flex items-center gap-2 sm:gap-3 bg-elevated/50 p-1.5 rounded-2xl backdrop-blur-md border border-border/50 shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-3">
             {streak > 0 && (
               <motion.div
                 initial={{ scale: 0 }}
@@ -229,12 +226,12 @@ export function GameClient() {
               transition={{ delay: 0.1 }}
               className="text-center space-y-6 max-w-3xl mx-auto"
             >
-              <h1 className="text-[clamp(2rem,4.5vw,4.5rem)] leading-[1.05] font-extrabold text-balance text-text-primary mb-4">
+              <h1 className="text-[clamp(2.5rem,4.5vw,4.5rem)] leading-[1.05] font-extrabold text-balance text-white mb-4">
                 {currentQuestion.text}
               </h1>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-elevated border border-border">
-                <span className="text-text-secondary text-sm font-bold uppercase tracking-widest">Unit</span>
-                <span className="font-mono font-bold text-accent text-lg">{currentQuestion.unit}</span>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20">
+                <span className="text-white/80 text-sm font-bold uppercase tracking-widest">Unit</span>
+                <span className="font-mono font-bold text-white text-lg">{currentQuestion.unit}</span>
               </div>
             </motion.div>
             
@@ -247,9 +244,9 @@ export function GameClient() {
               autoFocus={!showResult}
             />
             
-            <div className="flex flex-col sm:flex-row gap-3">
-              <SubmitButton onClick={handleSubmit} isLoading={isSubmitting} disabled={!parsedGuess.value || isSubmitting} />
+            <div className="flex items-center justify-between w-full mt-4">
               <HintButton questionId={currentQuestion.id} onHintUsed={handleHintUsed} disabled={isSubmitting || showResult} />
+              <SubmitButton onClick={handleSubmit} isLoading={isSubmitting} disabled={!parsedGuess.value || isSubmitting} />
             </div>
           </motion.div>
         ) : (

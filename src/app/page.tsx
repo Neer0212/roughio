@@ -5,21 +5,19 @@ import { HeaderAuth } from "@/components/layout/HeaderAuth";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-text-primary selection:bg-accent/30 selection:text-text-primary">
+    <div className="min-h-screen bg-background text-text-primary overflow-hidden">
       {/* Navigation */}
-      <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
+      <header className="container mx-auto px-4 py-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full border-4 border-accent flex items-center justify-center">
-            <div className="w-2 h-2 rounded-full bg-accent" />
+          <div className="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold text-lg">
+            R
           </div>
-          <span className="font-bold text-xl tracking-tight">ROUGHIO</span>
+          <span className="font-extrabold text-2xl tracking-tight hidden sm:block">roughio</span>
         </div>
-        <div className="flex items-center gap-8">
-          <nav className="hidden md:flex gap-6 text-sm font-medium text-text-secondary">
+        <div className="flex items-center gap-6">
+          <nav className="hidden md:flex gap-6 font-bold text-text-secondary">
             <Link href="/game/play" className="hover:text-text-primary transition-colors">Free Play</Link>
             <Link href="/ladder" className="hover:text-text-primary transition-colors">Campaign</Link>
-            <Link href="/battle" className="hover:text-text-primary transition-colors flex items-center gap-1">Battle</Link>
-            <Link href="/ranked" className="hover:text-accent font-bold text-accent transition-colors">Ranked</Link>
             <Link href="/leaderboard" className="hover:text-text-primary transition-colors">Leaderboard</Link>
           </nav>
           <HeaderAuth />
@@ -27,48 +25,72 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <main>
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center">
-          <h1 className="text-6xl md:text-[5.5rem] leading-[1.05] font-extrabold tracking-tight mb-6 text-balance">
-            How close can <span className="text-accent">you</span> get?
-          </h1>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto mb-12 text-balance">
-            You don&apos;t need to know the exact answer. You just need to get close. 
-            An unlimited Fermi estimation game to test your intuition.
-          </p>
+      <main className="container mx-auto px-4 py-12">
+        <section className="max-w-5xl mx-auto bg-accent text-white rounded-[3rem] p-12 md:p-20 text-center shadow-lg relative transform rotate-1 hover:rotate-0 transition-transform duration-500">
+          <div className="flex justify-between items-center mb-16 text-white/90 font-bold uppercase tracking-widest text-sm">
+            <span>Roughio</span>
+            <span>No. 001</span>
+          </div>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-            <Link 
-              href="/ladder" 
-              className="px-8 py-4 bg-accent text-background font-bold rounded-xl text-lg hover:bg-accent-dark transition-colors flex items-center gap-2 w-full sm:w-auto justify-center"
-            >
-              PLAY CAMPAIGN <ArrowRight size={20} />
-            </Link>
+          <h1 className="text-6xl md:text-[6rem] leading-[1.05] font-black tracking-tight mb-4">
+            Make a guess.
+          </h1>
+          <h2 className="text-5xl md:text-6xl font-bold text-warning italic mb-16 font-serif">
+            educated
+          </h2>
+          
+          <div className="text-white/80 font-bold mb-10 uppercase tracking-widest">
+            Daily Challenge - {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </div>
+          
+          <div className="flex justify-center">
             <Link 
               href="/game/play" 
-              className="px-8 py-4 bg-transparent border border-border hover:bg-elevated text-text-primary font-bold rounded-xl text-lg transition-colors w-full sm:w-auto justify-center flex"
+              className="px-10 py-5 bg-white text-accent font-black rounded-full text-lg hover:bg-gray-100 transition-colors shadow-md flex items-center gap-3 uppercase tracking-wider"
             >
-              Free Play
+              Play Today&apos;s <ArrowRight size={20} />
             </Link>
           </div>
+        </section>
 
-          {/* Game Preview Card */}
-          <div className="max-w-3xl mx-auto bg-surface border border-border rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden text-left">
-            <div className="absolute top-0 left-0 right-0 h-32 bg-accent/5 blur-[80px] pointer-events-none rounded-t-3xl" />
-            <div className="relative z-10 flex flex-col items-center text-center">
-              <span className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-6 border border-border px-3 py-1 rounded-full">Example</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold mb-8 text-balance">How many basketballs can fit in a school bus?</h2>
-              
-              <div className="w-full max-w-md bg-elevated border border-border rounded-2xl p-6 mb-8 flex flex-col items-center">
-                <span className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-2">Your Estimate</span>
-                <span className="text-4xl font-mono font-bold text-text-primary">120,000</span>
+        {/* How to Play */}
+        <section className="py-32 max-w-5xl mx-auto text-center">
+          <h2 className="text-5xl font-black mb-24 relative inline-block">
+            <span className="relative z-10">How to Play</span>
+            <div className="absolute bottom-1 left-[-10px] right-[-10px] h-4 bg-warning/60 -z-10 transform -rotate-1" />
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-20 items-center text-left mb-32">
+            <div>
+              <h3 className="text-4xl font-black mb-6 relative inline-block">
+                <span className="relative z-10">01. Make your best guess</span>
+                <div className="absolute bottom-1 left-[-5px] right-[-5px] h-3 bg-warning/60 -z-10 transform -rotate-1" />
+              </h3>
+              <p className="text-xl text-text-secondary font-medium leading-relaxed">
+                No Googling. Just napkin math, gut instinct, and a built-in calculator when you need it.
+              </p>
+            </div>
+            
+            <div className="bg-accent text-white rounded-[2rem] p-8 shadow-xl transform rotate-2 hover:rotate-0 transition-transform">
+              <div className="flex justify-between items-center text-white/80 text-sm font-bold mb-6">
+                <span>Q1 / 3</span>
+                <span>Roughio</span>
               </div>
-              
-              <div className="flex items-center gap-4 text-accent">
-                <Target size={32} />
-                <span className="text-5xl font-mono font-bold tracking-tighter">× 1.5</span>
+              <h4 className="text-3xl font-black mb-8 leading-tight">
+                How many iPhones have been produced since the launch in 2007?
+              </h4>
+              <div className="border-b-2 border-white/50 pb-2 flex justify-between items-end mb-8">
+                <span className="text-white/50 text-xl font-bold">your guess</span>
+                <span className="text-xs uppercase tracking-widest font-bold">iPhones</span>
               </div>
-              <span className="text-sm font-bold text-accent uppercase tracking-widest mt-2">Excellent</span>
+              <div className="flex justify-between items-center">
+                <div className="w-12 h-12 rounded-full border-2 border-white/50 flex items-center justify-center opacity-50">
+                  <span className="text-xl">🧮</span>
+                </div>
+                <div className="px-6 py-2 rounded-full border-2 border-white/50 text-sm font-bold tracking-widest uppercase">
+                  Lock it in ↵
+                </div>
+              </div>
             </div>
           </div>
         </section>

@@ -50,16 +50,14 @@ export function HintButton({ questionId, onHintUsed, disabled }: HintButtonProps
         onClick={handleClick}
         disabled={used || isLoading || disabled}
         className={cn(
-          'flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-lg h-full',
-          'bg-transparent border border-border text-text-secondary hover:text-text-primary hover:bg-elevated',
-          'transition-colors duration-200',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
-          used && 'bg-elevated/50 border-accent/20 text-text-primary'
+          'flex items-center justify-center w-14 h-14 rounded-full font-bold text-lg',
+          'bg-transparent border-2 border-white/50 text-white hover:bg-white hover:text-accent',
+          'transition-all duration-200',
+          'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-white',
+          used && 'bg-white/20 border-white/20 text-white'
         )}
       >
         <Lightbulb className="w-5 h-5" />
-        <span>{used ? 'Hint Used' : isLoading ? 'Getting hint...' : 'Get Hint'}</span>
-        {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
       </motion.button>
       
       <AnimatePresence mode="wait">

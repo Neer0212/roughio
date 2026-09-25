@@ -18,7 +18,7 @@ const config: Config = {
         "text-secondary": "var(--text-secondary)",
         accent: {
           DEFAULT: "var(--accent)",
-          muted: "rgba(53, 208, 127, 0.15)",
+          muted: "rgba(255, 90, 67, 0.15)",
           hover: "var(--accent-dark)",
         },
         success: {
@@ -31,11 +31,11 @@ const config: Config = {
         },
         warning: {
           DEFAULT: "var(--warning)",
-          muted: "rgba(245, 158, 11, 0.15)",
+          muted: "rgba(255, 222, 0, 0.15)",
         },
         info: {
           DEFAULT: "var(--info)",
-          muted: "rgba(96, 165, 250, 0.15)",
+          muted: "rgba(74, 101, 255, 0.15)",
         },
       },
       fontFamily: {

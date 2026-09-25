@@ -5,32 +5,34 @@
 @layer base {
 
   :root {
-    --radius: 0.75rem;
-    /* New Analytical / Scientific Dark Theme */
-    --background: #0A0D0F;
-    --surface: #11161A;
-    --elevated: #171D22;
-    --border: #29332F;
+    --radius: 2rem;
     
-    --text-primary: #F4F7F5;
-    --text-secondary: #9AA6A0;
+    /* Playful Fermi.gg Style Theme */
+    --background: #F3EFE9;
+    --surface: #FFFFFF;
+    --elevated: #FFFFFF;
+    --border: #E5DFD3;
     
-    --accent: #35D07F;
-    --accent-dark: #20A968;
+    --text-primary: #1C1C1C;
+    --text-secondary: #5A5A5A;
+    
+    /* Bright, playful card colors */
+    --accent: #FF5A43; /* Bright Red/Orange */
+    --accent-dark: #E04D39;
     
     --success: #35D07F;
     --error: #EF5350;
-    --warning: #F59E0B;
-    --info: #60A5FA;
+    --warning: #FFDE00; /* Bright Yellow */
+    --info: #4A65FF; /* Bright Blue */
 
     /* RGB Variables */
-    --background-rgb: 10 13 15;
-    --foreground: 244 247 245;
-    --muted-foreground: 154 166 160;
-    --muted: 23 29 34;
-    --primary: 53 208 127;
-    --primary-foreground: 10 13 15;
-    --secondary: 17 22 26;
+    --background-rgb: 243 239 233;
+    --foreground: 28 28 28;
+    --muted-foreground: 90 90 90;
+    --muted: 229 223 211;
+    --primary: 255 90 67;
+    --primary-foreground: 255 255 255;
+    --secondary: 255 255 255;
     --destructive: 239 83 80;
   }
 
