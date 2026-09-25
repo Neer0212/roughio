@@ -131,23 +131,17 @@ export function GameClient() {
         >
           <div className="flex items-center flex-wrap gap-2 sm:gap-4">
             {stage && (
-              <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm bg-accent/20 text-accent flex items-center gap-1.5">
+              <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-white/20 text-white border border-white/30 flex items-center gap-1.5">
                 <span>{stage.icon}</span> {stage.name}
               </span>
             )}
             {!stage && category && (
-              <span
-                className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest hidden sm:inline-block shadow-sm"
-                style={{ backgroundColor: category.accentColor || (category.color + '20'), color: category.color }}
-              >
+              <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest hidden sm:inline-block bg-white/20 text-white border border-white/30">
                 {category.name}
               </span>
             )}
             {!stage && (
-              <span
-                className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm"
-                style={{ backgroundColor: difficulty.bgColor, color: difficulty.color }}
-              >
+              <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-white/20 text-white border border-white/30">
                 {difficulty.name}
               </span>
             )}
@@ -158,18 +152,18 @@ export function GameClient() {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-success/20 text-success text-sm font-bold"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/20 text-white text-sm font-bold border border-white/30"
               >
                 <span className="relative">🔥</span>
                 <span>{streak}</span>
               </motion.div>
             )}
-            <span className="text-sm font-bold text-text-secondary hidden sm:inline-block px-3">
+            <span className="text-sm font-bold text-white/80 hidden sm:inline-block px-3">
               Q{questionsAnswered + 1}
             </span>
             <button
               onClick={() => window.location.href = '/leaderboard'}
-              className="p-2.5 rounded-xl hover:bg-surface hover:shadow-sm transition-all text-text-secondary hover:text-accent"
+              className="p-2.5 rounded-xl hover:bg-white/20 transition-all text-white/80 hover:text-white"
               title="Leaderboard"
             >
               <Trophy className="w-5 h-5" />
@@ -177,8 +171,8 @@ export function GameClient() {
             <button
               onClick={() => setShowCalculator(!showCalculator)}
               className={cn(
-                "p-2.5 rounded-xl transition-all shadow-sm",
-                showCalculator ? "bg-accent/20 text-accent" : "hover:bg-surface text-text-secondary hover:text-text-primary"
+                "p-2.5 rounded-xl transition-all",
+                showCalculator ? "bg-white/30 text-white" : "hover:bg-white/20 text-white/80 hover:text-white"
               )}
               title="Calculator"
             >
@@ -186,7 +180,7 @@ export function GameClient() {
             </button>
             <button
               onClick={() => setShowSettings(true)}
-              className="p-2.5 rounded-xl hover:bg-surface hover:shadow-sm transition-all text-text-secondary hover:text-text-primary"
+              className="p-2.5 rounded-xl hover:bg-white/20 transition-all text-white/80 hover:text-white"
               title="Settings"
             >
               <Settings className="w-5 h-5" />
@@ -194,14 +188,14 @@ export function GameClient() {
             {user ? (
               <button
                 onClick={() => window.location.href = '/profile'}
-                className="px-4 py-2 bg-elevated text-text-primary font-bold rounded-xl hover:bg-border transition-colors text-sm shadow-sm"
+                className="px-5 py-2.5 bg-white text-accent font-bold rounded-full hover:bg-gray-100 transition-colors text-sm shadow-sm ml-2"
               >
                 Profile
               </button>
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="px-4 py-2 bg-accent text-background font-bold rounded-xl hover:opacity-90 transition-opacity text-sm shadow-sm"
+                className="px-5 py-2.5 bg-white text-accent font-bold rounded-full hover:bg-gray-100 transition-colors text-sm shadow-sm ml-2"
               >
                 Sign In
               </button>

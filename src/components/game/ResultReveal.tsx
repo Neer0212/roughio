@@ -29,8 +29,8 @@ export function ResultReveal({ question, result, onNext, onReasoningSubmit, show
         className="space-y-6 w-full max-w-3xl mx-auto"
       >
         {/* Question Text */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-balance text-[rgb(var(--foreground))]">
+        <div className="text-center mb-10">
+          <h2 className="text-[clamp(2.5rem,5vw,5rem)] leading-[1.05] font-extrabold text-balance text-white">
             {question.text}
           </h2>
         </div>
@@ -52,37 +52,25 @@ export function ResultReveal({ question, result, onNext, onReasoningSubmit, show
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.4 }}
-          className="bg-[rgb(var(--secondary))] border border-[rgb(var(--border))] rounded-2xl p-6"
+          className="bg-white rounded-[2rem] p-8 shadow-xl mt-8 max-w-2xl mx-auto text-left text-text-primary"
         >
           <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[rgb(var(--primary))/0.15] flex items-center justify-center">
-              <Lightbulb className="w-5 h-5 text-[rgb(var(--primary))]" />
+            <div className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-error text-error flex items-center justify-center opacity-70 mt-1">
+              <Lightbulb className="w-4 h-4" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-2">How we estimated it</h3>
-              <p className="text-[rgb(var(--muted-foreground))] leading-relaxed whitespace-pre-line">
+              <p className="text-lg font-medium leading-relaxed whitespace-pre-line text-text-primary/90">
                 {question.estimationApproach}
               </p>
               {question.source && (
-                <p className="mt-3 text-sm text-[rgb(var(--muted-foreground))]">
-                  Source: <a href={question.source || '#'} target="_blank" rel="noopener noreferrer" className="text-[rgb(var(--primary))] hover:underline ml-1">{question.sourceName || 'Link'}</a>
+                <p className="mt-4 text-sm font-bold text-text-secondary uppercase tracking-widest">
+                  Source: <a href={question.source || '#'} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline ml-1">{question.sourceName || 'Link'}</a>
                   {question.referencePeriod && <span className="ml-2">· {question.referencePeriod}</span>}
                 </p>
               )}
             </div>
           </div>
         </motion.div>
-        
-        {/* User Reasoning */}
-        {showReasoning && (
-          <div className="max-w-md mx-auto pt-2">
-            <ReasoningInput
-              question={question}
-              onSubmit={onReasoningSubmit}
-              isGuest={isGuest}
-            />
-          </div>
-        )}
         
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
