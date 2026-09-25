@@ -1,6 +1,8 @@
 import type { Question } from "@/lib/types/game";
+import { AI_GENERATED_QUESTIONS } from "./ai_questions";
 
 export const SEED_QUESTIONS: Omit<Question, "id" | "createdAt">[] = [
+  ...AI_GENERATED_QUESTIONS,
   // ============================================================
   // TECHNOLOGY (15 questions)
   // ============================================================

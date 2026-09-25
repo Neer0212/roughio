@@ -18,6 +18,7 @@ export default function LandingPage() {
           <nav className="hidden md:flex gap-6 font-bold text-text-secondary">
             <Link href="/game/play" className="hover:text-text-primary transition-colors">Free Play</Link>
             <Link href="/ladder" className="hover:text-text-primary transition-colors">Campaign</Link>
+            <Link href="/battle" className="hover:text-text-primary transition-colors">Multiplayer</Link>
             <Link href="/leaderboard" className="hover:text-text-primary transition-colors">Leaderboard</Link>
           </nav>
           <HeaderAuth />

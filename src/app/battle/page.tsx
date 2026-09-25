@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Swords, Plus, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { createClient } from '@/lib/supabase/client';
 
 export default function BattleLobby() {
   const { user } = useAuth();
@@ -15,11 +16,21 @@ export default function BattleLobby() {
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState('');
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const supabase = createClient();
 
   const handleCreate = async () => {
-    if (!user) return setShowAuthModal(true);
     setIsCreating(true);
     setError('');
+    
+    // Automatically sign in as a guest if not logged in
+    if (!user) {
+      const { error: anonError } = await supabase.auth.signInAnonymously();
+      if (anonError) {
+        setIsCreating(false);
+        return setShowAuthModal(true); // Fallback if anon sign-in is disabled in Supabase
+      }
+    }
+
     try {
       const res = await fetch('/api/battles/create', { method: 'POST', body: JSON.stringify({ maxRounds: 3 }) });
       const data = await res.json();
@@ -33,11 +44,19 @@ export default function BattleLobby() {
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return setShowAuthModal(true);
     if (!joinCode || joinCode.length !== 4) return setError('Code must be 4 characters');
     
     setIsJoining(true);
     setError('');
+
+    // Automatically sign in as a guest if not logged in
+    if (!user) {
+      const { error: anonError } = await supabase.auth.signInAnonymously();
+      if (anonError) {
+        setIsJoining(false);
+        return setShowAuthModal(true); // Fallback
+      }
+    }
     try {
       const res = await fetch('/api/battles/join', { method: 'POST', body: JSON.stringify({ shortCode: joinCode }) });
       const data = await res.json();
