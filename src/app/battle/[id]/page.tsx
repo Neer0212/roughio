@@ -1,24 +1,110 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useBattle } from '@/lib/hooks/useBattle';
-import { Loader2, Users, Trophy, ArrowRight, Play, Check } from 'lucide-react';
+import { Loader2, Users, Trophy, ArrowRight, Play, Check, Brain } from 'lucide-react';
 import { NumericInput } from '@/components/game/NumericInput';
 import { parseNumber, formatLarge } from '@/lib/utils/number-parser';
 import { SCORE_COLORS, SCORE_LABELS } from '@/lib/constants/scoring';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { BattleCountdown } from '@/components/game/BattleCountdown';
+import { BATTLE_ROUND_TIMEOUT_SECONDS } from '@/lib/constants/battle';
 
 export default function BattleRoom({ params }: { params: { id: string } }) {
   const { user } = useAuth();
-  const { battle, players, rounds, guesses, isLoading, error, isHost, startGame, submitGuess, nextRound } = useBattle(params.id);
+  const { battle, players, rounds, guesses, isLoading, error, isHost, startGame, submitGuess, nextRound, refresh } = useBattle(params.id);
   
   const [guessInput, setGuessInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // AI State
+  const [aiFeedback, setAiFeedback] = useState<string | null>(null);
+  const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
+  const [feedbackError, setFeedbackError] = useState(false);
+  const aiRoundLock = useRef<string | null>(null);
   
   const parsedGuess = parseNumber(guessInput);
   
   const currentRound = battle ? rounds.find(r => r.round_number === battle.current_round) : null;
   const myGuess = guesses.find(g => g.user_id === user?.id);
+
+  useEffect(() => {
+    if (!currentRound || currentRound.status !== 'revealed' || !currentRound.question?.reference_answer) {
+      return;
+    }
+
+    if (aiRoundLock.current === currentRound.id) {
+      return;
+    }
+    
+    aiRoundLock.current = currentRound.id;
+    setAiFeedback(null);
+    setFeedbackError(false);
+    setIsGeneratingFeedback(true);
+
+    const question = currentRound.question;
+    
+    // Construct player estimates summary
+    const playerSummaries = guesses.map(g => {
+      const player = players.find(p => p.user_id === g.user_id);
+      const name = player?.email || 'Unknown Player';
+      return `${name}: estimated ${g.guess} (factor: ${g.factor}x, points: ${g.points_awarded})`;
+    }).join('\\n');
+
+    const prompt = `You are the post-round analysis system for Roughio, an estimation game.
+
+Both players have already submitted their estimates and the round result has already been revealed.
+
+Question:
+${question.text}
+
+Unit:
+${question.unit}
+
+Reference answer:
+${question.reference_answer}
+
+Player estimates:
+${playerSummaries}
+
+Give a short comparative observation.
+
+Rules:
+- The round is already complete.
+- Do not determine or change the winner.
+- Do not recalculate official scores.
+- Do not invent assumptions that are not supported.
+- Explain the magnitude of the estimates relative to the reference value.
+- If useful, mention whether an estimate was above or below the reference.
+- Keep the response to 1-3 sentences.
+- Be factual and concise.
+- Do not use motivational filler.
+- Do not repeat the entire question.`;
+
+    fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('AI API failed');
+        return res.json();
+      })
+      .then((data) => {
+        if (data.response) {
+          setAiFeedback(data.response);
+        } else {
+          setFeedbackError(true);
+        }
+      })
+      .catch((err) => {
+        console.error('AI Battle Feedback error:', err);
+        setFeedbackError(true);
+      })
+      .finally(() => {
+        setIsGeneratingFeedback(false);
+      });
+  }, [currentRound, guesses, players]);
   
   const handleStart = async () => {
     setIsSubmitting(true);
@@ -154,6 +240,16 @@ export default function BattleRoom({ params }: { params: { id: string } }) {
         <div className="font-bold text-text-secondary uppercase tracking-widest">
           Round {battle.current_round} <span className="opacity-50">/ {battle.max_rounds}</span>
         </div>
+        {currentRound?.status === 'guessing' && currentRound?.started_at && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold uppercase tracking-widest text-text-secondary">Time</span>
+            <BattleCountdown 
+              startedAt={currentRound.started_at} 
+              timeoutSeconds={BATTLE_ROUND_TIMEOUT_SECONDS} 
+              onExpire={refresh} 
+            />
+          </div>
+        )}
         <div className="flex items-center gap-4">
           <div className="text-sm">Players: <span className="font-bold">{guesses.length}/{players.length}</span> guessed</div>
         </div>
@@ -240,6 +336,38 @@ export default function BattleRoom({ params }: { params: { id: string } }) {
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          {/* AI Comparative Analysis */}
+          <div className="bg-surface/50 rounded-2xl p-6 border border-border mb-8 shadow-inner relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Brain className="w-24 h-24" />
+            </div>
+            <div className="relative z-10">
+              <h3 className="flex items-center gap-2 font-bold text-sm uppercase tracking-widest text-accent mb-3">
+                <Brain className="w-5 h-5" />
+                AI ROUND ANALYSIS
+              </h3>
+              
+              {isGeneratingFeedback ? (
+                <div className="flex items-center gap-3 text-text-secondary py-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-accent" />
+                  <span className="text-sm">Generating analysis...</span>
+                </div>
+              ) : feedbackError ? (
+                <div className="text-text-secondary text-sm italic py-2">
+                  AI analysis is temporarily unavailable.
+                </div>
+              ) : aiFeedback ? (
+                <div className="text-text-primary leading-relaxed">
+                  {aiFeedback}
+                </div>
+              ) : (
+                <div className="text-text-secondary text-sm py-2">
+                  Waiting for analysis...
+                </div>
+              )}
             </div>
           </div>
           

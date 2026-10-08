@@ -21,6 +21,8 @@ export interface BattleRound {
   id: string;
   round_number: number;
   status: 'guessing' | 'revealed';
+  started_at?: string;
+  revealed_at?: string;
   question: any;
 }
 
@@ -65,25 +67,45 @@ export function useBattle(battleId: string | null) {
         })));
       }
       
-      // Fetch Rounds with Questions
-      const { data: rData } = await supabase
-        .from('battle_rounds')
-        .select('*, questions(*)')
-        .eq('battle_id', battleId)
-        .order('round_number', { ascending: true });
+      // Fetch Rounds securely through API
+      let mappedRounds: any[] = [];
+      const roundsRes = await fetch(`/api/battles/rounds?id=${battleId}`);
+      if (roundsRes.ok) {
+        const roundsData = await roundsRes.json();
+        if (roundsData.success && roundsData.rounds) {
+          mappedRounds = roundsData.rounds;
+
+          // Fetch reference answers securely only for revealed rounds
+          const revealedRoundIds = mappedRounds.filter((r: any) => r.status === 'revealed').map((r: any) => r.id);
         
-      if (rData) {
-        setRounds(rData.map(r => ({
-          id: r.id,
-          round_number: r.round_number,
-          status: r.status,
-          question: r.questions
-        })));
+          if (revealedRoundIds.length > 0) {
+            try {
+              const res = await fetch('/api/battles/revealed', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ battleId, roundIds: revealedRoundIds })
+              });
+              const { success, answers } = await res.json();
+              
+              if (success && answers) {
+                mappedRounds.forEach(r => {
+                  if (answers[r.id] !== undefined && r.question) {
+                    r.question.reference_answer = answers[r.id];
+                  }
+                });
+              }
+            } catch (err) {
+              console.error('Failed to fetch revealed answers:', err);
+            }
+          }
+          
+          setRounds(mappedRounds);
+        }
       }
       
       // Fetch Guesses for current round
-      if (bData && rData) {
-        const currentRoundId = rData[bData.current_round - 1]?.id;
+      if (bData && mappedRounds.length > 0) {
+        const currentRoundId = mappedRounds[bData.current_round - 1]?.id;
         if (currentRoundId) {
           const { data: gData } = await supabase
             .from('battle_guesses')
@@ -117,6 +139,15 @@ export function useBattle(battleId: string | null) {
     };
   }, [battleId, fetchState, supabase]);
 
+  // Heartbeat
+  useEffect(() => {
+    if (!battleId) return;
+    const ping = () => fetch('/api/battles/ping', { method: 'POST', body: JSON.stringify({ battleId }) });
+    ping();
+    const interval = setInterval(ping, 15000);
+    return () => clearInterval(interval);
+  }, [battleId]);
+
   const startGame = async () => {
     await fetch('/api/battles/start', {
       method: 'POST',
@@ -138,7 +169,7 @@ export function useBattle(battleId: string | null) {
     });
   };
 
-  return {
+  return { refresh: fetchState,
     battle,
     players,
     rounds,

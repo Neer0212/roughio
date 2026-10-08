@@ -3,17 +3,17 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = createClient();
-    const id = params.id;
+    const { supabaseAdmin } = await import('@/lib/supabase/admin');
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json({ error: 'Missing question ID' }, { status: 400 });
     }
 
-    const { data: q, error } = await supabase
+    const { data: q, error } = await supabaseAdmin
       .from('questions')
       .select('*')
       .eq('id', id)
@@ -26,14 +26,15 @@ export async function GET(
 
     // Convert snake_case from DB to camelCase for the frontend
     const question = {
-      ...q,
-      referenceAnswer: q.reference_answer,
+      id: q.id,
+      text: q.text,
+      unit: q.unit,
       unitPlural: q.unit_plural,
-      estimationApproach: q.estimation_approach,
+      categoryId: q.category_id,
+      difficulty: q.difficulty,
+      hint: q.hint,
       sourceName: q.source_name,
       referencePeriod: q.reference_period,
-      uncertaintyLow: q.uncertainty_low,
-      uncertaintyHigh: q.uncertainty_high,
       isAiGenerated: q.is_ai_generated,
       isCommunity: q.is_community,
       createdAt: q.created_at

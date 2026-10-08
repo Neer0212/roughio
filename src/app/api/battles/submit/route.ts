@@ -1,19 +1,20 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { buildScoreResult } from '@/lib/constants/scoring';
 import { DIFFICULTIES } from '@/lib/constants/difficulties';
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { battleId, roundId, guess } = await request.json();
 
-    // 1. Get round and question info
-    const { data: round, error: roundError } = await supabase
+    // 1. Get round and question info securely
+    const { data: round, error: roundError } = await supabaseAdmin
       .from('battle_rounds')
       .select('*, questions(reference_answer, difficulty)')
       .eq('id', roundId)
@@ -21,6 +22,20 @@ export async function POST(request: Request) {
 
     if (roundError || !round) throw new Error('Round not found');
     if (round.status !== 'guessing') throw new Error('Round is closed');
+
+    const { BATTLE_ROUND_TIMEOUT_SECONDS } = await import('@/lib/constants/battle');
+    const { finalizeBattleRound } = await import('@/lib/battle/finalizeRound');
+
+    const now = new Date().getTime();
+    const startedAt = round.started_at ? new Date(round.started_at).getTime() : now;
+    const isTimeout = (now - startedAt) / 1000 >= BATTLE_ROUND_TIMEOUT_SECONDS;
+
+    if (isTimeout) {
+      // Force reveal immediately
+      await finalizeBattleRound(battleId, roundId);
+      // Do not allow this late guess to count
+      return NextResponse.json({ success: true, late: true });
+    }
 
     // 2. Calculate score securely
     const actual = round.questions.reference_answer;
@@ -48,44 +63,14 @@ export async function POST(request: Request) {
       
     if (playersError) throw playersError;
 
-    const { data: guesses, error: guessesError } = await supabase
+    const { count: guessCount } = await supabase
       .from('battle_guesses')
-      .select('user_id')
+      .select('*', { count: 'exact', head: true })
       .eq('round_id', roundId);
       
-    if (guessesError) throw guessesError;
-
-    if (guesses.length >= players.length) {
-      // Everyone guessed! Auto-reveal the round.
-      await supabase
-        .from('battle_rounds')
-        .update({ status: 'revealed' })
-        .eq('id', roundId);
-        
-      // Update cumulative scores
-      const { data: allGuesses } = await supabase
-        .from('battle_guesses')
-        .select('user_id, points_awarded')
-        .eq('round_id', roundId);
-        
-      if (allGuesses) {
-        for (const g of allGuesses) {
-          const { data: bp } = await supabase
-            .from('battle_players')
-            .select('score')
-            .eq('battle_id', battleId)
-            .eq('user_id', g.user_id)
-            .single();
-            
-          if (bp) {
-            await supabase
-              .from('battle_players')
-              .update({ score: bp.score + g.points_awarded })
-              .eq('battle_id', battleId)
-              .eq('user_id', g.user_id);
-          }
-        }
-      }
+    if ((guessCount || 0) >= players.length) {
+      // Everyone guessed! Auto-reveal the round securely.
+      await finalizeBattleRound(battleId, roundId);
     }
 
     return NextResponse.json({ success: true });
@@ -94,3 +79,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
   }
 }
+

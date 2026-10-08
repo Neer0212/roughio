@@ -6,7 +6,7 @@ import { BackButton } from '@/components/layout/BackButton';
 export const revalidate = 60; // Cache for 60 seconds
 
 export default async function LeaderboardPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   // Fetch top 100 profiles ordered by total_xp
   const { data: profiles, error } = await supabase
@@ -101,4 +101,5 @@ export default async function LeaderboardPage() {
     </div>
   );
 }
+
 
