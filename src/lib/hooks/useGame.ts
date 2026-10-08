@@ -1,12 +1,12 @@
 // src/lib/hooks/useGame.ts
-'use client';
+"use client";
 
-import { useCallback, useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import { useGameStore } from '@/lib/store/gameStore';
-import { parseNumber } from '@/lib/utils/number-parser';
-import { calculateFactor, classifyScore } from '@/lib/constants/scoring';
-import type { Question, AttemptResult, ParseResult } from '@/lib/types/game';
+import { useCallback, useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useGameStore } from "@/lib/store/gameStore";
+import { parseNumber } from "@/lib/utils/number-parser";
+import { calculateFactor, classifyScore } from "@/lib/constants/scoring";
+import type { Question, AttemptResult, ParseResult } from "@/lib/types/game";
 
 export function useGame() {
   const {
@@ -26,130 +26,210 @@ export function useGame() {
     nextQuestion,
     settings,
   } = useGameStore();
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
-  
+
   // Fetch a new question
-  const fetchQuestion = useCallback(async (options?: { category?: string; difficulty?: string; challengeId?: string; stageId?: string }) => {
-    setIsLoading(true);
-    try {
-      if (options?.challengeId) {
-        const response = await fetch(`/api/questions/${options.challengeId}`);
-        if (!response.ok) throw new Error('Failed to fetch challenge question');
-        const question = await response.json();
-        setCurrentQuestion(question);
-        return;
-      }
+  const fetchQuestion = useCallback(
+    async (options?: {
+      category?: string;
+      difficulty?: string;
+      challengeId?: string;
+      stageId?: string;
+    }) => {
+      setIsLoading(true);
 
-      const params = new URLSearchParams();
-      if (options?.category) params.set('category', options.category);
-      if (options?.difficulty) params.set('difficulty', options.difficulty);
-      if (options?.stageId) params.set('stage', options.stageId);
-      
-      if (settings.avoidRepeats) {
-        const { previousQuestions } = useGameStore.getState();
-        if (previousQuestions.length > 0) {
-          params.set('exclude', previousQuestions.map(q => q.id).join(','));
+      try {
+        // Challenge question
+        if (options?.challengeId) {
+          const response = await fetch(`/api/questions/${options.challengeId}`);
+
+          const responseText = await response.text();
+
+          if (!response.ok) {
+            console.error("Challenge question API failed:", {
+              status: response.status,
+              statusText: response.statusText,
+              response: responseText,
+            });
+
+            throw new Error(
+              `Failed to fetch challenge question (${response.status}): ${responseText}`,
+            );
+          }
+
+          let question;
+
+          try {
+            question = JSON.parse(responseText);
+          } catch {
+            console.error(
+              "Challenge question API returned invalid JSON:",
+              responseText,
+            );
+
+            throw new Error("Challenge question API returned invalid JSON");
+          }
+
+          setCurrentQuestion(question);
+          return;
         }
-      }
-      
-      const response = await fetch(`/api/questions/random?${params}`);
-      if (!response.ok) throw new Error('Failed to fetch question');
-      
-      const question = await response.json();
-      setCurrentQuestion(question);
-    } catch (error) {
-      console.error('Failed to fetch question:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [settings.avoidRepeats, setCurrentQuestion]);
-  
-  // Submit guess
-  const submitGuess = useCallback(async (hintUsed: boolean = false) => {
-    if (!currentQuestion || !parsedGuess.value || isSubmitting) return;
-    
-    setSubmitting(true);
-    
-    try {
-      // 1. Calculate everything locally first for instant UI response and Guest users
-      const { buildScoreResult } = await import('@/lib/constants/scoring');
-      const { DIFFICULTIES } = await import('@/lib/constants/difficulties');
-      
-      const diffMultiplier = DIFFICULTIES[currentQuestion.difficulty as keyof typeof DIFFICULTIES]?.xpMultiplier || 1.0;
-      const refAnswer = currentQuestion.referenceAnswer;
-      const secureScore = buildScoreResult(parsedGuess.value, refAnswer, diffMultiplier, hintUsed);
-      
-      const isOverestimate = parsedGuess.value > refAnswer;
-      const difference = Math.abs(parsedGuess.value - refAnswer);
-      
-      const achievements: string[] = [];
-      if (secureScore.factor <= 1.1 && !hintUsed) achievements.push("🎯 The Sniper");
-      if (secureScore.factor >= 1000) achievements.push("🚀 Astronomical");
-      if (difference === 0) achievements.push("🤯 Bullseye");
-      if (isOverestimate && secureScore.factor > 10) achievements.push("📈 Too Optimistic");
-      
-      const attemptResult: any = {
-        guess: parsedGuess.value,
-        referenceAnswer: refAnswer,
-        factor: secureScore.factor,
-        classification: secureScore.classification,
-        difference,
-        isOverestimate,
-        explanation: currentQuestion.explanation,
-        estimationApproach: currentQuestion.estimationApproach,
-        achievements
-      };
 
-      // 2. Save to database if authenticated
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const response = await fetch('/api/attempts', {
+        // Build query parameters BEFORE making the request
+        const params = new URLSearchParams();
+
+        if (options?.category) {
+          params.set("category", options.category);
+        }
+
+        if (options?.difficulty) {
+          params.set("difficulty", options.difficulty);
+        }
+
+        if (options?.stageId) {
+          params.set("stage", options.stageId);
+        }
+
+        // Avoid previously seen questions
+        if (settings.avoidRepeats) {
+          const { previousQuestions } = useGameStore.getState();
+
+          if (previousQuestions.length > 0) {
+            params.set("exclude", previousQuestions.map((q) => q.id).join(","));
+          }
+        }
+
+        // Fetch random question
+        const url = `/api/questions/random?${params.toString()}`;
+
+        console.log("Fetching question:", url);
+
+        const response = await fetch(url);
+
+        const responseText = await response.text();
+
+        if (!response.ok) {
+          console.error("Question API failed:", {
+            status: response.status,
+            statusText: response.statusText,
+            url,
+            response: responseText,
+          });
+
+          throw new Error(
+            `Failed to fetch question (${response.status}): ${responseText}`,
+          );
+        }
+
+        let question;
+
+        try {
+          question = JSON.parse(responseText);
+        } catch {
+          console.error("Question API returned invalid JSON:", responseText);
+
+          throw new Error("Question API returned invalid JSON");
+        }
+
+        setCurrentQuestion(question);
+      } catch (error) {
+        console.error("Failed to fetch question:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [settings.avoidRepeats, setCurrentQuestion],
+  );
+
+  // Submit guess
+  const submitGuess = useCallback(
+    async (hintUsed: boolean = false) => {
+      if (!currentQuestion || !parsedGuess.value || isSubmitting) return;
+
+      setSubmitting(true);
+
+      try {
+        // 1. Calculate securely on the server (handles both guests and users)
+        const scoreRes = await fetch('/api/score', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            attempts: [{
-              questionId: currentQuestion.id,
-              userGuess: parsedGuess.value,
-              usedHint: hintUsed
-            }]
-          }),
+          body: JSON.stringify({ questionId: currentQuestion.id, guess: parsedGuess.value, hintUsed }),
         });
         
-        if (response.ok) {
-          const data = await response.json();
-          // The API doesn't currently return the exact attempt_id in the array.
-          // Wait, the API returns { success: true, processed: N }
-          // Let's modify the API to return the ids.
-          // For now we will just proceed.
-        } else {
-          console.error('Failed to save attempt to server');
+        const scoreData = await scoreRes.json();
+        if (!scoreData.success) throw new Error(scoreData.error || 'Scoring failed');
+        
+        const attemptResult = scoreData.result;
+
+        // 2. Save to database if authenticated
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          const response = await fetch("/api/attempts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              attempts: [
+                {
+                  questionId: currentQuestion.id,
+                  userGuess: parsedGuess.value,
+                  usedHint: hintUsed,
+                },
+              ],
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+
+            console.log("Attempt saved successfully:", data);
+          } else {
+            const errorText = await response.text();
+
+            console.error("Attempt API failed:", {
+              status: response.status,
+              statusText: response.statusText,
+              response: errorText,
+            });
+          }
         }
+
+        setResult(attemptResult);
+      } catch (error) {
+        console.error("Failed to submit guess:", error);
+      } finally {
+        setSubmitting(false);
       }
-      
-      setResult(attemptResult);
-    } catch (error) {
-      console.error('Failed to submit guess:', error);
-    } finally {
-      setSubmitting(false);
-    }
-  }, [currentQuestion, parsedGuess, isSubmitting, setSubmitting, setResult, supabase]);
-  
+    },
+    [
+      currentQuestion,
+      parsedGuess,
+      isSubmitting,
+      setSubmitting,
+      setResult,
+      supabase,
+    ],
+  );
+
   // Handle input change with parsing
-  const handleInputChange = useCallback((value: string) => {
-    const parsed = parseNumber(value);
-    setUserGuess(value);
-    setParsedGuess(parsed);
-  }, [setUserGuess, setParsedGuess]);
-  
+  const handleInputChange = useCallback(
+    (value: string) => {
+      const parsed = parseNumber(value);
+      setUserGuess(value);
+      setParsedGuess(parsed);
+    },
+    [setUserGuess, setParsedGuess],
+  );
+
   // Load initial question on mount
   useEffect(() => {
     if (!currentQuestion && !isLoading) {
       fetchQuestion();
     }
   }, [currentQuestion, isLoading, fetchQuestion]);
-  
+
   return {
     // State
     currentQuestion,
@@ -162,7 +242,7 @@ export function useGame() {
     questionsAnswered,
     isLoading,
     settings,
-    
+
     // Actions
     fetchQuestion,
     submitGuess,

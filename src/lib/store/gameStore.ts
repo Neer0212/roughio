@@ -12,7 +12,6 @@ interface GameStore {
   isSubmitting: boolean;
   showResult: boolean;
   result: AttemptResult | null;
-  lastAttemptId: string | null;
   streak: number;
   questionsAnswered: number;
   sessionBest: number | null;
@@ -50,7 +49,6 @@ export const useGameStore = create<GameStore>()(
       isSubmitting: false,
       showResult: false,
       result: null,
-      lastAttemptId: null,
       streak: 0,
       questionsAnswered: 0,
       sessionBest: null,

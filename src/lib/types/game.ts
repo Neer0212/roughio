@@ -128,7 +128,6 @@ export interface Attempt {
   userGuessRaw: string;
   scoreResult: ScoreResult;
   usedHint: boolean;
-  userReasoning?: string;
   timestamp: Date;
 }
 

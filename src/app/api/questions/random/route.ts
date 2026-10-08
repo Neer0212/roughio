@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -24,7 +25,7 @@ export async function GET(request: Request) {
     }
   }
 
-  const { data, error } = await supabase.rpc('get_random_question_v2', {
+  const { data, error } = await supabaseAdmin.rpc('get_random_question_v2', {
     p_categories: categories,
     p_difficulties: difficulties,
     p_exclude: exclude
@@ -39,17 +40,18 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'No questions found' }, { status: 404 });
   }
 
-  // Convert snake_case from DB to camelCase for the frontend
+  // Strip secure fields for the client
   const q = data[0];
   const question = {
-    ...q,
-    referenceAnswer: q.reference_answer,
+    id: q.id,
+    text: q.text,
+    unit: q.unit,
     unitPlural: q.unit_plural,
-    estimationApproach: q.estimation_approach,
+    categoryId: q.category_id,
+    difficulty: q.difficulty,
+    hint: q.hint,
     sourceName: q.source_name,
     referencePeriod: q.reference_period,
-    uncertaintyLow: q.uncertainty_low,
-    uncertaintyHigh: q.uncertainty_high,
     isAiGenerated: q.is_ai_generated,
     isCommunity: q.is_community,
     createdAt: q.created_at

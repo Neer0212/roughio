@@ -6,7 +6,7 @@ import { SCORE_COLORS, SCORE_LABELS } from '@/lib/constants/scoring';
 import { AvatarSelect } from '@/components/profile/AvatarSelect';
 
 export default async function ProfilePage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
@@ -122,4 +122,5 @@ export default async function ProfilePage() {
     </div>
   );
 }
+
 

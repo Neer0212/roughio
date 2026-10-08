@@ -5,7 +5,7 @@ import { DIFFICULTIES } from '@/lib/constants/difficulties';
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     // Fetch questions to score securely
     const { data: questions } = await supabase
       .from('questions')
-      .select('id, reference_answer, difficulty')
+      .select('id, text, unit, reference_answer, difficulty')
       .in('id', challenge.question_ids);
 
     if (!questions || questions.length !== 3) throw new Error('Failed to load questions for scoring');
@@ -47,6 +47,7 @@ export async function POST(request: Request) {
     // Make sure we map guesses to the exact order of challenge.question_ids
     let totalScore = 0;
     let totalFactor = 0;
+    const results = [];
 
     for (let i = 0; i < 3; i++) {
       const qId = challenge.question_ids[i];
@@ -59,6 +60,16 @@ export async function POST(request: Request) {
       
       totalScore += result.xpEarned;
       totalFactor += result.factor;
+
+      results.push({
+        id: qDef.id,
+        text: qDef.text,
+        unit: qDef.unit,
+        guess: guess,
+        referenceAnswer: qDef.reference_answer,
+        factor: result.factor,
+        classification: result.classification
+      });
     }
 
     const avgFactor = totalFactor / 3;
@@ -98,9 +109,10 @@ export async function POST(request: Request) {
       .update({ elo_rating: newElo })
       .eq('id', session.user.id);
 
-    return NextResponse.json({ success: true, eloChange, newElo, totalScore, avgFactor });
+    return NextResponse.json({ success: true, eloChange, newElo, totalScore, avgFactor, results });
   } catch (err: any) {
     console.error('API Ranked Submit Error:', err);
     return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
   }
 }
+

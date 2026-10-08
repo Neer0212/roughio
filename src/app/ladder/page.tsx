@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 export default async function LadderPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
   
   let currentLevel = 1;
@@ -116,4 +116,5 @@ export default async function LadderPage() {
     </div>
   );
 }
+
 

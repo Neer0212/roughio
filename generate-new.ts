@@ -1,14 +1,14 @@
-import { AI_GENERATED_QUESTIONS } from './src/data/ai_questions.ts';
+import { AI_GENERATED_QUESTIONS } from './src/data/ai_questions';
 import * as fs from 'fs';
 
-function escapeSql(str) {
+function escapeSql(str: string | undefined | null): string {
   if (str === undefined || str === null) return 'NULL';
-  return `'${str.replace(/'/g, "''")}'`;
+  return "'" + (str as string).replace(/'/g, "''") + "'";
 }
 
-const values = AI_GENERATED_QUESTIONS.map(q => `(
+const values = AI_GENERATED_QUESTIONS.map((q: any) => `(
   ${escapeSql(q.text)},
-  ${q.referenceAnswer},
+  ${escapeSql(q.referenceAnswer)},
   ${escapeSql(q.unit)},
   ${escapeSql(q.unitPlural)},
   ${escapeSql(q.category)},
@@ -21,7 +21,7 @@ const values = AI_GENERATED_QUESTIONS.map(q => `(
   ${escapeSql(q.referencePeriod)},
   ${q.uncertaintyLow || 'NULL'},
   ${q.uncertaintyHigh || 'NULL'},
-  ARRAY[${q.tags.map(t => escapeSql(t)).join(', ')}]::text[],
+  ARRAY[${Array.isArray(q.tags) ? q.tags.map((t: string) => escapeSql(t)).join(', ') : ''}]::text[],
   'active'
 )`);
 

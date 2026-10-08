@@ -12,7 +12,7 @@ function generateShortCode() {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // Ensure user is authenticated
     const { data: { session } } = await supabase.auth.getSession();
@@ -82,3 +82,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
   }
 }
+

@@ -1,0 +1,1 @@
+export const BATTLE_ROUND_TIMEOUT_SECONDS = 45;

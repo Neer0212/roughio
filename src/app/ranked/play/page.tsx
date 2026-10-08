@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, ArrowRight, Check } from 'lucide-react';
 import { NumericInput } from '@/components/game/NumericInput';
-import { parseNumber } from '@/lib/utils/number-parser';
+import { parseNumber, formatLarge } from '@/lib/utils/number-parser';
 import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function RankedPlay() {
@@ -31,22 +31,9 @@ export default function RankedPlay() {
         const res = await fetch('/api/ranked/today');
         const data = await res.json();
         
-        if (!res.ok || !data.challenge) throw new Error('Failed to load challenge');
+        if (!res.ok || !data.challenge || !data.questions) throw new Error('Failed to load challenge');
         
-        // Fetch question details
-        const { createClient } = await import('@/lib/supabase/client');
-        const supabase = createClient();
-        
-        const { data: qData } = await supabase
-          .from('questions')
-          .select('*')
-          .in('id', data.challenge.question_ids);
-          
-        if (qData) {
-          // Sort to match challenge order
-          const ordered = data.challenge.question_ids.map((id: string) => qData.find(q => q.id === id));
-          setQuestions(ordered);
-        }
+        setQuestions(data.questions);
       } catch (e) {
         console.error(e);
       } finally {
@@ -97,8 +84,8 @@ export default function RankedPlay() {
 
   if (result) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-4">
-        <div className="bg-surface w-full max-w-lg rounded-3xl p-10 border border-border shadow-2xl text-center">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full py-8 md:py-12">
+        <div className="bg-surface w-full rounded-[2.5rem] p-8 md:p-12 border border-border shadow-2xl text-center mb-10">
           <div className="w-20 h-20 bg-accent/20 text-accent rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="w-10 h-10" />
           </div>
@@ -116,21 +103,58 @@ export default function RankedPlay() {
             </div>
           </div>
           
-          <div className={`p-6 rounded-2xl border ${result.eloChange > 0 ? 'bg-success/10 border-success/30' : result.eloChange < 0 ? 'bg-destructive/10 border-destructive/30' : 'bg-surface border-border'} mb-8`}>
+          <div className={`p-6 rounded-2xl border ${result.eloChange > 0 ? 'bg-success/10 border-success/30' : result.eloChange < 0 ? 'bg-destructive/10 border-destructive/30' : 'bg-surface border-border'}`}>
             <div className="text-sm font-bold uppercase mb-2">Elo Rating Change</div>
             <div className="text-5xl font-black mb-2">
               {result.eloChange > 0 ? '+' : ''}{result.eloChange}
             </div>
             <div className="text-text-secondary font-medium">New Rating: <span className="text-text-primary font-bold">{result.newElo}</span></div>
           </div>
-          
-          <button
-            onClick={() => router.push('/ranked')}
-            className="w-full py-4 rounded-xl font-bold text-lg bg-accent text-background hover:brightness-110 transition-all"
-          >
-            Back to Dashboard
-          </button>
         </div>
+
+        {/* Breakdown */}
+        {result.results && result.results.length > 0 && (
+          <div className="w-full space-y-4 mb-10">
+            <h3 className="text-xl font-bold text-text-primary ml-2 mb-2 uppercase tracking-widest">Question Breakdown</h3>
+            {result.results.map((r: any, i: number) => (
+              <div key={r.id} className="bg-surface p-6 sm:p-8 rounded-[2rem] border border-border flex flex-col gap-5 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-accent/20 text-accent font-bold flex items-center justify-center flex-shrink-0 mt-1">
+                    {i + 1}
+                  </div>
+                  <h4 className="text-lg sm:text-xl font-bold leading-tight">{r.text}</h4>
+                </div>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pl-0 sm:pl-14">
+                  <div className="bg-elevated p-4 rounded-2xl border border-border">
+                    <div className="text-xs text-text-secondary uppercase font-bold mb-1">Your Estimate</div>
+                    <div className="font-mono font-bold text-lg truncate" title={`${formatLarge(r.guess)} ${r.unit}`}>
+                      {formatLarge(r.guess)} <span className="text-sm opacity-50">{r.unit}</span>
+                    </div>
+                  </div>
+                  <div className="bg-elevated p-4 rounded-2xl border border-border">
+                    <div className="text-xs text-text-secondary uppercase font-bold mb-1">Actual Answer</div>
+                    <div className="font-mono font-bold text-lg text-accent truncate" title={`${formatLarge(r.referenceAnswer)} ${r.unit}`}>
+                      {formatLarge(r.referenceAnswer)} <span className="text-sm opacity-50">{r.unit}</span>
+                    </div>
+                  </div>
+                  <div className="bg-elevated p-4 rounded-2xl border border-border col-span-2 sm:col-span-1">
+                    <div className="text-xs text-text-secondary uppercase font-bold mb-1">Factor</div>
+                    <div className="font-mono font-bold text-lg">{r.factor.toFixed(2)}x</div>
+                    <div className="text-xs font-bold uppercase tracking-widest mt-1 opacity-70">{r.classification.replace(/_/g, ' ')}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        <button
+          onClick={() => router.push('/ranked')}
+          className="w-full max-w-sm mx-auto py-5 rounded-2xl font-bold text-xl bg-accent text-background shadow-[0_4px_0_rgb(10,135,95)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center"
+        >
+          Back to Dashboard
+        </button>
       </div>
     );
   }
@@ -181,3 +205,4 @@ export default function RankedPlay() {
     </div>
   );
 }
+
