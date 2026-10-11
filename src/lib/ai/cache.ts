@@ -64,8 +64,13 @@ export const aiHintCache = new MemoryLruCache<string>(1000);
 // Battle analysis deduplication cache: 15-minute TTL per (battleId + roundId)
 export const aiBattleAnalysisCache = new MemoryLruCache<string>(200);
 
-// Ongoing in-flight request deduplication map to prevent race conditions
-export const pendingBattlePromises = new Map<string, Promise<string>>();
+export interface BattleAnalysisResult {
+  reply: string;
+  usage?: any;
+}
+
+// Ongoing in-flight request deduplication map to prevent race conditions within the same process
+export const pendingBattlePromises = new Map<string, Promise<BattleAnalysisResult>>();
 
 /**
  * Generate a deterministic content hash for question hints.
@@ -92,12 +97,22 @@ interface RateLimitRecord {
   resetAt: number;
 }
 
+/**
+ * In-memory process-local rate limit store.
+ * 
+ * IMPORTANT ARCHITECTURAL NOTE:
+ * This rate limiter maintains state within a single Node.js process / serverless instance.
+ * In horizontally scaled or serverless deployments (such as Vercel Functions or AWS Lambda),
+ * memory is NOT shared across concurrently running instances.
+ * If global cross-instance coordination is required in production, an external distributed store
+ * (e.g., Upstash Redis with @upstash/ratelimit or a database counter) should be introduced.
+ */
 const rateLimitStore = new Map<string, RateLimitRecord>();
 
 /**
- * Rate limit validator.
- * - Enforces request thresholds per client identifier.
- * - Rejects empty/untrusted client keys safely.
+ * Process-local rate limit validator.
+ * - Enforces request thresholds per client identifier within the current process instance.
+ * - Rejects empty/untrusted client keys safely with a fallback bucket.
  */
 export function checkRateLimit(
   identifier: string,
@@ -134,9 +149,16 @@ export function checkRateLimit(
 }
 
 /**
- * Safely extracts the client IP address.
- * Does NOT blindly trust spoofed x-forwarded-for headers.
- * Uses x-real-ip or leftmost IP, with fallback.
+ * Extracts client IP address using reverse-proxy headers in order of platform specificity.
+ * 
+ * REVERSE-PROXY TRUST NOTICE:
+ * This function inspects headers in order:
+ * 1. 'cf-connecting-ip' (trusted when deployed behind Cloudflare)
+ * 2. 'x-real-ip' (trusted when provided by an upstream proxy like Nginx or Vercel edge)
+ * 3. Leftmost IP of 'x-forwarded-for'
+ * 
+ * In production deployments, ensure the ingress proxy or edge CDN strips or overwrites untrusted
+ * incoming headers from public clients, or configure your host platform to sanitize them.
  */
 export function getClientIp(headers: Headers): string {
   const cfConnectingIp = headers.get('cf-connecting-ip');

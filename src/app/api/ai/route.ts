@@ -38,6 +38,76 @@ interface AiRequestBody {
   roundId?: string;
 }
 
+class ProviderError extends Error {
+  statusCode: number;
+  constructor(message: string, statusCode = 502) {
+    super(message);
+    this.name = 'ProviderError';
+    this.statusCode = statusCode;
+  }
+}
+
+async function executeProviderCall(
+  model: string,
+  systemPrompt: string,
+  userPrompt: string,
+  maxTokens: number,
+  apiKey: string
+): Promise<{ reply: string; usage: any }> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, 25000);
+
+  try {
+    const apiResponse = await fetch("https://api.apinex.bond/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        max_tokens: maxTokens,
+        stream: false,
+      }),
+      signal: controller.signal,
+    });
+
+    const data = await apiResponse.json().catch(() => null);
+
+    if (!apiResponse.ok) {
+      // Sanitized server-side diagnostic logging (never leaked to client)
+      console.error(
+        `AI provider request failed with status ${apiResponse.status}:`,
+        data?.error?.message || data?.error || apiResponse.statusText
+      );
+
+      if (apiResponse.status === 429) {
+        throw new ProviderError("AI service rate limit exceeded", 429);
+      }
+      if (apiResponse.status >= 500) {
+        throw new ProviderError("AI service temporarily unavailable", 502);
+      }
+      throw new ProviderError("AI service request failed", 502);
+    }
+
+    const reply = data?.choices?.[0]?.message?.content?.trim();
+    if (!reply) {
+      console.error("AI provider returned empty response or invalid structure:", data);
+      throw new ProviderError("AI service returned an empty response", 502);
+    }
+
+    return { reply, usage: data?.usage };
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 export async function POST(req: Request) {
   const startTime = Date.now();
   let taskType: 'hint' | 'feedback' | 'battle_analysis' = 'hint';
@@ -52,7 +122,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. Abuse Protection / Shared-safe Rate Limiting
+    // 2. Process-local Rate Limiting (Single-instance protection)
     const clientIp = getClientIp(req.headers);
     const rateCheck = checkRateLimit(clientIp, 25, 60 * 1000);
     if (!rateCheck.allowed) {
@@ -213,16 +283,22 @@ export async function POST(req: Request) {
       }
 
       const refAnswer = question.reference_answer;
-      if (typeof refAnswer !== 'number' || !Number.isFinite(refAnswer)) {
+      if (typeof refAnswer !== 'number' || !Number.isFinite(refAnswer) || refAnswer <= 0) {
         return NextResponse.json(
-          { error: "Invalid reference answer in database" },
-          { status: 500 }
+          { error: "Invalid or non-positive reference answer in database" },
+          { status: 400 }
         );
       }
 
       const factor = Math.max(guess / refAnswer, refAnswer / guess);
-      const factorStr = `${factor.toFixed(2)}x`;
+      if (!Number.isFinite(factor) || factor <= 0) {
+        return NextResponse.json(
+          { error: "Invalid calculation: computed factor must be a finite positive number" },
+          { status: 400 }
+        );
+      }
 
+      const factorStr = `${factor.toFixed(2)}x`;
       userPrompt = `Question: "${question.text.slice(0, 300)}" (${question.unit || 'units'})\nPlayer guess: ${guess}. Reference answer: ${refAnswer}. Factor: ${factorStr}.\nGive 2 sentences explaining the estimate magnitude vs reference:`;
 
     // ==========================================
@@ -232,50 +308,15 @@ export async function POST(req: Request) {
       const battleId = body.battleId;
       const roundId = body.roundId;
 
-      if (!battleId || typeof battleId !== 'string' || !roundId || typeof roundId !== 'string') {
+      if (!battleId || typeof battleId !== 'string' || !roundId || typeof roundId !== 'string' || battleId.length > 100 || roundId.length > 100) {
         return NextResponse.json(
           { error: "Valid 'battleId' and 'roundId' are required for battle analysis." },
           { status: 400 }
         );
       }
 
-      // Check battle deduplication cache
-      const battleCacheKey = `battle:${battleId}:${roundId}`;
-      const cachedAnalysis = aiBattleAnalysisCache.get(battleCacheKey);
-      if (cachedAnalysis) {
-        logAiMetrics({
-          task: 'battle_analysis',
-          cached: true,
-          model: APINEX_MODEL,
-          durationMs: Date.now() - startTime,
-          promptTokens: 0,
-          completionTokens: 0,
-          totalTokens: 0,
-          success: true,
-        });
-
-        return NextResponse.json({
-          reply: cachedAnalysis,
-          response: cachedAnalysis,
-          cached: true,
-        });
-      }
-
-      // Deduplicate in-flight requests (e.g. host and guest trigger simultaneously)
-      if (pendingBattlePromises.has(battleCacheKey)) {
-        try {
-          const ongoingResult = await pendingBattlePromises.get(battleCacheKey)!;
-          return NextResponse.json({
-            reply: ongoingResult,
-            response: ongoingResult,
-            cached: true,
-          });
-        } catch {
-          // If in-flight fails, continue to fresh attempt
-        }
-      }
-
-      // Verify the battle and round authoritatively from the database
+      // 1. Authoritative round lookup & validation in database FIRST
+      // Never serve cache or deduplicate before DB validation confirms round is valid and revealed
       const { data: roundData, error: roundError } = await admin
         .from('battle_rounds')
         .select('id, status, question_id, questions(id, text, unit, reference_answer)')
@@ -297,103 +338,159 @@ export async function POST(req: Request) {
         );
       }
 
-      const q: any = Array.isArray(roundData.questions) ? roundData.questions[0] : roundData.questions;
-      if (!q) {
-        return NextResponse.json({ error: "Question not found for round" }, { status: 404 });
+      // Applicable authorization/battle-membership checks:
+      // If client has an authenticated session, verify the user is a participant of this battle
+      try {
+        const { createClient } = await import('@/lib/supabase/server');
+        const supabase = await createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { data: membership, error: mError } = await admin
+            .from('battle_players')
+            .select('user_id')
+            .eq('battle_id', battleId)
+            .eq('user_id', session.user.id)
+            .maybeSingle();
+
+          if (mError || !membership) {
+            return NextResponse.json(
+              { error: "Forbidden: not a participant of this battle" },
+              { status: 403 }
+            );
+          }
+        }
+      } catch {
+        // Safe fallback in environments without cookie support (e.g. testing)
       }
 
-      // Authoritative guesses query from database
-      const { data: dbGuesses } = await admin
-        .from('battle_guesses')
-        .select('user_id, guess, factor, points_awarded')
-        .eq('round_id', roundId);
+      const battleCacheKey = `battle:${battleId}:${roundId}`;
 
-      const summaries = (dbGuesses || []).map((g, idx) => {
-        const factorStr = typeof g.factor === 'number' && Number.isFinite(g.factor)
-          ? `${g.factor.toFixed(2)}x`
-          : 'n/a';
-        return `Player ${idx + 1}: ${g.guess} (factor: ${factorStr})`;
-      }).join(', ');
-
-      userPrompt = `Question: "${q.text.slice(0, 300)}" (${q.unit || 'units'})\nReference: ${q.reference_answer}\nEstimates: ${summaries || 'none'}\nProvide 1-2 concise comparative sentences:`;
-      cacheKey = battleCacheKey;
-    }
-
-    // ==========================================
-    // 7. DISPATCH TO APINEX
-    // ==========================================
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 25000);
-
-    const executeProviderCall = async (): Promise<{ reply: string; usage: any }> => {
-      const apiResponse = await fetch("https://api.apinex.bond/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
+      // 2. Cache check AFTER authoritative database validation
+      const cachedAnalysis = aiBattleAnalysisCache.get(battleCacheKey);
+      if (cachedAnalysis) {
+        logAiMetrics({
+          task: 'battle_analysis',
+          cached: true,
           model: APINEX_MODEL,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          max_tokens: maxTokens,
-          stream: false,
-        }),
-        signal: controller.signal,
-      });
+          durationMs: Date.now() - startTime,
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+          success: true,
+        });
 
-      const data = await apiResponse.json();
-
-      if (!apiResponse.ok) {
-        throw new Error(`APInex request failed with status ${apiResponse.status}: ${JSON.stringify(data?.error || data)}`);
+        return NextResponse.json({
+          reply: cachedAnalysis,
+          response: cachedAnalysis,
+          cached: true,
+        });
       }
 
-      const reply = data?.choices?.[0]?.message?.content?.trim();
-      if (!reply) {
-        throw new Error("AI returned an empty response");
+      // 3. In-flight single-promise deduplication per battle round
+      let battlePromise = pendingBattlePromises.get(battleCacheKey);
+      let isLeader = false;
+
+      if (!battlePromise) {
+        isLeader = true;
+
+        const generateAnalysisPromise = (async (): Promise<{ reply: string; usage: any }> => {
+          const q: any = Array.isArray(roundData.questions) ? roundData.questions[0] : roundData.questions;
+          if (!q || !q.text) {
+            throw new Error("Question not found for round");
+          }
+
+          const { data: dbGuesses } = await admin
+            .from('battle_guesses')
+            .select('user_id, guess, factor, points_awarded')
+            .eq('round_id', roundId);
+
+          const summaries = (dbGuesses || []).map((g, idx) => {
+            const factorStr = typeof g.factor === 'number' && Number.isFinite(g.factor)
+              ? `${g.factor.toFixed(2)}x`
+              : 'n/a';
+            return `Player ${idx + 1}: ${g.guess} (factor: ${factorStr})`;
+          }).join(', ');
+
+          const battlePrompt = `Question: "${q.text.slice(0, 300)}" (${q.unit || 'units'})\nReference: ${q.reference_answer}\nEstimates: ${summaries || 'none'}\nProvide 1-2 concise comparative sentences:`;
+
+          return executeProviderCall(
+            APINEX_MODEL,
+            systemPrompt,
+            battlePrompt,
+            maxTokens,
+            apiKey
+          );
+        })();
+
+        const newPromise = generateAnalysisPromise.finally(() => {
+          if (pendingBattlePromises.get(battleCacheKey) === newPromise) {
+            pendingBattlePromises.delete(battleCacheKey);
+          }
+        });
+
+        // Prevent unhandled rejections on this in-flight promise chain
+        newPromise.catch(() => {});
+
+        pendingBattlePromises.set(battleCacheKey, newPromise);
+        battlePromise = newPromise;
       }
 
-      return { reply, usage: data?.usage };
-    };
+      const result = await battlePromise;
 
-    let resultPromise: Promise<{ reply: string; usage: any }>;
+      // Only cache successful battle analysis once leader finishes
+      if (isLeader) {
+        aiBattleAnalysisCache.set(battleCacheKey, result.reply, BATTLE_CACHE_TTL_MS);
+      }
 
-    // In-flight deduplication registration for battle analysis
-    if (taskType === 'battle_analysis' && cacheKey) {
-      const promise = executeProviderCall().then(res => {
-        aiBattleAnalysisCache.set(cacheKey!, res.reply, BATTLE_CACHE_TTL_MS);
-        return res.reply;
-      }).finally(() => {
-        pendingBattlePromises.delete(cacheKey!);
+      const promptTokens = typeof result.usage?.prompt_tokens === 'number' ? result.usage.prompt_tokens : null;
+      const completionTokens = typeof result.usage?.completion_tokens === 'number' ? result.usage.completion_tokens : null;
+      const reasoningTokens = typeof result.usage?.completion_tokens_details?.reasoning_tokens === 'number'
+        ? result.usage.completion_tokens_details.reasoning_tokens
+        : null;
+      const totalTokens = typeof result.usage?.total_tokens === 'number' ? result.usage.total_tokens : null;
+
+      logAiMetrics({
+        task: 'battle_analysis',
+        cached: !isLeader,
+        model: APINEX_MODEL,
+        durationMs: Date.now() - startTime,
+        promptTokens,
+        completionTokens,
+        reasoningTokens,
+        totalTokens,
+        success: true,
       });
 
-      pendingBattlePromises.set(cacheKey, promise);
-      resultPromise = executeProviderCall();
-    } else {
-      resultPromise = executeProviderCall();
+      return NextResponse.json({
+        reply: result.reply,
+        response: result.reply,
+        cached: !isLeader,
+        usage: result.usage ? {
+          promptTokens,
+          completionTokens,
+          reasoningTokens,
+          totalTokens,
+        } : undefined,
+      });
     }
 
-    let replyData: { reply: string; usage: any };
-    try {
-      replyData = await resultPromise;
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    const { reply, usage } = replyData;
+    // ==========================================
+    // 7. DISPATCH TO APINEX (FOR HINT AND FEEDBACK)
+    // ==========================================
+    const result = await executeProviderCall(
+      APINEX_MODEL,
+      systemPrompt,
+      userPrompt,
+      maxTokens,
+      apiKey
+    );
 
     // Cache successful hints
     if (taskType === 'hint' && cacheKey) {
-      aiHintCache.set(cacheKey, reply, HINT_CACHE_TTL_MS);
-    } else if (taskType === 'battle_analysis' && cacheKey) {
-      aiBattleAnalysisCache.set(cacheKey, reply, BATTLE_CACHE_TTL_MS);
+      aiHintCache.set(cacheKey, result.reply, HINT_CACHE_TTL_MS);
     }
 
-    // Accurate token accounting distinguishing undefined from genuine 0
+    const { reply, usage } = result;
     const promptTokens = typeof usage?.prompt_tokens === 'number' ? usage.prompt_tokens : null;
     const completionTokens = typeof usage?.completion_tokens === 'number' ? usage.completion_tokens : null;
     const reasoningTokens = typeof usage?.completion_tokens_details?.reasoning_tokens === 'number' 
@@ -429,24 +526,49 @@ export async function POST(req: Request) {
     const duration = Date.now() - startTime;
     console.error("AI route error:", error instanceof Error ? error.message : error);
 
+    if (error instanceof Error && (error.name === "AbortError" || error.message.includes("timed out"))) {
+      logAiMetrics({
+        task: taskType,
+        cached: false,
+        model: APINEX_MODEL,
+        durationMs: duration,
+        success: false,
+        errorCode: 504,
+      });
+
+      return NextResponse.json(
+        { error: "AI request timed out" },
+        { status: 504 }
+      );
+    }
+
+    if (error instanceof ProviderError) {
+      logAiMetrics({
+        task: taskType,
+        cached: false,
+        model: APINEX_MODEL,
+        durationMs: duration,
+        success: false,
+        errorCode: error.statusCode,
+      });
+
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.statusCode }
+      );
+    }
+
     logAiMetrics({
       task: taskType,
       cached: false,
       model: APINEX_MODEL,
       durationMs: duration,
       success: false,
-      errorCode: error instanceof Error && error.name === "AbortError" ? 504 : 500,
+      errorCode: 500,
     });
 
-    if (error instanceof Error && error.name === "AbortError") {
-      return NextResponse.json(
-        { error: "AI request timed out after 25 seconds" },
-        { status: 504 }
-      );
-    }
-
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Internal AI service error" },
+      { error: "Internal AI service error" },
       { status: 500 }
     );
   }

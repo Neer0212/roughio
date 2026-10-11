@@ -131,14 +131,61 @@ test('Battle Deduplication - caches round results and deduplicates in-flight pro
   assert.equal(aiBattleAnalysisCache.get(battleKey), 'Player 1 was closer.');
 
   // Pending promise deduplication
-  let resolver: (val: string) => void;
-  const inFlightPromise = new Promise<string>((res) => { resolver = res; });
+  let resolver: (val: { reply: string }) => void;
+  const inFlightPromise = new Promise<{ reply: string }>((res) => { resolver = res; });
   pendingBattlePromises.set(battleKey, inFlightPromise);
 
   assert.equal(pendingBattlePromises.has(battleKey), true);
-  resolver!('Resolved analysis');
+  resolver!({ reply: 'Resolved analysis' });
   const result = await pendingBattlePromises.get(battleKey);
-  assert.equal(result, 'Resolved analysis');
+  assert.equal(result?.reply, 'Resolved analysis');
+});
+
+test('Battle Deduplication - safe in-flight promise cleanup on success and failure', async () => {
+  pendingBattlePromises.clear();
+  const testKey = 'battle:clean-test:r1';
+
+  // 1. Success cleanup: removes entry if still referring to same promise
+  let resSuccess: (val: { reply: string }) => void;
+  const successPromise = new Promise<{ reply: string }>((res) => { resSuccess = res; });
+  successPromise.finally(() => {
+    if (pendingBattlePromises.get(testKey) === successPromise) {
+      pendingBattlePromises.delete(testKey);
+    }
+  });
+  pendingBattlePromises.set(testKey, successPromise);
+  assert.equal(pendingBattlePromises.has(testKey), true);
+  resSuccess!({ reply: 'success' });
+  await successPromise;
+  assert.equal(pendingBattlePromises.has(testKey), false, 'Entry must be removed after resolution');
+
+  // 2. Failure cleanup: removes entry on rejection without leaving stale state
+  let rejFailure: (err: Error) => void;
+  const rawFailPromise = new Promise<{ reply: string }>((_, rej) => { rejFailure = rej; });
+  const failPromise = rawFailPromise.finally(() => {
+    if (pendingBattlePromises.get(testKey) === failPromise) {
+      pendingBattlePromises.delete(testKey);
+    }
+  });
+  failPromise.catch(() => {}); // prevent unhandled rejection
+  pendingBattlePromises.set(testKey, failPromise);
+  assert.equal(pendingBattlePromises.has(testKey), true);
+  rejFailure!(new Error('API error'));
+  try {
+    await failPromise;
+  } catch {}
+  assert.equal(pendingBattlePromises.has(testKey), false, 'Entry must be removed after rejection');
+
+  // 3. Stale promise cleanup protection: does NOT delete if entry refers to a newer promise
+  const oldPromise = Promise.resolve({ reply: 'old' });
+  const newerPromise = new Promise<{ reply: string }>(() => {}); // pending
+  pendingBattlePromises.set(testKey, newerPromise);
+  // Old promise finally runs now
+  if (pendingBattlePromises.get(testKey) === oldPromise) {
+    pendingBattlePromises.delete(testKey);
+  }
+  assert.equal(pendingBattlePromises.get(testKey), newerPromise, 'Must not remove a newer promise');
+  pendingBattlePromises.clear();
 });
 
 test('Supabase Admin Fail-Safe - rejects initialization if credentials missing in non-build runtime', async () => {
