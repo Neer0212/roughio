@@ -42,29 +42,13 @@ export default function BattleRoom({ params }: { params: { id: string } }) {
     setFeedbackError(false);
     setIsGeneratingFeedback(true);
 
-    const question = currentRound.question;
-    
-    // Construct player estimates summary
-    const playerEstimates = guesses.map(g => {
-      const player = players.find(p => p.user_id === g.user_id);
-      return {
-        name: player?.email || 'Player',
-        guess: g.guess,
-        factor: g.factor,
-        points: g.points_awarded,
-      };
-    });
-
     fetch('/api/ai', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         task: 'battle_analysis',
         battleId: params.id,
-        questionText: question.text,
-        unit: question.unit,
-        referenceAnswer: question.reference_answer,
-        playerEstimates,
+        roundId: currentRound.id,
       }),
     })
       .then((res) => {
