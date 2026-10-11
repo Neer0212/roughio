@@ -38,87 +38,45 @@ export function ResultReveal({ question, result, onNext, isGuest = false, hintUs
     });
   }, [result.factor]);
 
-  // AI Feedback generation
-  useEffect(() => {
-    if (hasRequestedFeedback.current || aiFeedback || isGeneratingFeedback || feedbackError) return;
-    hasRequestedFeedback.current = true;
+  // Optional on-demand AI Feedback generation
+  const handleRequestFeedback = async () => {
+    if (isGeneratingFeedback || aiFeedback) return;
+    setIsGeneratingFeedback(true);
+    setFeedbackError(false);
 
-    const generateFeedback = async () => {
-      setIsGeneratingFeedback(true);
-      try {
-        const response = await fetch('/api/ai', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: `You are the post-answer feedback system for Roughio, an estimation game.
+    try {
+      const response = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          task: 'feedback',
+          questionId: question.id,
+          questionText: question.text,
+          unit: question.unit,
+          category: question.category,
+          difficulty: question.difficulty,
+          guess: result.guess,
+          referenceAnswer: result.referenceAnswer,
+          factor: result.factor,
+          classification: result.classification,
+          hintUsed,
+        }),
+      });
 
-The player has already submitted their estimate and the reference answer has already been revealed.
-
-Your job is to give concise, useful feedback about the player's estimation.
-
-Question:
-${question.text}
-
-Unit:
-${question.unit}
-
-Category:
-${question.category}
-
-Difficulty:
-${question.difficulty}
-
-Player estimate:
-${result.guess}
-
-Reference answer:
-${result.referenceAnswer}
-
-Score classification:
-${result.classification}
-
-Score factor:
-${result.factor.toFixed(2)}x
-
-Player reasoning:
-No reasoning provided
-
-Hint used:
-${hintUsed ? 'yes' : 'no'}
-
-Rules:
-- The reference answer has already been revealed to the player.
-- Do not change or recalculate the official score.
-- Do not invent facts that are not supported by the information provided.
-- Explain how close or far the estimate was in practical terms.
-- If reasoning was provided, comment on whether the estimation approach was sensible.
-- If the estimate was far from the reference, identify what kind of assumption may have caused the error when reasonably inferable.
-- If the estimate was close, explain what was done well.
-- Keep the feedback concise: approximately 2-4 sentences.
-- Be constructive and factual.
-- Do not use excessive praise or motivational language.
-- Do not repeat the entire question.
-- Do not expose internal implementation details.`
-          })
-        });
-
-        if (!response.ok) throw new Error('API failed');
-        const data = await response.json();
-        if (data.reply) {
-          setAiFeedback(data.reply);
-        } else {
-          setFeedbackError(true);
-        }
-      } catch (err) {
-        console.error('Failed to generate post-answer feedback:', err);
+      if (!response.ok) throw new Error('API failed');
+      const data = await response.json();
+      if (data.reply) {
+        setAiFeedback(data.reply);
+      } else {
         setFeedbackError(true);
-      } finally {
-        setIsGeneratingFeedback(false);
       }
-    };
-
-    generateFeedback();
-  }, [question.id, result.guess, hintUsed, aiFeedback, isGeneratingFeedback, feedbackError]);
+    } catch (err) {
+      console.error('Failed to generate post-answer feedback:', err);
+      setFeedbackError(true);
+    } finally {
+      setIsGeneratingFeedback(false);
+    }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -201,17 +159,39 @@ Rules:
               <Brain className="w-4 h-4" />
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-bold text-white/80 uppercase tracking-widest mb-3">AI Feedback</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-bold text-white/80 uppercase tracking-widest">AI Feedback</h3>
+                {!aiFeedback && !isGeneratingFeedback && (
+                  <button
+                    onClick={handleRequestFeedback}
+                    className="text-xs font-bold text-accent hover:text-white bg-accent/20 hover:bg-accent/40 px-3 py-1 rounded-full transition-colors"
+                  >
+                    Get Feedback
+                  </button>
+                )}
+              </div>
               {isGeneratingFeedback ? (
                 <div className="flex items-center gap-2 text-white/60">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin text-accent" />
                   <span className="text-sm">Generating feedback...</span>
                 </div>
               ) : feedbackError ? (
-                <p className="text-white/60 text-sm">AI feedback is temporarily unavailable.</p>
-              ) : (
+                <div className="flex items-center justify-between">
+                  <p className="text-white/60 text-sm">AI feedback is temporarily unavailable.</p>
+                  <button
+                    onClick={handleRequestFeedback}
+                    className="text-xs text-accent hover:underline ml-2"
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : aiFeedback ? (
                 <p className="text-base font-medium leading-relaxed whitespace-pre-line text-white">
                   {aiFeedback}
+                </p>
+              ) : (
+                <p className="text-sm text-white/60">
+                  Want an AI breakdown of your estimate? Click &quot;Get Feedback&quot; above.
                 </p>
               )}
             </div>

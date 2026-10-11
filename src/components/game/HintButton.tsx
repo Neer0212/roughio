@@ -45,29 +45,12 @@ export function HintButton({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: `You are the hint system for Roughio, an estimation game.
-
-Question:
-${question.text}
-
-Unit:
-${question.unit}
-
-Category:
-${question.category}
-
-Difficulty:
-${question.difficulty}
-
-Give the player one short, useful hint.
-
-Rules:
-- Do NOT give the answer.
-- Do NOT reveal the reference value.
-- Do NOT calculate the final value.
-- Help the player identify what they should estimate or consider.
-- Keep it to 1-2 sentences.
-- Do not say 'the answer is'.`
+          task: 'hint',
+          questionId: question.id,
+          questionText: question.text,
+          unit: question.unit,
+          category: question.category,
+          difficulty: question.difficulty,
         }),
       });
 

@@ -45,54 +45,35 @@ export default function BattleRoom({ params }: { params: { id: string } }) {
     const question = currentRound.question;
     
     // Construct player estimates summary
-    const playerSummaries = guesses.map(g => {
+    const playerEstimates = guesses.map(g => {
       const player = players.find(p => p.user_id === g.user_id);
-      const name = player?.email || 'Unknown Player';
-      return `${name}: estimated ${g.guess} (factor: ${g.factor}x, points: ${g.points_awarded})`;
-    }).join('\\n');
-
-    const prompt = `You are the post-round analysis system for Roughio, an estimation game.
-
-Both players have already submitted their estimates and the round result has already been revealed.
-
-Question:
-${question.text}
-
-Unit:
-${question.unit}
-
-Reference answer:
-${question.reference_answer}
-
-Player estimates:
-${playerSummaries}
-
-Give a short comparative observation.
-
-Rules:
-- The round is already complete.
-- Do not determine or change the winner.
-- Do not recalculate official scores.
-- Do not invent assumptions that are not supported.
-- Explain the magnitude of the estimates relative to the reference value.
-- If useful, mention whether an estimate was above or below the reference.
-- Keep the response to 1-3 sentences.
-- Be factual and concise.
-- Do not use motivational filler.
-- Do not repeat the entire question.`;
+      return {
+        name: player?.email || 'Player',
+        guess: g.guess,
+        factor: g.factor,
+        points: g.points_awarded,
+      };
+    });
 
     fetch('/api/ai', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({
+        task: 'battle_analysis',
+        battleId: params.id,
+        questionText: question.text,
+        unit: question.unit,
+        referenceAnswer: question.reference_answer,
+        playerEstimates,
+      }),
     })
       .then((res) => {
         if (!res.ok) throw new Error('AI API failed');
         return res.json();
       })
       .then((data) => {
-        if (data.response) {
-          setAiFeedback(data.response);
+        if (data.reply || data.response) {
+          setAiFeedback(data.reply || data.response);
         } else {
           setFeedbackError(true);
         }
