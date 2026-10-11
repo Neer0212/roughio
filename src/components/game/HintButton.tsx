@@ -89,12 +89,13 @@ Rules:
       setUsed(true);
 
       onHintUsed(data.reply);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to generate AI hint:', error);
 
       // Fallback if APInex fails
-      const fallbackHint =
-        'Break the problem into smaller quantities that are easier to estimate, then combine them.';
+      const fallbackHint = process.env.NODE_ENV === 'development'
+        ? `[API Error: ${error.message}] Break the problem into smaller quantities that are easier to estimate, then combine them.`
+        : 'Break the problem into smaller quantities that are easier to estimate, then combine them.';
 
       setHint(fallbackHint);
 
