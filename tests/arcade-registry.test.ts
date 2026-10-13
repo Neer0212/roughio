@@ -22,20 +22,20 @@ describe('Arcade Game Registry', () => {
     assert.equal(ARCADE_GAMES.length, 6);
   });
 
-  it('contains Fermi Estimate and Color Recall as playable modes', () => {
+  it('contains Fermi Estimate, Color Recall, and Pattern Recall as playable modes', () => {
     const playable = getPlayableGames();
-    assert.equal(playable.length, 2);
+    assert.equal(playable.length, 3);
     const playableIds = playable.map((g) => g.id);
     assert.ok(playableIds.includes('fermi'));
     assert.ok(playableIds.includes('color-recall'));
+    assert.ok(playableIds.includes('pattern-recall'));
   });
 
   it('contains the planned upcoming games with coming-soon status', () => {
     const upcoming = getComingSoonGames();
-    assert.equal(upcoming.length, 4);
+    assert.equal(upcoming.length, 3);
     const upcomingIds = upcoming.map((g) => g.id);
     assert.ok(upcomingIds.includes('sound-match'));
-    assert.ok(upcomingIds.includes('pattern-recall'));
     assert.ok(upcomingIds.includes('rare-answer'));
     assert.ok(upcomingIds.includes('order-of-magnitude'));
   });

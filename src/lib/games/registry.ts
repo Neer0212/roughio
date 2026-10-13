@@ -79,8 +79,8 @@ export const ARCADE_GAMES: GameDefinition[] = [
       'Flash memory under pressure. Watch an animated matrix of geometric tiles ignite in sequence, then reconstruct the exact pattern without missing a beat.',
     category: 'Working Memory',
     route: '/games/pattern-recall',
-    status: 'coming-soon',
-    badge: 'Planned',
+    status: 'playable',
+    badge: 'New Mode',
     accentColor: '#FFDE00',
     themeClass: 'from-[#FFDE00] to-[#E0BE00]',
     metrics: {
@@ -89,9 +89,9 @@ export const ARCADE_GAMES: GameDefinition[] = [
       difficulty: 'Challenging',
     },
     features: [
-      'Dynamic grid expansion from 3x3 to 5x5',
-      'Distractor pulses and timing speedups',
-      'Strict memory span scoring',
+      'Responsive 3x3 interactive matrix with synthesized tones',
+      'Adaptive pacing with sequence lengths up to 15 rounds',
+      'Keyboard support (1–9) and local high score tracking',
     ],
   },
   {
