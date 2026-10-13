@@ -9,22 +9,24 @@ import {
   logAiMetrics,
 } from "@/lib/ai/cache";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { formatIndianNumber } from "@/lib/utils/number-parser";
 
-const APINEX_MODEL = "free/gpt-6-luna";
-const PROMPT_VERSION = "v2";
+const APINEX_MODEL = process.env.APINEX_MODEL || "free/gemini-3.8-flash";
+const FALLBACK_MODEL = process.env.APINEX_FALLBACK_MODEL || "free/deepseek-v4.1-flash";
+const PROMPT_VERSION = "v3";
 const HINT_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const BATTLE_CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
 
 const MAX_OUTPUT_TOKENS = {
   hint: 120,
-  feedback: 150,
+  feedback: 180,
   battle_analysis: 150,
 };
 
 const SYSTEM_PROMPTS = {
-  hint: "You provide 1-2 sentence estimation hints for an estimation game. Never reveal the answer or numerical value. Highlight what real-world factors or scale to consider.",
-  feedback: "You provide 2-sentence post-answer feedback for an estimation game. State how the estimate compares to the reference answer factually and constructively. Never change or recalculate the score.",
-  battle_analysis: "You provide 1-2 sentence comparative analysis for an estimation battle. Compare players' estimates to the reference answer factually. Do not pick winners or recalculate scores.",
+  hint: "You provide a concise (1-2 sentences), question-specific estimation hint for an estimation game. Never reveal the numerical answer or exact target. Suggest a practical estimation strategy or breakdown tailored specifically to the entities in the question (e.g. population x per-capita rate, dimensions x volume, or anchoring to a common benchmark).",
+  feedback: "You provide concise (2-3 sentences), constructive post-answer feedback for an estimation game. Explain how the player's estimate compares to the reference answer (direction: overestimate or underestimate, and by what factor/order of magnitude), highlight a sensible estimation breakdown, and provide a helpful tip for next time. Format all multi-digit numbers using Indian digit grouping (e.g. 10,000, 25,00,000, 1,00,00,000) and preserve units. Never recalculate or alter the score.",
+  battle_analysis: "You provide 1-2 sentence comparative analysis for an estimation battle. Compare players' estimates to the reference answer factually using Indian number formatting for values. Do not pick winners or recalculate scores.",
 };
 
 const MAX_BODY_BYTES = 10 * 1024; // 10 KB request size limit
@@ -47,17 +49,63 @@ class ProviderError extends Error {
   }
 }
 
+function generateFallbackHint(question: {
+  text: string;
+  unit?: string | null;
+  category?: string | null;
+  hint?: string | null;
+  estimation_approach?: string | null;
+}): string {
+  if (question.hint && question.hint.trim().length > 0) {
+    return question.hint.trim();
+  }
+  if (question.estimation_approach && question.estimation_approach.trim().length > 0) {
+    const firstSentence = question.estimation_approach.split(/(?<=[.!?])\s+/)[0]?.trim();
+    if (firstSentence && !/\b\d{4,}\b/.test(firstSentence)) {
+      return `Consider this breakdown: ${firstSentence}`;
+    }
+  }
+  const unitStr = question.unit ? ` (${question.unit})` : '';
+  const categoryStr = question.category ? ` for this ${question.category} estimate` : '';
+  return `To calculate this${categoryStr}, try breaking it down into a known baseline and scaling by the relevant frequency or population${unitStr ? ` to reach ${question.unit}` : ''}.`;
+}
+
+function generateFallbackFeedback(
+  question: { text: string; unit?: string | null; estimation_approach?: string | null },
+  guess: number,
+  refAnswer: number,
+  factor: number
+): string {
+  const isOver = guess > refAnswer;
+  const dir = isOver ? 'overestimated' : 'underestimated';
+  const factorStr = `${factor.toFixed(1)}x`;
+  const formattedGuess = formatIndianNumber(guess);
+  const formattedRef = formatIndianNumber(refAnswer);
+  const unit = question.unit ? ` ${question.unit}` : '';
+
+  let breakdownTip = 'A reliable approach is to break the calculation down into a known per-unit baseline and scale by orders of magnitude.';
+  if (question.estimation_approach) {
+    const firstSentence = question.estimation_approach.split(/(?<=[.!?])\s+/)[0]?.trim();
+    if (firstSentence && !/\b\d{4,}\b/.test(firstSentence)) {
+      breakdownTip = `Consider: ${firstSentence}`;
+    }
+  }
+
+  return `You ${dir} by about ${factorStr} (${formattedGuess}${unit} vs. actual ${formattedRef}${unit}). ${breakdownTip} Next time, verify your baseline assumptions and magnitude before submitting.`;
+}
+
 async function executeProviderCall(
   model: string,
   systemPrompt: string,
   userPrompt: string,
   maxTokens: number,
-  apiKey: string
+  apiKey: string,
+  timeoutMs = 12000
 ): Promise<{ reply: string; usage: any }> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
     controller.abort();
-  }, 25000);
+  }, timeoutMs);
 
   try {
     const apiResponse = await fetch("https://api.apinex.bond/v1/chat/completions", {
@@ -105,6 +153,27 @@ async function executeProviderCall(
     return { reply, usage: data?.usage };
   } finally {
     clearTimeout(timeoutId);
+  }
+}
+
+async function callAiWithFallback(
+  systemPrompt: string,
+  userPrompt: string,
+  maxTokens: number,
+  apiKey: string
+): Promise<{ reply: string; usage: any }> {
+  try {
+    return await executeProviderCall(APINEX_MODEL, systemPrompt, userPrompt, maxTokens, apiKey, 10000);
+  } catch (primaryError) {
+    if (primaryError instanceof ProviderError && primaryError.statusCode === 429) {
+      throw primaryError;
+    }
+    console.warn(`Primary AI model (${APINEX_MODEL}) failed, trying fallback (${FALLBACK_MODEL}):`, primaryError instanceof Error ? primaryError.message : primaryError);
+    try {
+      return await executeProviderCall(FALLBACK_MODEL, systemPrompt, userPrompt, maxTokens, apiKey, 8000);
+    } catch {
+      throw primaryError;
+    }
   }
 }
 
@@ -190,6 +259,10 @@ export async function POST(req: Request) {
     let systemPrompt = SYSTEM_PROMPTS[taskType];
     const maxTokens = MAX_OUTPUT_TOKENS[taskType];
     let cacheKey: string | null = null;
+    let loadedQuestion: any = null;
+    let guessVal: number | null = null;
+    let refAnswerVal: number | null = null;
+    let factorVal: number | null = null;
 
     // ==========================================
     // 4. TASK 1: HINT
@@ -206,7 +279,7 @@ export async function POST(req: Request) {
       // Load authoritative question from Supabase
       const { data: question, error: qError } = await admin
         .from('questions')
-        .select('id, text, unit')
+        .select('id, text, unit, category, difficulty, hint, estimation_approach')
         .eq('id', qId)
         .single();
 
@@ -216,6 +289,8 @@ export async function POST(req: Request) {
           { status: 404 }
         );
       }
+
+      loadedQuestion = question;
 
       // Cache lookup with content-hashed key to prevent stale hints
       cacheKey = buildHintCacheKey(
@@ -246,7 +321,12 @@ export async function POST(req: Request) {
         });
       }
 
-      userPrompt = `Hint for estimating: "${question.text.slice(0, 300)}" (Unit: ${question.unit || 'units'}). What 1-2 practical factors should be considered?`;
+      userPrompt = [
+        `Question: "${question.text.slice(0, 300)}"`,
+        `Category: ${question.category || 'General'}, Difficulty: ${question.difficulty || 'Medium'}, Unit: ${question.unit || 'units'}`,
+        question.estimation_approach ? `Key estimation factor context: ${question.estimation_approach.slice(0, 200)}` : '',
+        `Task: Provide a 1-2 sentence hint suggesting a practical breakdown or anchor strategy to estimate this quantity. Do NOT reveal the numerical answer or exact target.`,
+      ].filter(Boolean).join('\n');
 
     // ==========================================
     // 5. TASK 2: FEEDBACK
@@ -271,7 +351,7 @@ export async function POST(req: Request) {
       // Authoritative lookup: NEVER trust client-provided reference answers
       const { data: question, error: qError } = await admin
         .from('questions')
-        .select('id, text, unit, reference_answer')
+        .select('id, text, unit, reference_answer, category, difficulty, hint, estimation_approach')
         .eq('id', qId)
         .single();
 
@@ -298,8 +378,29 @@ export async function POST(req: Request) {
         );
       }
 
+      loadedQuestion = question;
+      guessVal = guess;
+      refAnswerVal = refAnswer;
+      factorVal = factor;
+
       const factorStr = `${factor.toFixed(2)}x`;
-      userPrompt = `Question: "${question.text.slice(0, 300)}" (${question.unit || 'units'})\nPlayer guess: ${guess}. Reference answer: ${refAnswer}. Factor: ${factorStr}.\nGive 2 sentences explaining the estimate magnitude vs reference:`;
+      const isOver = guess > refAnswer;
+      const formattedGuess = formatIndianNumber(guess);
+      const formattedRef = formatIndianNumber(refAnswer);
+
+      userPrompt = [
+        `Question: "${question.text.slice(0, 300)}"`,
+        `Category: ${question.category || 'General'}, Difficulty: ${question.difficulty || 'Medium'}`,
+        `Player guess: ${formattedGuess} ${question.unit || 'units'}`,
+        `Reference answer: ${formattedRef} ${question.unit || 'units'}`,
+        `Direction: ${isOver ? 'Overestimate' : 'Underestimate'} by a factor of ${factorStr}.`,
+        question.estimation_approach ? `Authoritative estimation approach context: ${question.estimation_approach.slice(0, 250)}` : '',
+        `Task: Write 2-3 concise sentences explaining:`,
+        `1) How the estimate compares to the reference answer (${isOver ? 'over' : 'under'} by ${factorStr}),`,
+        `2) A sensible estimation breakdown they could have used,`,
+        `3) A brief tip for next time.`,
+        `Format all multi-digit numbers using Indian digit grouping (e.g. 10,000, 25,00,000, 1,00,00,000) and preserve units. Do not recalculate score.`,
+      ].filter(Boolean).join('\n');
 
     // ==========================================
     // 6. TASK 3: BATTLE ANALYSIS
@@ -477,17 +578,28 @@ export async function POST(req: Request) {
     // ==========================================
     // 7. DISPATCH TO APINEX (FOR HINT AND FEEDBACK)
     // ==========================================
-    const result = await executeProviderCall(
-      APINEX_MODEL,
-      systemPrompt,
-      userPrompt,
-      maxTokens,
-      apiKey
-    );
+    let result: { reply: string; usage: any };
+    try {
+      result = await callAiWithFallback(
+        systemPrompt,
+        userPrompt,
+        maxTokens,
+        apiKey
+      );
 
-    // Cache successful hints
-    if (taskType === 'hint' && cacheKey) {
-      aiHintCache.set(cacheKey, result.reply, HINT_CACHE_TTL_MS);
+      // Cache successful hints
+      if (taskType === 'hint' && cacheKey) {
+        aiHintCache.set(cacheKey, result.reply, HINT_CACHE_TTL_MS);
+      }
+    } catch (dispatchErr) {
+      console.warn(`AI provider call failed for ${taskType}, using question-specific fallback:`, dispatchErr instanceof Error ? dispatchErr.message : dispatchErr);
+      if (taskType === 'hint' && loadedQuestion) {
+        result = { reply: generateFallbackHint(loadedQuestion), usage: undefined };
+      } else if (taskType === 'feedback' && loadedQuestion && guessVal !== null && refAnswerVal !== null && factorVal !== null) {
+        result = { reply: generateFallbackFeedback(loadedQuestion, guessVal, refAnswerVal, factorVal), usage: undefined };
+      } else {
+        throw dispatchErr;
+      }
     }
 
     const { reply, usage } = result;

@@ -18,6 +18,12 @@ interface HintButtonProps {
   disabled?: boolean;
 }
 
+function getQuestionSpecificFallbackHint(question: HintButtonProps['question']): string {
+  const unitStr = question.unit ? ` (${question.unit})` : '';
+  const categoryStr = question.category ? ` for this ${question.category} problem` : '';
+  return `To estimate this${categoryStr}, try breaking it down into a familiar baseline number and scaling by the relevant rate, population, or dimensions${unitStr ? ` to reach ${question.unit}` : ''}.`;
+}
+
 export function HintButton({
   question,
   onHintUsed,
@@ -75,10 +81,8 @@ export function HintButton({
     } catch (error: any) {
       console.error('Failed to generate AI hint:', error);
 
-      // Fallback if APInex fails
-      const fallbackHint = process.env.NODE_ENV === 'development'
-        ? `[API Error: ${error.message}] Break the problem into smaller quantities that are easier to estimate, then combine them.`
-        : 'Break the problem into smaller quantities that are easier to estimate, then combine them.';
+      // Question-specific fallback if network or provider fails
+      const fallbackHint = getQuestionSpecificFallbackHint(question);
 
       setHint(fallbackHint);
 

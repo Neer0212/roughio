@@ -47,6 +47,7 @@ export function ScoreDisplay({ factor, guess, referenceAnswer, unit, classificat
         <div className="bg-white/10 rounded-3xl p-6 border border-white/20 flex flex-col justify-center text-left">
           <span className="text-white/90 font-bold uppercase tracking-widest text-xs mb-2">You Guessed</span>
           <span className="text-3xl sm:text-4xl font-black text-white">{formatNumber(guess)}</span>
+          <span className="text-white/80 text-sm font-bold uppercase tracking-wider mt-1">{unit}</span>
         </div>
         
         {/* Answer */}
@@ -80,7 +81,7 @@ export function ScoreDisplay({ factor, guess, referenceAnswer, unit, classificat
           transition={{ delay: 0.4 }}
           className="mt-6 text-white font-bold leading-snug max-w-xs"
         >
-          {label} • Difference of {formatNumber(difference)}
+          {label} • Difference of {formatNumber(difference)} {unit}
         </motion.div>
       </div>
     </motion.div>

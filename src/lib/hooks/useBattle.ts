@@ -6,6 +6,7 @@ export interface BattlePlayer {
   user_id: string;
   email: string; // we might need to fetch this
   score: number;
+  last_ping_at?: string;
 }
 
 export interface BattleState {
@@ -23,6 +24,7 @@ export interface BattleRound {
   status: 'guessing' | 'revealed';
   started_at?: string;
   revealed_at?: string;
+  guessCount?: number;
   question: any;
 }
 
@@ -63,7 +65,8 @@ export function useBattle(battleId: string | null) {
         setPlayers(pData.map(p => ({
           user_id: p.user_id,
           score: p.score,
-          email: p.profiles?.email || 'Unknown'
+          email: p.profiles?.email || 'Unknown',
+          last_ping_at: p.last_ping_at
         })));
       }
       
@@ -131,13 +134,20 @@ export function useBattle(battleId: string | null) {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'battles', filter: `id=eq.${battleId}` }, fetchState)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'battle_players', filter: `battle_id=eq.${battleId}` }, fetchState)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'battle_rounds', filter: `battle_id=eq.${battleId}` }, fetchState)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'battle_guesses' }, fetchState)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'battle_guesses', filter: `battle_id=eq.${battleId}` }, fetchState)
       .subscribe();
       
     return () => {
       supabase.removeChannel(channel);
     };
   }, [battleId, fetchState, supabase]);
+
+  const [nowMs, setNowMs] = useState<number | null>(null);
+  useEffect(() => {
+    setNowMs(Date.now());
+    const timer = setInterval(() => setNowMs(Date.now()), 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Heartbeat
   useEffect(() => {
@@ -148,25 +158,52 @@ export function useBattle(battleId: string | null) {
     return () => clearInterval(interval);
   }, [battleId]);
 
+  const isHost = battle?.host_id === user?.id;
+  const hostPlayer = players.find(p => p.user_id === battle?.host_id);
+  const hostLastPingMs = hostPlayer?.last_ping_at ? new Date(hostPlayer.last_ping_at).getTime() : 0;
+  const isHostStale = !isHost && (hostLastPingMs === 0 || (nowMs !== null && nowMs - hostLastPingMs > 45000));
+
   const startGame = async () => {
-    await fetch('/api/battles/start', {
+    const res = await fetch('/api/battles/start', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ battleId })
     });
+    await fetchState();
+    return res;
   };
 
   const submitGuess = async (roundId: string, guess: number) => {
     await fetch('/api/battles/submit', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ battleId, roundId, guess })
     });
   };
 
-  const nextRound = async () => {
-    await fetch('/api/battles/next', {
+  const nextRound = async (expectedRound?: number) => {
+    const res = await fetch('/api/battles/next', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        battleId,
+        expectedRound: typeof expectedRound === 'number' ? expectedRound : (battle?.current_round)
+      })
+    });
+    await fetchState();
+    return res;
+  };
+
+  const claimHost = async () => {
+    const res = await fetch('/api/battles/claim-host', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ battleId })
     });
+    if (res.ok) {
+      await fetchState();
+    }
+    return res;
   };
 
   return { refresh: fetchState,
@@ -176,9 +213,11 @@ export function useBattle(battleId: string | null) {
     guesses,
     isLoading,
     error,
-    isHost: battle?.host_id === user?.id,
+    isHost,
+    isHostStale,
     startGame,
     submitGuess,
-    nextRound
+    nextRound,
+    claimHost
   };
 }

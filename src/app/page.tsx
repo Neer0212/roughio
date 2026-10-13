@@ -16,6 +16,10 @@ export default function LandingPage() {
         </div>
         <div className="flex items-center gap-6">
           <nav className="hidden md:flex gap-6 font-bold text-text-secondary">
+            <Link href="/games" className="text-accent hover:text-accent-dark transition-colors flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              Arcade
+            </Link>
             <Link href="/game/play" className="hover:text-text-primary transition-colors">Free Play</Link>
             <Link href="/ladder" className="hover:text-text-primary transition-colors">Campaign</Link>
             <Link href="/battle" className="hover:text-text-primary transition-colors">Multiplayer</Link>
@@ -44,12 +48,18 @@ export default function LandingPage() {
             Daily Challenge - {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </div>
           
-          <div className="flex justify-center">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <Link 
               href="/game/play" 
               className="px-10 py-5 bg-white text-accent font-black rounded-full text-lg hover:bg-gray-100 transition-colors shadow-md flex items-center gap-3 uppercase tracking-wider"
             >
               Play Today&apos;s <ArrowRight size={20} />
+            </Link>
+            <Link 
+              href="/games" 
+              className="px-8 py-5 bg-white/20 hover:bg-white/30 text-white border-2 border-white/40 font-bold rounded-full text-lg transition-colors flex items-center gap-2 uppercase tracking-wider"
+            >
+              Explore Arcade (6 Games)
             </Link>
           </div>
         </section>

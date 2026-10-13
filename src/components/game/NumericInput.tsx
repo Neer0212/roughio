@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState, ForwardRefExoticComponent, RefAttributes } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils/formatting';
+import { formatIndianNumber } from '@/lib/utils/number-parser';
 import { Calculator, X } from 'lucide-react';
 
 interface NumericInputProps {
@@ -43,9 +44,9 @@ export const NumericInput = Object.assign(
       let val = e.target.value;
       const rawVal = val.replace(/,/g, '');
       
-      // Auto-add commas if they are typing a pure integer
+      // Auto-add commas using Indian digit grouping if typing a pure integer
       if (/^[0-9]+$/.test(rawVal)) {
-        val = Number(rawVal).toLocaleString('en-US');
+        val = formatIndianNumber(Number(rawVal));
       }
       
       onChange(val);

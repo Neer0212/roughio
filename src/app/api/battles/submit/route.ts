@@ -6,18 +6,45 @@ import { DIFFICULTIES } from '@/lib/constants/difficulties';
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient();
-    
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    let user = null;
+    try {
+      const supabase = await createClient();
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      if (!authError && authUser) {
+        user = authUser;
+      }
+    } catch {
+      // In environments without cookies / mock requests without cookies
+    }
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { battleId, roundId, guess } = await request.json();
+
+    if (!battleId || typeof battleId !== 'string' || !roundId || typeof roundId !== 'string') {
+      return NextResponse.json({ error: 'Invalid battle or round ID' }, { status: 400 });
+    }
+    if (typeof guess !== 'number' || !Number.isFinite(guess) || guess <= 0) {
+      return NextResponse.json({ error: 'Invalid guess value' }, { status: 400 });
+    }
+
+    // Verify player is an active participant in this battle
+    const { data: playerRecord, error: playerError } = await supabaseAdmin
+      .from('battle_players')
+      .select('user_id')
+      .eq('battle_id', battleId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (playerError || !playerRecord) {
+      return NextResponse.json({ error: 'Forbidden: not a participant of this battle' }, { status: 403 });
+    }
 
     // 1. Get round and question info securely
     const { data: round, error: roundError } = await supabaseAdmin
       .from('battle_rounds')
       .select('*, questions(reference_answer, difficulty)')
       .eq('id', roundId)
+      .eq('battle_id', battleId)
       .single();
 
     if (roundError || !round) throw new Error('Round not found');
@@ -42,12 +69,13 @@ export async function POST(request: Request) {
     const diffMultiplier = DIFFICULTIES[round.questions.difficulty as keyof typeof DIFFICULTIES]?.xpMultiplier || 1.0;
     const secureScore = buildScoreResult(guess, actual, diffMultiplier, false);
 
-    // 3. Insert guess
-    const { error: guessError } = await supabase
+    // 3. Insert guess via admin (server-authorized path to prevent client tampering)
+    const { error: guessError } = await supabaseAdmin
       .from('battle_guesses')
       .upsert({
         round_id: roundId,
-        user_id: session.user.id,
+        battle_id: battleId,
+        user_id: user.id,
         guess: guess,
         factor: secureScore.factor,
         points_awarded: secureScore.xpEarned // Map XP to points for battle
@@ -56,14 +84,15 @@ export async function POST(request: Request) {
     if (guessError) throw guessError;
 
     // 4. Check if everyone has guessed
-    const { data: players, error: playersError } = await supabase
+    const { data: players, error: playersError } = await supabaseAdmin
       .from('battle_players')
       .select('user_id')
       .eq('battle_id', battleId);
       
     if (playersError) throw playersError;
 
-    const { count: guessCount } = await supabase
+    // Must query with supabaseAdmin: RLS prevents regular client from seeing opponents' guesses during 'guessing'
+    const { count: guessCount } = await supabaseAdmin
       .from('battle_guesses')
       .select('*', { count: 'exact', head: true })
       .eq('round_id', roundId);

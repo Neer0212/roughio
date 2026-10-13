@@ -11,11 +11,18 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Missing battle ID' }, { status: 400 });
     }
 
-    const supabase = await createClient();
-    
     // Auth Check
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    let user = null;
+    try {
+      const supabase = await createClient();
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      if (!authError && authUser) {
+        user = authUser;
+      }
+    } catch {
+      // In environments without cookies / mock requests without cookies
+    }
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -24,7 +31,7 @@ export async function GET(request: Request) {
       .from('battle_players')
       .select('user_id')
       .eq('battle_id', battleId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single();
 
     if (pError || !participation) {
@@ -39,6 +46,20 @@ export async function GET(request: Request) {
       .order('round_number', { ascending: true });
 
     if (rError) throw rError;
+
+    const roundIds = (rData || []).map((r) => r.id);
+    const guessCountsByRound: Record<string, number> = {};
+    if (roundIds.length > 0) {
+      const { data: gData } = await supabaseAdmin
+        .from('battle_guesses')
+        .select('round_id')
+        .in('round_id', roundIds);
+      if (gData) {
+        for (const g of gData) {
+          guessCountsByRound[g.round_id] = (guessCountsByRound[g.round_id] || 0) + 1;
+        }
+      }
+    }
 
     const { BATTLE_ROUND_TIMEOUT_SECONDS } = await import('@/lib/constants/battle');
     const { finalizeBattleRound } = await import('@/lib/battle/finalizeRound');
@@ -65,6 +86,7 @@ export async function GET(request: Request) {
         round_number: r.round_number,
         status: status,
         started_at: r.started_at,
+        guessCount: guessCountsByRound[r.id] || 0,
         question: q
       });
     }

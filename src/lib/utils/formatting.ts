@@ -1,12 +1,12 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { formatLarge, formatWithCommas } from "./number-parser";
+import { formatLarge, formatWithCommas, formatIndianNumber } from "./number-parser";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export { formatLarge, formatWithCommas };
+export { formatLarge, formatWithCommas, formatIndianNumber };
 
 /**
  * Format a date for display.

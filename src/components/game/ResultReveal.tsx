@@ -25,6 +25,13 @@ export function ResultReveal({ question, result, onNext, isGuest = false, hintUs
   const [feedbackError, setFeedbackError] = useState(false);
   const hasRequestedFeedback = useRef(false);
 
+  // Reset feedback state when question changes
+  useEffect(() => {
+    setAiFeedback(null);
+    setIsGeneratingFeedback(false);
+    setFeedbackError(false);
+  }, [question.id]);
+
   // Normal result sound
   useEffect(() => {
     import('@/lib/utils/audio').then(({ audio }) => {

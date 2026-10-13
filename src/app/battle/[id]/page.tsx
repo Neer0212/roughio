@@ -12,7 +12,7 @@ import { BATTLE_ROUND_TIMEOUT_SECONDS } from '@/lib/constants/battle';
 
 export default function BattleRoom({ params }: { params: { id: string } }) {
   const { user } = useAuth();
-  const { battle, players, rounds, guesses, isLoading, error, isHost, startGame, submitGuess, nextRound, refresh } = useBattle(params.id);
+  const { battle, players, rounds, guesses, isLoading, error, isHost, isHostStale, startGame, submitGuess, nextRound, refresh } = useBattle(params.id);
   
   const [guessInput, setGuessInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,6 +27,9 @@ export default function BattleRoom({ params }: { params: { id: string } }) {
   
   const currentRound = battle ? rounds.find(r => r.round_number === battle.current_round) : null;
   const myGuess = guesses.find(g => g.user_id === user?.id);
+  const guessedCount = currentRound?.status === 'revealed'
+    ? guesses.length
+    : (currentRound?.guessCount ?? (myGuess ? 1 : 0));
 
   useEffect(() => {
     if (!currentRound || currentRound.status !== 'revealed' || !currentRound.question?.reference_answer) {
@@ -144,6 +147,15 @@ export default function BattleRoom({ params }: { params: { id: string } }) {
               {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <Play className="w-6 h-6 fill-current" />}
               Start Battle
             </button>
+          ) : isHostStale ? (
+            <button
+              onClick={handleStart}
+              disabled={isSubmitting || players.length < 1}
+              className="w-full py-5 rounded-2xl font-bold text-xl bg-amber-500 text-white shadow-[0_4px_0_rgb(180,100,20)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <Play className="w-6 h-6 fill-current" />}
+              Host Inactive: Claim Host & Start
+            </button>
           ) : (
             <div className="py-5 rounded-2xl font-bold text-lg bg-surface text-text-secondary border-2 border-border flex items-center justify-center gap-3">
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -216,7 +228,7 @@ export default function BattleRoom({ params }: { params: { id: string } }) {
           </div>
         )}
         <div className="flex items-center gap-4">
-          <div className="text-sm">Players: <span className="font-bold">{guesses.length}/{players.length}</span> guessed</div>
+          <div className="text-sm">Players: <span className="font-bold">{guessedCount}/{players.length}</span> guessed</div>
         </div>
       </div>
       
@@ -343,6 +355,14 @@ export default function BattleRoom({ params }: { params: { id: string } }) {
               className="w-full max-w-sm mx-auto py-4 rounded-xl font-bold text-lg bg-accent text-background shadow-[0_4px_0_rgb(10,135,95)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Next Round'} <ArrowRight className="w-5 h-5" />
+            </button>
+          ) : isHostStale ? (
+            <button
+              onClick={handleNext}
+              disabled={isSubmitting}
+              className="w-full max-w-sm mx-auto py-4 rounded-xl font-bold text-lg bg-amber-500 text-white shadow-[0_4px_0_rgb(180,100,20)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Host Inactive: Advance Round'} <ArrowRight className="w-5 h-5" />
             </button>
           ) : (
             <div className="text-center text-text-secondary font-bold py-4">

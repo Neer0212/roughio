@@ -10,9 +10,16 @@ const WORD_MULTIPLIERS: Record<string, number> = {
   k: 1_000,
   thousand: 1_000,
   thousands: 1_000,
+  lakh: 100_000,
+  lakhs: 100_000,
+  lac: 100_000,
+  lacs: 100_000,
   m: 1_000_000,
   million: 1_000_000,
   millions: 1_000_000,
+  crore: 10_000_000,
+  crores: 10_000_000,
+  cr: 10_000_000,
   b: 1_000_000_000,
   billion: 1_000_000_000,
   billions: 1_000_000_000,
@@ -104,7 +111,9 @@ export function parseNumber(input: string): ParseResult {
   let processed = withoutCommas.toLowerCase();
 
   processed = processed.replace(/\b(k|thousand|thousands)\b/g, '*1000');
+  processed = processed.replace(/\b(lakh|lakhs|lac|lacs)\b/g, '*100000');
   processed = processed.replace(/\b(m|million|millions)\b/g, '*1000000');
+  processed = processed.replace(/\b(crore|crores|cr)\b/g, '*10000000');
   processed = processed.replace(/\b(b|billion|billions)\b/g, '*1000000000');
   processed = processed.replace(/\b(t|trillion|trillions)\b/g, '*1000000000000');
 
@@ -170,49 +179,44 @@ function validateAndNormalize(value: number, original: string): ParseResult {
   return {
     value,
     error: null,
-    normalized: formatLarge(value),
+    normalized: formatIndianNumber(value),
   };
 }
 
 /**
- * Format a large number into a human-readable string.
- * e.g. 250_000_000 → "250 million"
+ * Format a number using Indian digit grouping (en-IN).
+ * e.g. 1000 → "1,000"
+ *      27600 → "27,600"
+ *      4000000 → "40,00,000"
+ *      27.6 → "27.6"
+ * Preserves meaningful decimals without altering underlying numerical values.
  */
-export function formatLarge(value: number): string {
-  const abs = Math.abs(value);
-
-  if (abs >= 1e12) {
-    const t = value / 1e12;
-    return `${trimTrailingZeros(t.toFixed(3))} trillion`;
-  }
-  if (abs >= 1e9) {
-    const b = value / 1e9;
-    return `${trimTrailingZeros(b.toFixed(3))} billion`;
-  }
-  if (abs >= 1e6) {
-    const m = value / 1e6;
-    return `${trimTrailingZeros(m.toFixed(3))} million`;
-  }
-  if (abs >= 1e3) {
-    const k = value / 1e3;
-    return `${trimTrailingZeros(k.toFixed(3))}k`;
+export function formatIndianNumber(value: number): string {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return String(value ?? "");
   }
 
-  return value % 1 === 0
-    ? value.toLocaleString("en-US")
-    : value.toFixed(2);
+  const str = value.toString();
+  const decimalPart = str.split(".")[1];
+  const maxDecimals = decimalPart ? Math.min(decimalPart.length, 6) : 0;
+
+  return value.toLocaleString("en-IN", {
+    maximumFractionDigits: maxDecimals,
+  });
 }
 
 /**
- * Format a number for display with commas.
- * e.g. 250000000 → "250,000,000"
+ * Format a number for display across the game with readable Indian digit grouping.
+ * Preserves full digits and decimals without converting to K, M, or B.
  */
-export function formatWithCommas(value: number): string {
-  if (value >= 1e15) return value.toExponential(2);
-  return value.toLocaleString("en-US", { maximumFractionDigits: 2 });
+export function formatLarge(value: number): string {
+  return formatIndianNumber(value);
 }
 
-function trimTrailingZeros(str: string): string {
-  if (!str.includes(".")) return str;
-  return str.replace(/\.?0+$/, "");
+/**
+ * Format a number for display with Indian commas.
+ */
+export function formatWithCommas(value: number): string {
+  return formatIndianNumber(value);
 }
+
