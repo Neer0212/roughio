@@ -22,22 +22,21 @@ describe('Arcade Game Registry', () => {
     assert.equal(ARCADE_GAMES.length, 6);
   });
 
-  it('contains Fermi Estimate, Color Recall, and Pattern Recall as playable modes', () => {
+  it('contains all 6 arcade games as playable modes', () => {
     const playable = getPlayableGames();
-    assert.equal(playable.length, 3);
+    assert.equal(playable.length, 6);
     const playableIds = playable.map((g) => g.id);
     assert.ok(playableIds.includes('fermi'));
     assert.ok(playableIds.includes('color-recall'));
     assert.ok(playableIds.includes('pattern-recall'));
+    assert.ok(playableIds.includes('sound-match'));
+    assert.ok(playableIds.includes('rare-answer'));
+    assert.ok(playableIds.includes('order-of-magnitude'));
   });
 
-  it('contains the planned upcoming games with coming-soon status', () => {
+  it('has zero upcoming games remaining with coming-soon status', () => {
     const upcoming = getComingSoonGames();
-    assert.equal(upcoming.length, 3);
-    const upcomingIds = upcoming.map((g) => g.id);
-    assert.ok(upcomingIds.includes('sound-match'));
-    assert.ok(upcomingIds.includes('rare-answer'));
-    assert.ok(upcomingIds.includes('order-of-magnitude'));
+    assert.equal(upcoming.length, 0);
   });
 
   it('provides working lookup via getGameById', () => {
@@ -50,6 +49,24 @@ describe('Arcade Game Registry', () => {
     assert.ok(colorRecall);
     assert.equal(colorRecall.name, 'Color Recall');
     assert.equal(colorRecall.route, '/games/color-recall');
+
+    const soundMatch = getGameById('sound-match');
+    assert.ok(soundMatch);
+    assert.equal(soundMatch.name, 'Sound Match');
+    assert.equal(soundMatch.route, '/games/sound-match');
+    assert.equal(soundMatch.status, 'playable');
+
+    const rareAnswer = getGameById('rare-answer');
+    assert.ok(rareAnswer);
+    assert.equal(rareAnswer.name, 'Rare Answer');
+    assert.equal(rareAnswer.route, '/games/rare-answer');
+    assert.equal(rareAnswer.status, 'playable');
+
+    const orderOfMagnitude = getGameById('order-of-magnitude');
+    assert.ok(orderOfMagnitude);
+    assert.equal(orderOfMagnitude.name, 'Order of Magnitude');
+    assert.equal(orderOfMagnitude.route, '/games/order-of-magnitude');
+    assert.equal(orderOfMagnitude.status, 'playable');
 
     assert.equal(getGameById('nonexistent'), undefined);
   });

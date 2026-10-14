@@ -56,8 +56,8 @@ export const ARCADE_GAMES: GameDefinition[] = [
       'Train your ear. Hear a brief musical frequency or synthesizer tone, then sweep an oscillator slider to match the exact pitch from memory.',
     category: 'Audio & Pitch',
     route: '/games/sound-match',
-    status: 'coming-soon',
-    badge: 'Planned',
+    status: 'playable',
+    badge: 'New Mode',
     accentColor: '#4A65FF',
     themeClass: 'from-[#4A65FF] to-[#3548CC]',
     metrics: {
@@ -102,8 +102,8 @@ export const ARCADE_GAMES: GameDefinition[] = [
       'Inspired by Pointless and Krillion. Given a broad prompt (e.g., "Countries starting with M"), enter valid answers that few other players would remember.',
     category: 'Trivia & Language',
     route: '/games/rare-answer',
-    status: 'coming-soon',
-    badge: 'Planned',
+    status: 'playable',
+    badge: 'New Mode',
     accentColor: '#B9A0FF',
     themeClass: 'from-[#B9A0FF] to-[#8C6CEE]',
     metrics: {
@@ -125,8 +125,8 @@ export const ARCADE_GAMES: GameDefinition[] = [
       'Fast-paced binary and sorting duels. Is the number of stars in the Milky Way greater than the number of seconds since the Pyramids were built?',
     category: 'Scale & Numbers',
     route: '/games/order-of-magnitude',
-    status: 'coming-soon',
-    badge: 'Planned',
+    status: 'playable',
+    badge: 'New Mode',
     accentColor: '#FF8585',
     themeClass: 'from-[#FF8585] to-[#E05B5B]',
     metrics: {
