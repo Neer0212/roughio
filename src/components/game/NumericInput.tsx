@@ -58,7 +58,7 @@ export const NumericInput = Object.assign(
     };
     
     return (
-      <div className="relative w-full max-w-2xl mx-auto mt-8">
+      <div className="relative w-full max-w-2xl mx-auto mt-6">
         <motion.div
           initial={false}
           className="relative"
@@ -74,10 +74,10 @@ export const NumericInput = Object.assign(
             disabled={disabled}
             placeholder={placeholder}
             className={cn(
-              'w-full max-w-full overflow-hidden text-ellipsis px-2 py-4 sm:py-5 text-left text-4xl sm:text-5xl lg:text-6xl font-mono font-bold bg-transparent border-b-2 border-white/50 rounded-none',
-              'text-white placeholder-white/30',
-              'transition-all duration-200',
-              'focus:outline-none focus:border-white',
+              'w-full max-w-full overflow-hidden text-ellipsis px-5 py-4 sm:py-5 text-left text-3xl sm:text-5xl lg:text-6xl font-mono font-black bg-surface/90 border-2 border-border rounded-2xl',
+              'text-white placeholder-text-muted',
+              'transition-all duration-200 shadow-inner',
+              'focus:outline-none focus:border-accent focus:shadow-[0_0_20px_rgba(204,255,0,0.2)]',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               error && 'border-error focus:border-error'
             )}

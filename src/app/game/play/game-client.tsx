@@ -120,89 +120,98 @@ export function GameClient() {
     : null;
 
   return (
-    <div className="flex-1 min-h-[100dvh] flex flex-col lg:flex-row justify-center items-center w-full px-4 py-4 sm:p-6 lg:p-8 gap-6 max-w-7xl mx-auto">
+    <div className="flex-1 min-h-[100dvh] flex flex-col lg:flex-row justify-center items-center w-full px-4 py-6 sm:p-6 lg:p-8 gap-6 max-w-7xl mx-auto">
       <div
-        className={cn(
-          "flex flex-col w-full max-w-[900px] text-white rounded-[2.5rem] p-6 sm:p-8 md:p-12 relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-colors duration-500",
-          showResult ? "bg-info" : "bg-accent",
-        )}
+        className="flex flex-col w-full max-w-[900px] text-text-primary bg-surface border border-border rounded-3xl p-6 sm:p-8 md:p-12 relative overflow-hidden shadow-2xl transition-all duration-300"
       >
+        {/* Top Accent Strip */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-fermi" />
+
         {/* Header Stats */}
-        <BackButton fallback="/" />
+        <div className="flex items-center justify-between mb-8 sm:mb-10 relative z-10">
+          <BackButton fallback="/games" label="Arcade" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="w-2.5 h-2.5 rounded-full bg-fermi hidden sm:inline-block" />
+            <span className="font-bold text-sm tracking-tight hidden sm:inline-block">
+              Fermi Estimate
+            </span>
+          </div>
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-8 sm:mb-12 relative z-10"
+          className="flex items-center justify-between mb-8 sm:mb-10 relative z-10"
         >
-          <div className="flex items-center flex-wrap gap-2 sm:gap-4">
+          <div className="flex items-center flex-wrap gap-2">
             {stage && (
-              <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-white/20 text-white border border-white/30 flex items-center gap-1.5">
+              <span className="px-3 py-1 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-background border border-border text-text-secondary flex items-center gap-1.5">
                 <span>{stage.icon}</span> {stage.name}
               </span>
             )}
             {!stage && category && (
-              <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest hidden sm:inline-block bg-white/20 text-white border border-white/30">
+              <span className="px-3 py-1 rounded-xl text-xs font-mono font-bold uppercase tracking-wider hidden sm:inline-block bg-background border border-border text-text-secondary">
                 {category.name}
               </span>
             )}
             {!stage && (
-              <span className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-white/20 text-white border border-white/30">
+              <span className="px-3 py-1 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-background border border-border text-text-secondary">
                 {difficulty.name}
               </span>
             )}
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2">
             {streak > 0 && (
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/20 text-white text-sm font-bold border border-white/30"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-warning/10 text-warning text-xs font-mono font-bold border border-warning/20"
               >
-                <span className="relative">🔥</span>
+                <span>🔥</span>
                 <span>{streak}</span>
               </motion.div>
             )}
-            <span className="text-sm font-bold text-white/80 hidden sm:inline-block px-3">
+            <span className="text-xs font-mono font-bold text-text-muted hidden sm:inline-block px-2">
               Q{questionsAnswered + 1}
             </span>
             <button
               onClick={() => (window.location.href = "/leaderboard")}
-              className="p-2.5 rounded-xl hover:bg-white/20 transition-all text-white/80 hover:text-white"
+              className="p-2 rounded-xl border border-border bg-background hover:bg-elevated hover:text-white transition-all text-text-secondary"
               title="Leaderboard"
             >
-              <Trophy className="w-5 h-5" />
+              <Trophy className="w-4 h-4" />
             </button>
             <button
               onClick={() => setShowCalculator(!showCalculator)}
               className={cn(
-                "p-2.5 rounded-xl transition-all",
+                "p-2 rounded-xl border transition-all",
                 showCalculator
-                  ? "bg-white/30 text-white"
-                  : "hover:bg-white/20 text-white/80 hover:text-white",
+                  ? "bg-accent text-[#090A0F] border-accent"
+                  : "bg-background border-border hover:bg-elevated text-text-secondary hover:text-white",
               )}
               title="Calculator"
             >
-              <CalcIcon className="w-5 h-5" />
+              <CalcIcon className="w-4 h-4" />
             </button>
             <button
               onClick={() => setShowSettings(true)}
-              className="p-2.5 rounded-xl hover:bg-white/20 transition-all text-white/80 hover:text-white"
+              className="p-2 rounded-xl border border-border bg-background hover:bg-elevated hover:text-white transition-all text-text-secondary"
               title="Settings"
             >
-              <Settings className="w-5 h-5" />
+              <Settings className="w-4 h-4" />
             </button>
             {user ? (
               <button
                 onClick={() => (window.location.href = "/profile")}
-                className="px-5 py-2.5 bg-white text-accent font-bold rounded-full hover:bg-gray-100 transition-colors text-sm shadow-sm ml-2"
+                className="px-4 py-1.5 bg-surface text-text-primary border border-border font-mono font-bold rounded-xl hover:border-accent hover:text-accent transition-colors text-xs ml-1"
               >
                 Profile
               </button>
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="px-5 py-2.5 bg-white text-accent font-bold rounded-full hover:bg-gray-100 transition-colors text-sm shadow-sm ml-2"
+                className="px-4 py-1.5 bg-accent text-[#090A0F] font-mono font-black rounded-xl hover:bg-accent-hover transition-colors text-xs ml-1 shadow-sm"
               >
                 Sign In
               </button>
@@ -230,11 +239,11 @@ export function GameClient() {
                 <h1 className="text-[clamp(2.5rem,4.5vw,4.5rem)] leading-[1.05] font-extrabold text-balance text-white mb-4">
                   {currentQuestion.text}
                 </h1>
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20">
-                  <span className="text-white/80 text-sm font-bold uppercase tracking-widest">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-background border border-border shadow-sm">
+                  <span className="text-text-secondary text-xs font-mono font-bold uppercase tracking-widest">
                     Unit
                   </span>
-                  <span className="font-mono font-bold text-white text-lg">
+                  <span className="font-mono font-black text-accent text-base">
                     {currentQuestion.unit}
                   </span>
                 </div>

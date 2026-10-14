@@ -3,12 +3,12 @@
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export function BackButton({ fallback = '/' }: { fallback?: string }) {
+export function BackButton({ fallback = '/', label = 'Back' }: { fallback?: string; label?: string }) {
   const router = useRouter();
 
   return (
     <button 
-      className="mb-6 -ml-2 text-text-secondary hover:text-text-primary hover:bg-elevated/50 flex items-center gap-2 rounded-full py-2 px-4 transition-colors font-medium text-sm"
+      className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-xl border border-border bg-surface/80 hover:bg-elevated hover:border-border-hover transition-colors shadow-sm"
       onClick={() => {
         if (typeof window !== 'undefined' && window.history.length > 2) {
           router.back();
@@ -17,8 +17,8 @@ export function BackButton({ fallback = '/' }: { fallback?: string }) {
         }
       }}
     >
-      <ArrowLeft className="w-4 h-4" />
-      <span>Back</span>
+      <ArrowLeft className="w-3.5 h-3.5" />
+      <span>{label}</span>
     </button>
   );
 }

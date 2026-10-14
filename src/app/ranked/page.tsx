@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Target, Trophy, Clock, Play, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { BackButton } from '@/components/layout/BackButton';
+import { Navbar } from '@/components/layout/Navbar';
 import { createClient } from '@/lib/supabase/client';
 import { AuthModal } from '@/components/auth/AuthModal';
 
@@ -67,43 +68,50 @@ export default function RankedDashboard() {
   if (loading) return <div className="flex-1 flex items-center justify-center"><div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" /></div>;
 
   return (
-    <div className="flex-1 max-w-5xl mx-auto w-full px-4 py-8 md:py-12">
-        <BackButton />
-      <div className="text-center mb-12">
-        <div className="w-20 h-20 bg-accent/20 text-accent rounded-full flex items-center justify-center mx-auto mb-6">
-          <Target className="w-10 h-10" />
-        </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Ranked Mode</h1>
-        <p className="text-text-secondary text-lg">The Daily Challenge. One shot. Global Elo.</p>
-      </div>
+    <div className="min-h-screen bg-background text-text-primary flex flex-col selection:bg-accent selection:text-[#090A0F]">
+      <Navbar />
 
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
-        {/* Profile Card */}
-        <div className="bg-surface rounded-3xl p-8 border border-border shadow-xl text-center relative overflow-hidden">
-          <h2 className="text-sm font-bold text-text-secondary uppercase tracking-widest mb-6">Your Rating</h2>
-          <div className="text-6xl font-black font-mono mb-2">{elo}</div>
-          <div className={`text-xl font-bold uppercase tracking-widest mb-8 ${rank.color}`}>{rank.title}</div>
-          
-          <button
-            onClick={handlePlay}
-            disabled={hasPlayedToday && !!user}
-            className={`w-full py-5 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-all shadow-[0_4px_0_rgba(0,0,0,0.5)] active:translate-y-1 active:shadow-none ${
-              hasPlayedToday && !!user
-                ? 'bg-elevated text-text-secondary cursor-not-allowed shadow-[0_4px_0_var(--border)]'
-                : 'bg-accent text-background shadow-[0_4px_0_rgb(10,135,95)] hover:brightness-110'
-            }`}
-          >
-            {hasPlayedToday && !!user ? (
-              <>
-                <Clock className="w-6 h-6" /> Come back tomorrow
-              </>
-            ) : (
-              <>
-                <Play className="w-6 h-6 fill-current" /> Play Daily Challenge
-              </>
-            )}
-          </button>
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8 md:py-12">
+        <div className="mb-6">
+          <BackButton fallback="/games" label="Arcade" />
         </div>
+
+        <div className="text-center mb-12">
+          <div className="w-16 h-16 bg-warning/15 text-warning border border-warning/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(255,222,0,0.15)]">
+            <Target className="w-8 h-8" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black mb-3 tracking-tight">Ranked Ladder</h1>
+          <p className="text-text-secondary text-base font-mono">The Daily Challenge. One shot. Global Elo.</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          {/* Profile Card */}
+          <div className="bg-surface rounded-3xl p-8 border border-border shadow-xl text-center relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-warning" />
+            <span className="text-xs font-mono font-bold text-text-muted uppercase tracking-widest mb-4 block">Your Rating</span>
+            <div className="text-6xl font-black font-mono text-white mb-2">{elo}</div>
+            <div className={`text-base font-mono font-bold uppercase tracking-wider mb-8 ${rank.color}`}>{rank.title}</div>
+            
+            <button
+              onClick={handlePlay}
+              disabled={hasPlayedToday && !!user}
+              className={`w-full py-4 rounded-xl font-mono font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+                hasPlayedToday && !!user
+                  ? 'bg-elevated text-text-secondary cursor-not-allowed border border-border'
+                  : 'bg-accent text-[#090A0F] hover:bg-accent-hover shadow-[0_0_20px_rgba(204,255,0,0.25)]'
+              }`}
+            >
+              {hasPlayedToday && !!user ? (
+                <>
+                  <Clock className="w-4 h-4" /> <span>Come Back Tomorrow</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 fill-current" /> <span>Play Daily Challenge</span>
+                </>
+              )}
+            </button>
+          </div>
 
         {/* Info Card */}
         <div className="bg-surface rounded-3xl p-8 border border-border shadow-xl flex flex-col justify-center">
@@ -163,7 +171,8 @@ export default function RankedDashboard() {
         )}
       </div>
 
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      </main>
     </div>
   );
 }

@@ -14,18 +14,18 @@ export function HeaderAuth() {
     <>
       <div className="flex items-center gap-4">
         {loading ? (
-          <Loader2 className="w-5 h-5 animate-spin text-text-secondary" />
+          <Loader2 className="w-4 h-4 animate-spin text-text-secondary" />
         ) : user ? (
           <Link 
             href="/profile" 
-            className="text-sm font-bold px-5 py-2.5 bg-elevated text-text-primary rounded-full hover:bg-border transition-colors"
+            className="text-xs font-mono font-bold uppercase tracking-wider px-4 py-2 bg-surface text-text-primary border border-border rounded-xl hover:border-accent/50 hover:text-accent transition-colors"
           >
             Profile
           </Link>
         ) : (
           <button
             onClick={() => setShowAuthModal(true)}
-            className="text-sm font-bold px-5 py-2.5 bg-accent text-background rounded-full hover:bg-accent/90 transition-colors"
+            className="text-xs font-mono font-black uppercase tracking-wider px-4 py-2 bg-accent text-[#090A0F] rounded-xl hover:bg-accent-hover transition-all shadow-[0_0_15px_rgba(204,255,0,0.2)]"
           >
             Sign In
           </button>

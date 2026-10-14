@@ -19,6 +19,7 @@ import {
   Play,
 } from 'lucide-react';
 import { BackButton } from '@/components/layout/BackButton';
+import { GameHeader } from '@/components/game-shell/GameHeader';
 import {
   HSLColor,
   RoundResult,
@@ -246,31 +247,20 @@ export function ColorRecallClient() {
   return (
     <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-6 sm:py-10 flex flex-col justify-between">
       {/* Top Header */}
-      <div className="flex items-center justify-between mb-6">
-        <BackButton fallback="/games" />
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => {
-              const nextMuted = !soundMuted;
-              setSoundMuted(nextMuted);
-              audio.toggle(!nextMuted);
-            }}
-            className="p-2.5 rounded-xl border border-border bg-surface hover:bg-elevated text-text-secondary hover:text-text-primary transition-colors"
-            title={soundMuted ? 'Unmute Sound' : 'Mute Sound'}
-            aria-label={soundMuted ? 'Unmute Sound' : 'Mute Sound'}
-          >
-            {soundMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-          </button>
-
-          <Link
-            href="/games"
-            className="text-xs font-bold uppercase tracking-widest text-text-secondary hover:text-text-primary px-4 py-2 rounded-full border border-border bg-surface hover:bg-elevated transition-colors"
-          >
-            Arcade Hub
-          </Link>
-        </div>
-      </div>
+      <GameHeader
+        title="Color Recall"
+        category="Perception & Memory"
+        accentColor="#35D07F"
+        soundMuted={soundMuted}
+        onToggleSound={() => {
+          const nextMuted = !soundMuted;
+          setSoundMuted(nextMuted);
+          audio.toggle(!nextMuted);
+        }}
+        highScore={stats.highScore}
+        score={phase !== 'ready' && phase !== 'game_over' ? currentTotalScore : undefined}
+        roundInfo={phase !== 'ready' && phase !== 'game_over' ? `Round ${roundIndex + 1} / ${TOTAL_ROUNDS}` : undefined}
+      />
 
       {/* Main Container */}
       <div className="w-full">
@@ -281,47 +271,49 @@ export function ColorRecallClient() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-surface border-2 border-border rounded-[2.5rem] p-8 sm:p-12 text-center shadow-xl max-w-2xl mx-auto"
+            className="bg-surface border border-border rounded-3xl p-8 sm:p-12 text-center shadow-xl max-w-2xl mx-auto relative overflow-hidden"
           >
-            <div className="w-20 h-20 rounded-3xl bg-accent text-white flex items-center justify-center mx-auto mb-6 shadow-md">
-              <Eye className="w-10 h-10" />
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#35D07F]" />
+
+            <div className="w-16 h-16 rounded-2xl bg-[#35D07F]/15 border border-[#35D07F]/30 text-[#35D07F] flex items-center justify-center mx-auto mb-6 shadow-sm">
+              <Eye className="w-8 h-8" />
             </div>
 
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-accent/15 text-accent border border-accent/30 mb-4">
-              Visual Perception
+            <span className="inline-block px-3 py-1 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-background border border-border text-text-secondary mb-4">
+              Visual Perception &amp; Memory
             </span>
 
-            <h1 className="text-4xl sm:text-5xl font-black mb-4 tracking-tight text-text-primary">
+            <h1 className="text-3xl sm:text-5xl font-black mb-4 tracking-tight text-text-primary">
               Color Recall
             </h1>
 
             <p className="text-text-secondary text-base sm:text-lg mb-8 leading-relaxed font-medium">
-              A target color will appear for <span className="text-text-primary font-bold">3 seconds</span>. 
+              A target color will appear for <span className="text-white font-bold">3 seconds</span>. 
               Once it vanishes, tune Hue, Saturation, and Lightness to recreate it from memory.
             </p>
 
             {/* Quick High Score Banner */}
             {stats.gamesPlayed > 0 && (
-              <div className="grid grid-cols-2 gap-4 mb-8 text-left bg-elevated p-4 rounded-2xl border border-border">
+              <div className="grid grid-cols-2 gap-4 mb-8 text-left bg-background/80 p-4 rounded-2xl border border-border">
                 <div>
-                  <span className="text-xs uppercase font-bold text-text-secondary">High Score</span>
-                  <div className="text-2xl font-black text-accent">{stats.highScore} pts</div>
+                  <span className="text-[11px] font-mono uppercase font-bold text-text-muted">High Score</span>
+                  <div className="text-2xl font-mono font-black text-[#35D07F]">{stats.highScore} pts</div>
                 </div>
                 <div>
-                  <span className="text-xs uppercase font-bold text-text-secondary">Best Accuracy</span>
-                  <div className="text-2xl font-black text-success">{stats.bestAccuracy}%</div>
+                  <span className="text-[11px] font-mono uppercase font-bold text-text-muted">Best Accuracy</span>
+                  <div className="text-2xl font-mono font-black text-white">{stats.bestAccuracy}%</div>
                 </div>
               </div>
             )}
 
             <button
               onClick={handleStartGame}
-              className="w-full sm:w-auto px-10 py-5 rounded-full font-black text-lg bg-accent text-white shadow-[0_4px_0_rgb(224,77,57)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-3 mx-auto uppercase tracking-wider"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl font-mono font-black text-sm uppercase tracking-wider bg-[#35D07F] text-[#090A0F] hover:bg-[#35D07F]/90 shadow-[0_0_20px_rgba(53,208,127,0.3)] transition-all flex items-center justify-center gap-2 mx-auto"
             >
-              <Play className="w-5 h-5 fill-current" />
+              <Play className="w-4 h-4 fill-current" />
               <span>Start 5-Round Session</span>
             </button>
-            <p className="text-xs text-text-secondary mt-3">Press Enter or Space to begin</p>
+            <p className="text-xs font-mono text-text-muted mt-3">Press Enter or Space to begin</p>
           </motion.div>
         )}
 
@@ -342,9 +334,9 @@ export function ColorRecallClient() {
                     key={i}
                     className={`w-2.5 h-2.5 rounded-full transition-all ${
                       i < roundIndex
-                        ? 'bg-success'
+                        ? 'bg-[#35D07F]'
                         : i === roundIndex
-                        ? 'bg-accent scale-125'
+                        ? 'bg-[#35D07F] scale-125 shadow-[0_0_8px_rgba(53,208,127,0.6)]'
                         : 'bg-border'
                     }`}
                   />
@@ -353,8 +345,8 @@ export function ColorRecallClient() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase text-text-secondary tracking-widest">Score</span>
-              <span className="font-mono font-bold text-lg text-accent">
+              <span className="text-xs font-mono font-bold uppercase text-text-secondary tracking-widest">Score</span>
+              <span className="font-mono font-black text-lg text-[#35D07F]">
                 {currentTotalScore} pts
               </span>
             </div>
@@ -368,39 +360,41 @@ export function ColorRecallClient() {
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-surface border-2 border-border rounded-[2.5rem] p-6 sm:p-10 text-center shadow-xl"
+            className="bg-surface border border-border rounded-3xl p-6 sm:p-10 text-center shadow-xl relative overflow-hidden"
           >
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#35D07F]" />
+
             <div className="mb-6 flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-text-secondary">
                 Step 1: Memorize
               </span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-accent px-3 py-1 rounded-full bg-accent/10">
-                <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#35D07F] px-3 py-1 rounded-full bg-[#35D07F]/10 border border-[#35D07F]/20">
+                <span className="w-2 h-2 rounded-full bg-[#35D07F] animate-ping" />
                 Vanishing in {countdown}s
               </span>
             </div>
 
             {/* Target Color Swatch */}
             <div
-              className="w-full h-64 sm:h-80 rounded-[2rem] border-4 border-white shadow-2xl transition-all duration-300 relative flex items-center justify-center overflow-hidden mb-6"
+              className="w-full h-64 sm:h-80 rounded-2xl border-2 border-white/20 shadow-2xl transition-all duration-300 relative flex items-center justify-center overflow-hidden mb-6"
               style={{ backgroundColor: toHslString(targetColor) }}
             >
-              <div className="px-6 py-3 rounded-full bg-black/40 backdrop-blur-md text-white font-mono font-bold text-sm tracking-wider shadow-lg">
+              <div className="px-5 py-2.5 rounded-xl bg-black/60 backdrop-blur-md text-white font-mono font-bold text-xs tracking-wider shadow-lg border border-white/10">
                 Memorize this exact shade
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <p className="text-sm text-text-secondary font-medium">
+              <p className="text-xs font-mono text-text-muted">
                 Tip: Pay attention to both the color tone and its lightness.
               </p>
 
               <button
                 onClick={handleReadyToRecreate}
-                className="w-full sm:w-auto px-6 py-3 rounded-full font-bold text-sm bg-accent text-white hover:bg-accent/90 shadow-md transition-colors flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl font-mono font-bold text-xs uppercase tracking-wider bg-[#35D07F] text-[#090A0F] hover:bg-[#35D07F]/90 shadow-sm transition-colors flex items-center justify-center gap-2"
               >
                 <span>I&apos;ve Got It</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </motion.div>
@@ -413,24 +407,26 @@ export function ColorRecallClient() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-surface border-2 border-border rounded-[2.5rem] p-6 sm:p-10 shadow-xl"
+            className="bg-surface border border-border rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden"
           >
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#35D07F]" />
+
             <div className="flex items-center justify-between mb-6">
-              <span className="text-xs font-bold uppercase tracking-widest text-text-secondary">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-text-secondary">
                 Step 2: Recreate from Memory
               </span>
-              <span className="text-xs font-mono font-bold text-text-primary px-3 py-1 rounded-full bg-elevated border border-border">
+              <span className="text-xs font-mono font-bold text-text-primary px-3 py-1 rounded-xl bg-background border border-border">
                 {hslToHex(guessColor)}
               </span>
             </div>
 
             {/* Live Guessed Color Swatch */}
             <div
-              className="w-full h-44 sm:h-56 rounded-[2rem] border-4 border-white shadow-inner transition-colors duration-100 flex items-center justify-center mb-8 relative overflow-hidden"
+              className="w-full h-44 sm:h-56 rounded-2xl border-2 border-white/20 shadow-inner transition-colors duration-100 flex items-center justify-center mb-8 relative overflow-hidden"
               style={{ backgroundColor: toHslString(guessColor) }}
             >
-              <div className="px-5 py-2 rounded-full bg-black/35 backdrop-blur-md text-white font-mono font-bold text-sm">
-                Your Mix: H:{guessColor.h}° S:{guessColor.s}% L:{guessColor.l}%
+              <div className="px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md text-white font-mono font-bold text-xs border border-white/10">
+                Mix: H:{guessColor.h}° S:{guessColor.s}% L:{guessColor.l}%
               </div>
             </div>
 
@@ -525,12 +521,12 @@ export function ColorRecallClient() {
             {/* Submit Button */}
             <button
               onClick={handleSubmitGuess}
-              className="w-full py-5 rounded-2xl font-black text-xl bg-accent text-white shadow-[0_4px_0_rgb(224,77,57)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 uppercase tracking-wider"
+              className="w-full py-4 rounded-xl font-mono font-black text-sm uppercase tracking-wider bg-[#35D07F] text-[#090A0F] hover:bg-[#35D07F]/90 shadow-[0_0_20px_rgba(53,208,127,0.3)] transition-all flex items-center justify-center gap-2"
             >
               <span>Lock In Color</span>
-              <Check className="w-6 h-6 stroke-[3]" />
+              <Check className="w-5 h-5 stroke-[2.5]" />
             </button>
-            <p className="text-center text-xs text-text-secondary mt-3">Press Enter to Lock In</p>
+            <p className="text-center text-xs font-mono text-text-muted mt-3">Press Enter to Lock In</p>
           </motion.div>
         )}
 
@@ -541,8 +537,9 @@ export function ColorRecallClient() {
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-surface border-2 border-border rounded-[2.5rem] p-6 sm:p-10 shadow-xl"
+            className="bg-surface border border-border rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden"
           >
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#35D07F]" />
             {/* Header Result */}
             {roundsHistory[roundIndex] && (
               <div className="text-center mb-8">
@@ -625,12 +622,12 @@ export function ColorRecallClient() {
             {/* Next Action */}
             <button
               onClick={handleNextRound}
-              className="w-full py-5 rounded-2xl font-black text-xl bg-accent text-white shadow-[0_4px_0_rgb(224,77,57)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-3 uppercase tracking-wider"
+              className="w-full py-4 rounded-xl font-mono font-black text-sm uppercase tracking-wider bg-[#35D07F] text-[#090A0F] hover:bg-[#35D07F]/90 shadow-[0_0_20px_rgba(53,208,127,0.3)] transition-all flex items-center justify-center gap-2"
             >
               <span>{roundIndex + 1 < TOTAL_ROUNDS ? 'Next Round' : 'View Final Summary'}</span>
-              <ArrowRight className="w-6 h-6 stroke-[3]" />
+              <ArrowRight className="w-5 h-5 stroke-[2.5]" />
             </button>
-            <p className="text-center text-xs text-text-secondary mt-3">Press Enter or Space to continue</p>
+            <p className="text-center text-xs font-mono text-text-muted mt-3">Press Enter or Space to continue</p>
           </motion.div>
         )}
 
@@ -641,17 +638,19 @@ export function ColorRecallClient() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-surface border-2 border-border rounded-[2.5rem] p-8 sm:p-12 text-center shadow-xl max-w-3xl mx-auto"
+            className="bg-surface border border-border rounded-3xl p-8 sm:p-12 text-center shadow-xl max-w-3xl mx-auto relative overflow-hidden"
           >
-            <div className="w-20 h-20 rounded-full bg-accent text-white flex items-center justify-center mx-auto mb-6 shadow-md">
-              <Trophy className="w-10 h-10" />
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#35D07F]" />
+
+            <div className="w-16 h-16 rounded-2xl bg-[#35D07F]/15 border border-[#35D07F]/30 text-[#35D07F] flex items-center justify-center mx-auto mb-6 shadow-sm">
+              <Trophy className="w-8 h-8" />
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black mb-2 tracking-tight">
               Session Complete!
             </h1>
 
-            <div className="text-5xl sm:text-6xl font-mono font-black text-accent mb-2">
+            <div className="text-5xl sm:text-6xl font-mono font-black text-[#35D07F] mb-2">
               {roundsHistory.reduce((acc, r) => acc + r.score, 0)} pts
             </div>
 
@@ -663,28 +662,28 @@ export function ColorRecallClient() {
             </p>
 
             {/* Round-by-Round Chips */}
-            <h3 className="text-xs font-bold uppercase tracking-widest text-text-secondary mb-4 text-left">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-text-secondary mb-4 text-left">
               Round Breakdown
             </h3>
             <div className="space-y-3 mb-8">
               {roundsHistory.map((round) => (
                 <div
                   key={round.roundNumber}
-                  className="flex items-center justify-between p-3.5 bg-elevated rounded-2xl border border-border gap-4"
+                  className="flex items-center justify-between p-3.5 bg-background/80 rounded-2xl border border-border gap-4"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-7 h-7 rounded-full bg-surface border border-border flex items-center justify-center font-bold text-xs">
+                    <span className="w-7 h-7 rounded-xl bg-surface border border-border flex items-center justify-center font-mono font-bold text-xs">
                       #{round.roundNumber}
                     </span>
                     <div className="flex items-center gap-2">
                       <div
-                        className="w-8 h-8 rounded-lg border-2 border-white shadow-sm"
+                        className="w-8 h-8 rounded-lg border-2 border-white/40 shadow-sm"
                         style={{ backgroundColor: toHslString(round.target) }}
                         title={`Target: ${round.targetHex}`}
                       />
-                      <span className="text-xs font-bold text-text-secondary">vs</span>
+                      <span className="text-xs font-mono font-bold text-text-secondary">vs</span>
                       <div
-                        className="w-8 h-8 rounded-lg border-2 border-white shadow-sm"
+                        className="w-8 h-8 rounded-lg border-2 border-white/40 shadow-sm"
                         style={{ backgroundColor: toHslString(round.guess) }}
                         title={`Guess: ${round.guessHex}`}
                       />
@@ -693,10 +692,10 @@ export function ColorRecallClient() {
 
                   <div className="flex items-center gap-4 text-right">
                     <div>
-                      <div className="text-sm font-bold text-text-primary">{round.accuracy}%</div>
+                      <div className="text-sm font-mono font-bold text-text-primary">{round.accuracy}%</div>
                       <div className="text-[10px] text-text-secondary font-medium">{round.ratingLabel}</div>
                     </div>
-                    <div className="font-mono font-bold text-accent text-sm w-16">
+                    <div className="font-mono font-black text-[#35D07F] text-sm w-16">
                       +{round.score}
                     </div>
                   </div>
@@ -708,15 +707,15 @@ export function ColorRecallClient() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={handleStartGame}
-                className="w-full sm:w-auto px-10 py-5 rounded-full font-black text-lg bg-accent text-white shadow-[0_4px_0_rgb(224,77,57)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-3 uppercase tracking-wider"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl font-mono font-black text-sm uppercase tracking-wider bg-[#35D07F] text-[#090A0F] hover:bg-[#35D07F]/90 shadow-[0_0_20px_rgba(53,208,127,0.3)] transition-all flex items-center justify-center gap-2"
               >
-                <RotateCcw className="w-5 h-5" />
+                <RotateCcw className="w-4 h-4" />
                 <span>Play Again</span>
               </button>
 
               <Link
                 href="/games"
-                className="w-full sm:w-auto px-8 py-5 rounded-full font-bold text-base bg-elevated text-text-primary border-2 border-border hover:bg-border/50 transition-colors"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl font-mono font-bold text-sm uppercase tracking-wider bg-surface text-text-primary border border-border hover:bg-elevated transition-colors"
               >
                 Back to Arcade
               </Link>

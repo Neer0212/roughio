@@ -18,6 +18,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { BackButton } from '@/components/layout/BackButton';
+import { GameHeader } from '@/components/game-shell/GameHeader';
 import { formatIndianNumber } from '@/lib/utils/number-parser';
 import {
   PATTERN_TILES,
@@ -308,24 +309,20 @@ export function PatternRecallClient() {
   return (
     <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-6 sm:py-10 flex flex-col items-center">
       {/* Top Header Bar */}
-      <div className="w-full flex items-center justify-between mb-6">
-        <BackButton fallback="/games" />
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setSoundMuted((m) => !m)}
-            aria-label={soundMuted ? 'Unmute Sound' : 'Mute Sound'}
-            className="p-2.5 rounded-full border border-border bg-surface hover:bg-elevated text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          >
-            {soundMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5 text-accent" />}
-          </button>
-
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border bg-surface text-xs font-bold uppercase tracking-wider text-text-secondary">
-            <Trophy className="w-4 h-4 text-[#FFDE00]" />
-            <span>High: {formatIndianNumber(stats.highScore)}</span>
-          </div>
-        </div>
-      </div>
+      <GameHeader
+        title="Pattern Recall"
+        category="Working Memory"
+        accentColor="#FFDE00"
+        soundMuted={soundMuted}
+        onToggleSound={() => setSoundMuted((m) => !m)}
+        highScore={stats.highScore}
+        score={gameState.phase !== 'ready' ? gameState.score : undefined}
+        roundInfo={
+          gameState.phase !== 'ready' && gameState.phase !== 'game_over' && gameState.phase !== 'victory'
+            ? `Round ${gameState.round} / ${gameState.maxRound}`
+            : undefined
+        }
+      />
 
       <AnimatePresence mode="wait">
         {/* ============================================================ */}
@@ -338,64 +335,66 @@ export function PatternRecallClient() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-lg bg-surface border border-border rounded-3xl p-6 sm:p-8 text-center shadow-xl space-y-6 my-auto"
+            className="w-full max-w-lg bg-surface border border-border rounded-3xl p-6 sm:p-8 text-center shadow-xl space-y-6 my-auto relative overflow-hidden"
           >
-            <div className="inline-flex p-4 rounded-2xl bg-[#FFDE00]/10 border border-[#FFDE00]/20 text-[#FFDE00] mb-2">
-              <Grid className="w-10 h-10" />
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#FFDE00]" />
+
+            <div className="inline-flex p-4 rounded-2xl bg-[#FFDE00]/15 border border-[#FFDE00]/30 text-[#FFDE00] mb-2 shadow-sm">
+              <Grid className="w-9 h-9" />
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#FFDE00]">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FFDE00]">
                 Working Memory Arcade
               </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight">
+              <h1 className="text-3xl sm:text-4xl font-black text-text-primary tracking-tight">
                 Pattern Recall
               </h1>
-              <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
+              <p className="text-sm text-text-secondary leading-relaxed font-medium">
                 Watch the sequence of glowing tiles, then tap or press them in the exact order.
                 Sequences grow longer with every round!
               </p>
             </div>
 
             {/* Controls Info Box */}
-            <div className="grid grid-cols-2 gap-3 text-left p-4 rounded-2xl bg-elevated/60 border border-border text-xs">
+            <div className="grid grid-cols-2 gap-3 text-left p-4 rounded-2xl bg-background/80 border border-border text-xs font-mono">
               <div>
-                <span className="text-text-secondary font-bold block mb-1">Controls</span>
+                <span className="text-text-muted font-bold block mb-1">Controls</span>
                 <span className="text-text-primary font-medium">Click / Tap tiles or Keys 1–9</span>
               </div>
               <div>
-                <span className="text-text-secondary font-bold block mb-1">Target</span>
+                <span className="text-text-muted font-bold block mb-1">Target</span>
                 <span className="text-text-primary font-medium">Clear up to {DEFAULT_MAX_ROUNDS} Rounds</span>
               </div>
             </div>
 
             {/* Quick Stats Banner */}
             {stats.gamesPlayed > 0 && (
-              <div className="flex items-center justify-around py-3 px-4 rounded-2xl bg-surface border border-border text-xs">
+              <div className="flex items-center justify-around py-3 px-4 rounded-2xl bg-background/80 border border-border text-xs font-mono">
                 <div>
-                  <span className="text-text-secondary block">Best Round</span>
-                  <span className="text-text-primary font-extrabold text-sm">Round {stats.bestRound}</span>
+                  <span className="text-text-muted block text-[10px] uppercase">Best Round</span>
+                  <span className="text-text-primary font-black text-sm">Round {stats.bestRound}</span>
                 </div>
                 <div className="h-6 w-px bg-border" />
                 <div>
-                  <span className="text-text-secondary block">Longest Span</span>
-                  <span className="text-text-primary font-extrabold text-sm">{stats.longestSequence} Tiles</span>
+                  <span className="text-text-muted block text-[10px] uppercase">Longest Span</span>
+                  <span className="text-[#FFDE00] font-black text-sm">{stats.longestSequence} Tiles</span>
                 </div>
                 <div className="h-6 w-px bg-border" />
                 <div>
-                  <span className="text-text-secondary block">Games</span>
-                  <span className="text-text-primary font-extrabold text-sm">{stats.gamesPlayed}</span>
+                  <span className="text-text-muted block text-[10px] uppercase">Games</span>
+                  <span className="text-text-primary font-black text-sm">{stats.gamesPlayed}</span>
                 </div>
               </div>
             )}
 
             <button
               onClick={handleStartGame}
-              className="w-full py-4 rounded-full bg-accent text-white font-extrabold text-base hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-accent/25 flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/40"
+              className="w-full py-4 rounded-xl bg-[#FFDE00] text-[#090A0F] hover:bg-[#FFDE00]/90 font-mono font-black text-sm uppercase tracking-wider shadow-[0_0_20px_rgba(255,222,0,0.3)] transition-all flex items-center justify-center gap-2"
             >
-              <Play className="w-5 h-5 fill-current" />
+              <Play className="w-4 h-4 fill-current" />
               <span>Start Game</span>
-              <span className="text-xs text-white/70 font-normal hidden sm:inline">(or press Space)</span>
+              <span className="text-xs text-[#090A0F]/70 font-mono hidden sm:inline">(or press Space)</span>
             </button>
           </motion.div>
         )}
@@ -632,18 +631,18 @@ export function PatternRecallClient() {
             <div className="space-y-3 pt-2">
               <button
                 onClick={handleStartGame}
-                className="w-full py-4 rounded-full bg-accent text-white font-extrabold text-base hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-accent/25 flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/40"
+                className="w-full py-4 rounded-xl bg-[#FFDE00] text-[#090A0F] font-mono font-black text-sm uppercase tracking-wider hover:bg-[#FFDE00]/90 transition-all shadow-[0_0_20px_rgba(255,222,0,0.3)] flex items-center justify-center gap-2"
               >
-                <RotateCcw className="w-5 h-5" />
+                <RotateCcw className="w-4 h-4" />
                 <span>Play Again</span>
               </button>
 
               <Link
                 href="/games"
-                className="w-full py-3.5 rounded-full border border-border bg-surface hover:bg-elevated text-text-primary font-bold text-sm transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-xl border border-border bg-surface hover:bg-elevated text-text-primary font-mono font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
               >
                 <span>Back to Arcade</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </motion.div>

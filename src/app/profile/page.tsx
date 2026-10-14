@@ -1,4 +1,5 @@
 import { BackButton } from '@/components/layout/BackButton';
+import { Navbar } from '@/components/layout/Navbar';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { formatLarge } from '@/lib/utils/number-parser';
@@ -39,12 +40,16 @@ export default async function ProfilePage() {
     .limit(50);
 
   return (
-    <div className="flex-1 w-full max-w-5xl mx-auto px-4 py-8 sm:py-12">
-        <BackButton />
-      <div className="mb-10">
-        <h1 className="text-3xl sm:text-5xl font-extrabold mb-2">Estimation Dashboard</h1>
-        <p className="text-text-secondary text-lg">{session.user.email}</p>
-      </div>
+    <div className="min-h-screen bg-background text-text-primary flex flex-col selection:bg-accent selection:text-[#090A0F]">
+      <Navbar />
+      <div className="flex-1 w-full max-w-5xl mx-auto px-4 py-8 sm:py-12">
+        <div className="mb-6">
+          <BackButton fallback="/games" label="Arcade" />
+        </div>
+        <div className="mb-10">
+          <h1 className="text-3xl sm:text-5xl font-black mb-2 tracking-tight">Player Profile</h1>
+          <p className="text-text-secondary text-sm font-mono">{session.user.email}</p>
+        </div>
 
       {/* Core Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
@@ -119,6 +124,7 @@ export default async function ProfilePage() {
           ))
         )}
       </div>
+    </div>
     </div>
   );
 }

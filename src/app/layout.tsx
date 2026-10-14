@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Roughio | How close can you get?",
-  description: "An unlimited Fermi estimation game. Estimate things you don't know, discover the actual answer, and improve your estimation skills.",
+  title: "Roughio — Cognitive Arcade | Test Your Gut, Memory & Scale",
+  description: "A competitive retro-modern cognitive arcade featuring numerical estimation, pitch matching, color recall, pattern reproduction, and scale intuition.",
 };
 
 export default function RootLayout({

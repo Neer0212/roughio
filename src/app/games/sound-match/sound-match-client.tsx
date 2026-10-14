@@ -22,6 +22,7 @@ import {
   Radio,
 } from 'lucide-react';
 import { BackButton } from '@/components/layout/BackButton';
+import { GameHeader } from '@/components/game-shell/GameHeader';
 import { formatIndianNumber } from '@/lib/utils/number-parser';
 import {
   MIN_FREQUENCY,
@@ -285,44 +286,22 @@ export function SoundMatchClient() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-[#08090C] text-white flex flex-col items-center px-4 py-8">
+    <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-6 sm:py-10 flex flex-col items-center">
       {/* Top Header Bar */}
-      <header className="w-full max-w-4xl flex items-center justify-between mb-8 border-b border-white/10 pb-4">
-        <div className="flex items-center gap-3">
-          <BackButton />
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-[#4A65FF]/20 text-[#4A65FF] border border-[#4A65FF]/30">
-                <Music className="w-4 h-4" />
-              </span>
-              Sound Match
-            </h1>
-            <p className="text-xs text-white/50">Arcade Frequency & Pitch Recreation</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Mute toggle button */}
-          <button
-            onClick={() => setSoundMuted((prev) => !prev)}
-            className={`p-2 rounded-lg border transition-all ${
-              soundMuted
-                ? 'bg-rose-500/10 border-rose-500/30 text-rose-400 hover:bg-rose-500/20'
-                : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10'
-            }`}
-            title={soundMuted ? 'Unmute Sound' : 'Mute Sound'}
-            aria-label={soundMuted ? 'Unmute Sound' : 'Mute Sound'}
-          >
-            {soundMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
-
-          {/* High Score Pill */}
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-white/80">
-            <Trophy className="w-3.5 h-3.5 text-amber-400" />
-            <span>Best: {formatIndianNumber(stats.highScore)}</span>
-          </div>
-        </div>
-      </header>
+      <GameHeader
+        title="Sound Match"
+        category="Audio & Pitch"
+        accentColor="#4A65FF"
+        soundMuted={soundMuted}
+        onToggleSound={() => setSoundMuted((prev) => !prev)}
+        highScore={stats.highScore}
+        score={phase !== 'ready' ? totalSessionScore : undefined}
+        roundInfo={
+          phase !== 'ready' && phase !== 'game_over'
+            ? `Round ${roundIndex + 1} / ${TOTAL_ROUNDS}`
+            : undefined
+        }
+      />
 
       {/* Main Content Area */}
       <main className="w-full max-w-3xl flex-1 flex flex-col items-center">

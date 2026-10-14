@@ -101,17 +101,16 @@ export function HintButton({
         onClick={handleClick}
         disabled={used || isLoading || disabled}
         className={cn(
-          'flex items-center justify-center w-14 h-14 rounded-full font-bold text-lg',
-          'bg-transparent border-2 border-white/50 text-white hover:bg-white hover:text-accent',
+          'flex items-center justify-center w-12 h-12 rounded-xl font-bold',
+          'bg-surface border border-border text-text-secondary hover:text-warning hover:border-warning/40 hover:bg-elevated',
           'transition-all duration-200',
           'disabled:opacity-50 disabled:cursor-not-allowed',
-          'disabled:hover:bg-transparent disabled:hover:text-white',
-          used && 'bg-white/20 border-white/20 text-white'
+          used && 'bg-warning/10 border-warning/30 text-warning'
         )}
         title={used ? 'Hint used' : 'Get AI hint'}
       >
         {isLoading ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
+          <Loader2 className="w-5 h-5 animate-spin text-warning" />
         ) : (
           <Lightbulb className="w-5 h-5" />
         )}
@@ -123,17 +122,17 @@ export function HintButton({
             initial={{ opacity: 0, y: -10, height: 0 }}
             animate={{ opacity: 1, y: 0, height: 'auto' }}
             exit={{ opacity: 0, y: -10, height: 0 }}
-            className="mt-4 p-5 rounded-2xl bg-white/10 border border-white/20 text-base text-white overflow-hidden"
+            className="mt-4 p-4 rounded-2xl bg-surface border border-warning/30 text-sm text-text-primary overflow-hidden shadow-lg"
           >
             <div className="flex items-start gap-3">
-              <Lightbulb className="w-6 h-6 text-white flex-shrink-0 mt-0.5" />
+              <Lightbulb className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
 
               <div>
-                <p className="text-xs uppercase tracking-widest font-bold text-white/60 mb-1">
-                  AI Hint
+                <p className="text-[10px] uppercase font-mono tracking-widest font-bold text-warning mb-1">
+                  AI Estimation Strategy
                 </p>
 
-                <p className="font-medium leading-relaxed">
+                <p className="font-medium text-text-secondary leading-relaxed">
                   {hint}
                 </p>
               </div>

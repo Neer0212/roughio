@@ -119,10 +119,10 @@ export function ResultReveal({ question, result, onNext, isGuest = false, hintUs
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, type: 'spring' }}
-            className="flex flex-wrap justify-center gap-3 mt-4"
+            className="flex flex-wrap justify-center gap-2 mt-4"
           >
             {result.achievements.map((ach: string, i: number) => (
-              <div key={i} className="px-4 py-2 rounded-full bg-warning text-accent font-black text-sm uppercase tracking-widest shadow-md transform rotate-1 hover:rotate-0 transition-transform">
+              <div key={i} className="px-3.5 py-1.5 rounded-xl bg-warning/15 border border-warning/30 text-warning font-mono font-bold text-xs uppercase tracking-wider shadow-sm">
                 {ach}
               </div>
             ))}
@@ -134,18 +134,21 @@ export function ResultReveal({ question, result, onNext, isGuest = false, hintUs
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.4 }}
-          className="bg-white rounded-[2rem] p-8 shadow-xl mt-8 max-w-2xl mx-auto text-left text-text-primary"
+          className="bg-surface rounded-2xl p-6 sm:p-7 border border-border mt-6 max-w-2xl mx-auto text-left text-text-primary shadow-md"
         >
           <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-error text-error flex items-center justify-center opacity-70 mt-1">
+            <div className="flex-shrink-0 w-8 h-8 rounded-xl border border-warning/40 text-warning bg-warning/10 flex items-center justify-center mt-1">
               <Lightbulb className="w-4 h-4" />
             </div>
             <div className="flex-1">
-              <p className="text-lg font-medium leading-relaxed whitespace-pre-line text-text-primary/90">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-warning block mb-2">
+                Estimation Reasoning &amp; Steps
+              </span>
+              <p className="text-base font-medium leading-relaxed whitespace-pre-line text-text-primary/90">
                 {question.estimationApproach}
               </p>
               {question.source && (
-                <p className="mt-4 text-sm font-bold text-text-secondary uppercase tracking-widest">
+                <p className="mt-4 text-xs font-mono font-bold text-text-secondary uppercase tracking-widest">
                   Source: <a href={question.source || '#'} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline ml-1">{question.sourceName || 'Link'}</a>
                   {question.referencePeriod && <span className="ml-2">· {question.referencePeriod}</span>}
                 </p>
@@ -159,32 +162,34 @@ export function ResultReveal({ question, result, onNext, isGuest = false, hintUs
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.4 }}
-          className="bg-white/10 rounded-[2rem] p-8 shadow-xl mt-8 max-w-2xl mx-auto text-left border border-white/20"
+          className="bg-surface rounded-2xl p-6 sm:p-7 border border-accent/25 mt-6 max-w-2xl mx-auto text-left shadow-md"
         >
           <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-accent text-accent flex items-center justify-center mt-1">
+            <div className="flex-shrink-0 w-8 h-8 rounded-xl border border-accent/40 text-accent bg-accent/10 flex items-center justify-center mt-1">
               <Brain className="w-4 h-4" />
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-bold text-white/80 uppercase tracking-widest">AI Feedback</h3>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-accent">
+                  AI Feedback &amp; Calibration
+                </span>
                 {!aiFeedback && !isGeneratingFeedback && (
                   <button
                     onClick={handleRequestFeedback}
-                    className="text-xs font-bold text-accent hover:text-white bg-accent/20 hover:bg-accent/40 px-3 py-1 rounded-full transition-colors"
+                    className="text-xs font-mono font-bold text-[#090A0F] bg-accent hover:bg-accent-hover px-3 py-1 rounded-lg transition-colors shadow-sm"
                   >
-                    Get Feedback
+                    Analyze Guess
                   </button>
                 )}
               </div>
               {isGeneratingFeedback ? (
-                <div className="flex items-center gap-2 text-white/60">
+                <div className="flex items-center gap-2 text-text-secondary">
                   <Loader2 className="w-4 h-4 animate-spin text-accent" />
-                  <span className="text-sm">Generating feedback...</span>
+                  <span className="text-sm font-mono">Analyzing estimate...</span>
                 </div>
               ) : feedbackError ? (
                 <div className="flex items-center justify-between">
-                  <p className="text-white/60 text-sm">AI feedback is temporarily unavailable.</p>
+                  <p className="text-text-secondary text-sm">AI feedback is temporarily unavailable.</p>
                   <button
                     onClick={handleRequestFeedback}
                     className="text-xs text-accent hover:underline ml-2"
@@ -193,12 +198,12 @@ export function ResultReveal({ question, result, onNext, isGuest = false, hintUs
                   </button>
                 </div>
               ) : aiFeedback ? (
-                <p className="text-base font-medium leading-relaxed whitespace-pre-line text-white">
+                <p className="text-sm font-medium leading-relaxed whitespace-pre-line text-text-primary">
                   {aiFeedback}
                 </p>
               ) : (
-                <p className="text-sm text-white/60">
-                  Want an AI breakdown of your estimate? Click &quot;Get Feedback&quot; above.
+                <p className="text-xs text-text-secondary font-mono">
+                  Want an AI breakdown of your order of magnitude? Click &quot;Analyze Guess&quot; above.
                 </p>
               )}
             </div>
@@ -206,17 +211,17 @@ export function ResultReveal({ question, result, onNext, isGuest = false, hintUs
         </motion.div>
         
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
           <ShareButton questionId={question.id} result={result} />
           
           <motion.button
             whileTap={{ scale: 0.98 }}
             whileHover={{ scale: 1.02 }}
             onClick={onNext}
-            className="w-full sm:w-auto px-10 py-4 bg-white text-info font-bold text-lg rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 bg-accent text-[#090A0F] hover:bg-accent-hover font-mono font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl transition-all shadow-[0_0_20px_rgba(204,255,0,0.25)] flex items-center justify-center gap-2"
           >
             <span>Next Question</span>
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </motion.button>
         </div>
       </motion.div>

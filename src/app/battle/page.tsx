@@ -6,6 +6,8 @@ import { Swords, Plus, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { createClient } from '@/lib/supabase/client';
+import { BackButton } from '@/components/layout/BackButton';
+import { Navbar } from '@/components/layout/Navbar';
 
 export default function BattleLobby() {
   const { user } = useAuth();
@@ -70,73 +72,86 @@ export default function BattleLobby() {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4">
-      <div className="max-w-md w-full text-center mb-8">
-        <div className="w-20 h-20 bg-accent/20 text-accent rounded-full flex items-center justify-center mx-auto mb-6">
-          <Swords className="w-10 h-10" />
-        </div>
-        <h1 className="text-4xl font-extrabold mb-4">Fermi Battles</h1>
-        <p className="text-text-secondary text-lg">Challenge your friends in real-time estimation showdowns.</p>
-      </div>
+    <div className="min-h-screen bg-background text-text-primary flex flex-col selection:bg-accent selection:text-[#090A0F]">
+      <Navbar />
 
-      <div className="w-full max-w-md bg-surface p-8 rounded-3xl border border-border shadow-2xl">
-        {error && (
-          <div className="mb-6 p-4 bg-destructive/10 text-destructive rounded-xl text-sm font-medium border border-destructive/20 text-center">
-            {error}
+      <main className="flex-1 w-full max-w-lg mx-auto px-4 py-8 sm:py-12 flex flex-col items-center justify-center">
+        <div className="w-full flex items-center justify-start mb-6">
+          <BackButton fallback="/games" label="Arcade" />
+        </div>
+
+        <div className="w-full text-center mb-8">
+          <div className="w-16 h-16 bg-accent/15 text-accent border border-accent/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(204,255,0,0.2)]">
+            <Swords className="w-8 h-8" />
           </div>
-        )}
-
-        <div className="mb-4">
-          <label className="block text-sm font-bold text-text-secondary uppercase tracking-widest mb-2">Number of Questions</label>
-          <select 
-            value={rounds} 
-            onChange={(e) => setRounds(Number(e.target.value))}
-            className="w-full px-6 py-4 rounded-xl bg-elevated border-2 border-border text-lg font-bold focus:outline-none focus:border-accent transition-colors appearance-none"
-            style={{ backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem top 50%', backgroundSize: '0.65rem auto' }}
-          >
-            <option value={3}>3 Questions (Quick Match)</option>
-            <option value={5}>5 Questions (Standard)</option>
-            <option value={10}>10 Questions (Long Match)</option>
-            <option value={20}>20 Questions (Marathon)</option>
-          </select>
+          <h1 className="text-3xl sm:text-4xl font-black mb-2 tracking-tight">Multiplayer Battles</h1>
+          <p className="text-text-secondary text-sm font-medium">Challenge your friends in real-time estimation showdowns.</p>
         </div>
 
-        <button
-          onClick={handleCreate}
-          disabled={isCreating || isJoining}
-          className="w-full py-4 rounded-xl font-bold text-lg bg-accent text-background shadow-[0_4px_0_rgb(10,135,95)] hover:brightness-110 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 mb-8 disabled:opacity-50"
-        >
-          {isCreating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-6 h-6" />}
-          Create New Battle
-        </button>
+        <div className="w-full bg-surface p-6 sm:p-8 rounded-3xl border border-border shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-accent" />
 
-        <div className="relative flex items-center py-4 mb-4">
-          <div className="flex-grow border-t border-border"></div>
-          <span className="flex-shrink-0 mx-4 text-text-secondary text-sm font-bold uppercase">OR JOIN MATCH</span>
-          <div className="flex-grow border-t border-border"></div>
-        </div>
+          {error && (
+            <div className="mb-6 p-3.5 bg-error/15 text-error rounded-xl text-xs font-mono font-bold border border-error/30 text-center">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleJoin} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Enter 4-letter code"
-            value={joinCode}
-            onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-            maxLength={4}
-            className="w-full px-6 py-4 rounded-xl bg-elevated border-2 border-border text-center text-2xl font-mono font-bold uppercase focus:outline-none focus:border-accent transition-colors"
-          />
+          <div className="mb-4">
+            <label className="block text-xs font-mono font-bold text-text-secondary uppercase tracking-widest mb-2">
+              Number of Questions
+            </label>
+            <select 
+              value={rounds} 
+              onChange={(e) => setRounds(Number(e.target.value))}
+              className="w-full px-4 py-3.5 rounded-xl bg-background border border-border text-sm font-mono font-bold text-text-primary focus:outline-none focus:border-accent transition-colors appearance-none cursor-pointer"
+            >
+              <option value={3}>3 Questions (Quick Match)</option>
+              <option value={5}>5 Questions (Standard)</option>
+              <option value={10}>10 Questions (Long Match)</option>
+              <option value={20}>20 Questions (Marathon)</option>
+            </select>
+          </div>
+
           <button
-            type="submit"
-            disabled={isJoining || isCreating || joinCode.length !== 4}
-            className="w-full py-4 rounded-xl font-bold text-lg bg-surface text-text-primary border-2 border-border shadow-[0_4px_0_var(--border)] hover:text-accent hover:border-accent hover:shadow-[0_4px_0_var(--accent)] active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            onClick={handleCreate}
+            disabled={isCreating || isJoining}
+            className="w-full py-4 rounded-xl font-mono font-black text-sm uppercase tracking-wider bg-accent text-[#090A0F] hover:bg-accent-hover shadow-[0_0_20px_rgba(204,255,0,0.25)] transition-all flex items-center justify-center gap-2 mb-6 disabled:opacity-50"
           >
-            {isJoining ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-6 h-6" />}
-            Join Battle
+            {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-5 h-5 stroke-[2.5]" />}
+            Create Battle Room
           </button>
-        </form>
-      </div>
-      
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+
+          <div className="relative flex items-center py-3 mb-3">
+            <div className="flex-grow border-t border-border"></div>
+            <span className="flex-shrink-0 mx-4 text-text-muted text-[11px] font-mono font-bold uppercase tracking-wider">
+              OR JOIN ROOM
+            </span>
+            <div className="flex-grow border-t border-border"></div>
+          </div>
+
+          <form onSubmit={handleJoin} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Enter 4-letter code"
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+              maxLength={4}
+              className="w-full px-4 py-3.5 rounded-xl bg-background border border-border text-center text-xl font-mono font-black uppercase text-white placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+            />
+            <button
+              type="submit"
+              disabled={isJoining || isCreating || joinCode.length !== 4}
+              className="w-full py-3.5 rounded-xl font-mono font-bold text-xs uppercase tracking-wider bg-surface text-text-primary border border-border hover:border-accent hover:text-accent transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isJoining ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+              Join Battle
+            </button>
+          </form>
+        </div>
+        
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      </main>
     </div>
   );
 }

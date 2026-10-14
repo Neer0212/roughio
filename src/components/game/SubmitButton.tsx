@@ -20,14 +20,14 @@ export function SubmitButton({ onClick, disabled, isLoading, className }: Submit
       onClick={onClick}
       disabled={disabled || isLoading}
       className={cn(
-        'w-full sm:w-auto px-10 py-4 rounded-full font-bold text-lg flex-1 sm:flex-none justify-center flex',
-        'bg-transparent border-2 border-white/50 text-white hover:bg-white hover:text-accent',
+        'w-full sm:w-auto px-8 py-3.5 rounded-xl font-mono font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2',
+        'bg-accent text-[#090A0F] hover:bg-accent-hover shadow-[0_0_20px_rgba(204,255,0,0.25)]',
         'transition-all duration-200',
-        'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-white',
+        'disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:bg-accent',
         className
       )}
     >
-      <span className="flex items-center gap-2 tracking-widest uppercase text-sm">
+      <span className="flex items-center gap-2">
         {isLoading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -35,7 +35,7 @@ export function SubmitButton({ onClick, disabled, isLoading, className }: Submit
           </>
         ) : (
           <>
-            <span>Lock it in</span>
+            <span>Lock It In</span>
             <ArrowRight className="w-4 h-4" />
           </>
         )}

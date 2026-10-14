@@ -20,6 +20,7 @@ import {
   Info,
 } from 'lucide-react';
 import { BackButton } from '@/components/layout/BackButton';
+import { GameHeader } from '@/components/game-shell/GameHeader';
 import { formatIndianNumber } from '@/lib/utils/number-parser';
 import {
   getRandomSessionPrompts,
@@ -215,29 +216,20 @@ export function RareAnswerClient() {
   const totalSessionScore = roundsHistory.reduce((sum, r) => sum + r.validation.score, 0);
 
   return (
-    <div className="min-h-screen bg-[#08090C] text-white flex flex-col items-center px-4 py-8">
-      {/* Header Bar */}
-      <header className="w-full max-w-4xl flex items-center justify-between mb-8 border-b border-white/10 pb-4">
-        <div className="flex items-center gap-3">
-          <BackButton />
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-[#B9A0FF]/20 text-[#B9A0FF] border border-[#B9A0FF]/30">
-                <Sparkles className="w-4 h-4" />
-              </span>
-              Rare Answer
-            </h1>
-            <p className="text-xs text-white/50">Arcade Trivia Depth & Obscurity Recall</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-white/80">
-            <Trophy className="w-3.5 h-3.5 text-amber-400" />
-            <span>Best: {formatIndianNumber(stats.highScore)}</span>
-          </div>
-        </div>
-      </header>
+    <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-6 sm:py-10 flex flex-col items-center">
+      {/* Top Header Bar */}
+      <GameHeader
+        title="Rare Answer"
+        category="Trivia & Language"
+        accentColor="#B9A0FF"
+        highScore={stats.highScore}
+        score={phase !== 'ready' ? totalSessionScore : undefined}
+        roundInfo={
+          phase !== 'ready' && phase !== 'game_over'
+            ? `Round ${roundIndex + 1} / ${TOTAL_ROUNDS}`
+            : undefined
+        }
+      />
 
       {/* Main Content Area */}
       <main className="w-full max-w-2xl flex-1 flex flex-col items-center">

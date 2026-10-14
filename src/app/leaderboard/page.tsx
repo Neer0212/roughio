@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Trophy, Medal, Star } from 'lucide-react';
 import { getLevelProgress } from '@/lib/utils/leveling';
 import { BackButton } from '@/components/layout/BackButton';
+import { Navbar } from '@/components/layout/Navbar';
 
 export const revalidate = 60; // Cache for 60 seconds
 
@@ -27,15 +28,19 @@ export default async function LeaderboardPage() {
   };
 
   return (
-    <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-8 sm:py-12">
-        <BackButton />
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-elevated text-accent mb-4">
-          <Trophy className="w-8 h-8" />
+    <div className="min-h-screen bg-background text-text-primary flex flex-col selection:bg-accent selection:text-[#090A0F]">
+      <Navbar />
+      <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-8 sm:py-12">
+        <div className="mb-6">
+          <BackButton fallback="/games" label="Arcade" />
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold mb-4">Global Leaderboard</h1>
-        <p className="text-lg text-text-secondary">The most accurate estimators in the world.</p>
-      </div>
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-surface border border-accent/30 text-accent mb-4 shadow-[0_0_20px_rgba(204,255,0,0.15)]">
+            <Trophy className="w-8 h-8" />
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black mb-3 tracking-tight">Global Leaderboard</h1>
+          <p className="text-base text-text-secondary font-mono">The highest-scoring cognitive minds in Roughio.</p>
+        </div>
 
       <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
@@ -98,6 +103,7 @@ export default async function LeaderboardPage() {
           </table>
         </div>
       </div>
+    </div>
     </div>
   );
 }

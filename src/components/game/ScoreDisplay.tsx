@@ -42,35 +42,35 @@ export function ScoreDisplay({ factor, guess, referenceAnswer, unit, classificat
       className="flex flex-col gap-8 w-full mt-2"
     >
       {/* Top Row: Guess and Answer */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* You Guessed */}
-        <div className="bg-white/10 rounded-3xl p-6 border border-white/20 flex flex-col justify-center text-left">
-          <span className="text-white/90 font-bold uppercase tracking-widest text-xs mb-2">You Guessed</span>
-          <span className="text-3xl sm:text-4xl font-black text-white">{formatNumber(guess)}</span>
-          <span className="text-white/80 text-sm font-bold uppercase tracking-wider mt-1">{unit}</span>
+        <div className="bg-surface/80 rounded-2xl p-6 border border-border flex flex-col justify-center text-left">
+          <span className="text-text-secondary font-mono font-bold uppercase tracking-widest text-xs mb-2">You Guessed</span>
+          <span className="text-3xl sm:text-4xl font-mono font-black text-white">{formatNumber(guess)}</span>
+          <span className="text-text-muted text-xs font-mono uppercase tracking-wider mt-1">{unit}</span>
         </div>
         
         {/* Answer */}
-        <div className="bg-white rounded-3xl p-6 border-[3px] border-warning shadow-[6px_6px_0_var(--warning)] flex flex-col justify-center text-left">
-          <span className="text-text-secondary font-bold uppercase tracking-widest text-xs mb-2">Answer</span>
-          <span className="text-3xl sm:text-4xl font-black text-text-primary">{formatNumber(referenceAnswer)}</span>
-          <span className="text-text-secondary text-sm font-bold uppercase tracking-wider mt-1">{unit}</span>
+        <div className="bg-surface rounded-2xl p-6 border-2 border-accent/60 shadow-[0_0_20px_rgba(204,255,0,0.12)] flex flex-col justify-center text-left">
+          <span className="text-accent font-mono font-bold uppercase tracking-widest text-xs mb-2">Actual Answer</span>
+          <span className="text-3xl sm:text-4xl font-mono font-black text-white">{formatNumber(referenceAnswer)}</span>
+          <span className="text-accent/80 text-xs font-mono uppercase tracking-wider mt-1">{unit}</span>
         </div>
       </div>
       
       {/* Bottom Row: Score */}
-      <div className="flex flex-col items-start text-left mt-2">
-        <span className="text-white/90 font-bold uppercase tracking-widest text-xs mb-2">You Landed</span>
+      <div className="flex flex-col items-center sm:items-start text-center sm:text-left mt-2 p-6 rounded-2xl bg-surface/50 border border-border">
+        <span className="text-text-secondary font-mono font-bold uppercase tracking-widest text-xs mb-2">Order of Magnitude Result</span>
         
         <motion.div
           initial={animate ? { opacity: 0, x: -20 } : false}
           animate={animate ? { opacity: 1, x: 0 } : false}
           transition={{ delay: 0.2 }}
         >
-          <div className="text-[4rem] sm:text-[5.5rem] font-black text-warning leading-none tracking-tighter">
+          <div className="text-5xl sm:text-7xl font-mono font-black text-accent leading-none tracking-tight">
             {formatFactor(factor)}
           </div>
-          <div className="text-3xl sm:text-4xl font-black text-warning mt-1">
+          <div className="text-2xl sm:text-3xl font-black text-white mt-2">
             {isOverestimate ? 'Too High' : 'Too Low'}
           </div>
         </motion.div>
@@ -79,9 +79,9 @@ export function ScoreDisplay({ factor, guess, referenceAnswer, unit, classificat
           initial={animate ? { opacity: 0 } : false}
           animate={animate ? { opacity: 1 } : false}
           transition={{ delay: 0.4 }}
-          className="mt-6 text-white font-bold leading-snug max-w-xs"
+          className="mt-4 text-sm font-mono text-text-secondary leading-snug"
         >
-          {label} • Difference of {formatNumber(difference)} {unit}
+          <span className="text-accent font-bold">{label}</span> • Difference of {formatNumber(difference)} {unit}
         </motion.div>
       </div>
     </motion.div>
